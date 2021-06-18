@@ -27,7 +27,7 @@ class ChunkedEncoder(Encoder):
     frame_to_chk: FrameToChunk
 
     def __call__(self, frames: Frames):
-        return b"".join(map(self.frame_to_chk, frames))
+        return b''.join(map(self.frame_to_chk, frames))
 
 
 first_element = itemgetter(0)  # "equivalent" to lambda x: x[0]
@@ -55,9 +55,9 @@ ChkFormat = str  # a str recognized as a struct format
 
 
 def _split_chk_format(chk_format):
-    if chk_format[0] in "@=<>!":
+    if chk_format[0] in '@=<>!':
         return chk_format[0], chk_format[1:]
-    return "", chk_format
+    return '', chk_format
 
 
 def _format_chars_part_of_chk_format(chk_format):
@@ -148,7 +148,7 @@ class StructCodecSpecs:
         else:
             assert (
                 inferred_n_channels == 1
-            ), "if n_channels is given, chk_format needs to be for a single channel"
+            ), 'if n_channels is given, chk_format needs to be for a single channel'
             byte_order, format_chars = _split_chk_format(self.chk_format)
             self.chk_format = byte_order + format_chars * self.n_channels
 
@@ -157,8 +157,8 @@ class StructCodecSpecs:
             self.chk_size_bytes = chk_size_bytes
         else:
             assert self.chk_size_bytes == chk_size_bytes, (
-                f"The given chk_size_bytes {self.chk_size_bytes} did not match the "
-                f"inferred (from chk_format) {chk_size_bytes}"
+                f'The given chk_size_bytes {self.chk_size_bytes} did not match the '
+                f'inferred (from chk_format) {chk_size_bytes}'
             )
 
     def frame_to_chk(self, frame):
