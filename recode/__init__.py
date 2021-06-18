@@ -189,17 +189,20 @@ class StructCodecSpecs:
             )
 
     def frame_to_chk(self, frame):
+        # Note: Removed the assertions because
+        #  (1) It lead to errors (len(frame) not defined when n_channels==1
+        #  (2) It might be a bit heavy to do this (calls to frame_to_chk frequent)
         if self.n_channels == 1:
-            assert len(frame) == _chk_format_to_n_channels(self.chk_format), (
-                f'The inferred n_channels {_chk_format_to_n_channels(self.chk_format)} did not match the '
-                f'inferred (from frames) {len(frame)}'
-            )
+            # assert len(frame) == _chk_format_to_n_channels(self.chk_format), (
+            #     f'The inferred n_channels {_chk_format_to_n_channels(self.chk_format)} did not match the '
+            #     f'inferred (from frames) {len(frame)}'
+            # )
             return pack(self.chk_format, frame)
         else:
-            assert len(frame) == self.n_channels, (
-                f'The given n_channels {self.n_channels} did not match the '
-                f'inferred (from frames) {len(frame)}'
-            )
+            # assert len(frame) == self.n_channels, (
+            #     f'The given n_channels {self.n_channels} did not match the '
+            #     f'inferred (from frames) {len(frame)}'
+            # )
             return pack(self.chk_format, *frame)
 
     def chk_to_frame(self, chk):
