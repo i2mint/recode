@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>recode &#8212; recode 0.1.1 documentation</title>
+    <title>recode &#8212; recode 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -39,7 +39,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">iter_unpack</span>
 <span class="kn">import</span> <span class="nn">struct</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 
@@ -84,6 +84,15 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="n">first_element</span><span class="p">,</span> <span class="n">frames</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">frames</span></div>
+
+
+<div class="viewcode-block" id="IterativeDecoder"><a class="viewcode-back" href="../module_docs/recode.html#recode.IterativeDecoder">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">IterativeDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">ChunkToFrame</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iterator</span></div>
 
 
 <span class="k">def</span> <span class="nf">_split_chk_format</span><span class="p">(</span><span class="n">chk_format</span><span class="p">):</span>
@@ -198,6 +207,22 @@
 <span class="sd">    &gt;&gt;&gt; assert b == b&#39;\x01\x00\x9a\x99\x99\x99\x99\x99\x03@\x01\x00\x03\x00b\x10X9\xb4H\x11@\x03\x00&#39;</span>
 <span class="sd">    &gt;&gt;&gt; decoded_frames = list(decoder(b))</span>
 <span class="sd">    &gt;&gt;&gt; assert decoded_frames == frames</span>
+
+<span class="sd">    Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements the struct.iter_unpack function.</span>
+<span class="sd">    IterativeDecoder only requires one argument, a chk_to_frame_iter function, and returns an iterator of each chunk.</span>
+<span class="sd">    An example of an IterativeDecorator can be seen below.</span>
+
+<span class="sd">    &gt;&gt;&gt; specs = StructCodecSpecs(chk_format = &#39;hdhd&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(specs)</span>
+<span class="sd">    StructCodecSpecs(chk_format=&#39;hdhd&#39;, n_channels=4, chk_size_bytes=32)</span>
+<span class="sd">    &gt;&gt;&gt; encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)</span>
+<span class="sd">    &gt;&gt;&gt; decoder = IterativeDecoder(chk_to_frame = specs.chk_to_frame_iter)</span>
+<span class="sd">    &gt;&gt;&gt; frames = [(1,1.1,1,1.1),(2,2.2,2,2.2),(3,3.3,3,3.3)]</span>
+<span class="sd">    &gt;&gt;&gt; b = encoder(frames)</span>
+<span class="sd">    &gt;&gt;&gt; iter_frames = decoder(b)</span>
+<span class="sd">    &gt;&gt;&gt; assert next(iter_frames) == frames[0]</span>
+<span class="sd">    &gt;&gt;&gt; next(iter_frames)</span>
+<span class="sd">    (2, 2.2, 2, 2.2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
@@ -224,24 +249,16 @@
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">frame_to_chk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-        <span class="c1"># Note: Removed the assertions because</span>
-        <span class="c1">#  (1) It lead to errors (len(frame) not defined when n_channels==1</span>
-        <span class="c1">#  (2) It might be a bit heavy to do this (calls to frame_to_chk frequent)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># assert len(frame) == _chk_format_to_n_channels(self.chk_format), (</span>
-            <span class="c1">#     f&#39;The inferred n_channels {_chk_format_to_n_channels(self.chk_format)} did not match the &#39;</span>
-            <span class="c1">#     f&#39;inferred (from frames) {len(frame)}&#39;</span>
-            <span class="c1"># )</span>
             <span class="k">return</span> <span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># assert len(frame) == self.n_channels, (</span>
-            <span class="c1">#     f&#39;The given n_channels {self.n_channels} did not match the &#39;</span>
-            <span class="c1">#     f&#39;inferred (from frames) {len(frame)}&#39;</span>
-            <span class="c1"># )</span>
             <span class="k">return</span> <span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="o">*</span><span class="n">frame</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">chk_to_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chk</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">chk</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">chk</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">chk_to_frame_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chk</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">iter_unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">chk</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
