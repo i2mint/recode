@@ -3,10 +3,12 @@ Make codecs for fixed size structured chunks serialization and deserialization o
 sequences, tabular data, and time-series.
 """
 from dataclasses import dataclass
-from typing import Iterable, Callable, Sequence, Union, Any
+from typing import Iterable, Callable, Sequence, Union, Any, Iterator
 from struct import pack, unpack, iter_unpack
 import struct
 from operator import itemgetter
+from recode.util import spy, get_struct
+
 
 Chunk = Sequence[bytes]
 Chunks = Iterable[Chunk]
@@ -224,3 +226,52 @@ class StructCodecSpecs:
 
     def chk_to_frame_iter(self, chk):
         return iter_unpack(self.chk_format, chk)
+
+
+def specs_from_frames(frames: Frames):
+    r"""
+    Implicitly defines the codec specs based on the frames to encode/decode.
+    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If frames is an
+    iterable, then the iterator can be ignored like the following example.
+    >>> frames = [1,2,3]
+    >>> _, specs = specs_from_frames(frames)
+    >>> print(specs)
+    StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
+    >>> encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
+    >>> decoder = ChunkedDecoder(
+    ...     chk_to_frame = specs.chk_to_frame,
+    ...     n_channels = specs.n_channels,
+    ...     chk_size_bytes = specs.chk_size_bytes
+    ... )
+    >>> b = encoder(frames)
+    >>> assert b == b'\x01\x00\x02\x00\x03\x00'
+    >>> decoded_frames = list(decoder(b))
+    >>> assert decoded_frames == frames
+
+    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames from the output like
+    in the following example.
+
+    >>> frames = iter([[1.1,2.2],[3.3,4.4]])
+    >>> frames, specs = specs_from_frames(frames)
+    >>> print(specs)
+    StructCodecSpecs(chk_format='dd', n_channels=2, chk_size_bytes=16)
+    >>> encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
+    >>> decoder = ChunkedDecoder(
+    ...     chk_to_frame = specs.chk_to_frame,
+    ...     n_channels = specs.n_channels,
+    ...     chk_size_bytes = specs.chk_size_bytes
+    ... )
+    >>> b = encoder(frames)
+    >>> decoded_frames = list(decoder(b))
+    >>> assert decoded_frames == [(1.1,2.2),(3.3,4.4)]
+    """
+    head, frames = spy(frames)
+
+    if isinstance(head[0], (int, float)):
+        format_char = get_struct(type(head[0]))
+        n_channels = 1
+    else:
+        format_char = get_struct(type(head[0][0]))
+        n_channels = len(head[0])
+
+    return frames, StructCodecSpecs(format_char, n_channels=n_channels)
