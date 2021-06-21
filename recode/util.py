@@ -1,3 +1,7 @@
+"""
+Utils for use throughout the package
+"""
+
 from itertools import islice, chain
 
 
