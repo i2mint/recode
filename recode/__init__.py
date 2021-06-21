@@ -4,7 +4,7 @@ sequences, tabular data, and time-series.
 """
 from dataclasses import dataclass
 from typing import Iterable, Callable, Sequence, Union, Any
-from struct import pack, unpack
+from struct import pack, unpack, iter_unpack
 import struct
 from operator import itemgetter
 
@@ -49,6 +49,15 @@ class ChunkedDecoder(Decoder):
         if self.n_channels == 1:
             return map(first_element, frames)
         return frames
+
+
+@dataclass
+class IterativeDecoder(Decoder):
+    chk_to_frame: ChunkToFrame
+
+    def __call__(self, b: bytes):
+        iterator = self.chk_to_frame(b)
+        return iterator
 
 
 def _split_chk_format(chk_format):
@@ -163,6 +172,22 @@ class StructCodecSpecs:
     >>> assert b == b'\x01\x00\x9a\x99\x99\x99\x99\x99\x03@\x01\x00\x03\x00b\x10X9\xb4H\x11@\x03\x00'
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
+
+    Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements the struct.iter_unpack function.
+    IterativeDecoder only requires one argument, a chk_to_frame_iter function, and returns an iterator of each chunk.
+    An example of an IterativeDecorator can be seen below.
+
+    >>> specs = StructCodecSpecs(chk_format = 'hdhd')
+    >>> print(specs)
+    StructCodecSpecs(chk_format='hdhd', n_channels=4, chk_size_bytes=32)
+    >>> encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
+    >>> decoder = IterativeDecoder(chk_to_frame = specs.chk_to_frame_iter)
+    >>> frames = [(1,1.1,1,1.1),(2,2.2,2,2.2),(3,3.3,3,3.3)]
+    >>> b = encoder(frames)
+    >>> iter_frames = decoder(b)
+    >>> assert next(iter_frames) == frames[0]
+    >>> next(iter_frames)
+    (2, 2.2, 2, 2.2)
     """
     chk_format: str
     n_channels: int = None
@@ -189,21 +214,13 @@ class StructCodecSpecs:
             )
 
     def frame_to_chk(self, frame):
-        # Note: Removed the assertions because
-        #  (1) It lead to errors (len(frame) not defined when n_channels==1
-        #  (2) It might be a bit heavy to do this (calls to frame_to_chk frequent)
         if self.n_channels == 1:
-            # assert len(frame) == _chk_format_to_n_channels(self.chk_format), (
-            #     f'The inferred n_channels {_chk_format_to_n_channels(self.chk_format)} did not match the '
-            #     f'inferred (from frames) {len(frame)}'
-            # )
             return pack(self.chk_format, frame)
         else:
-            # assert len(frame) == self.n_channels, (
-            #     f'The given n_channels {self.n_channels} did not match the '
-            #     f'inferred (from frames) {len(frame)}'
-            # )
             return pack(self.chk_format, *frame)
 
     def chk_to_frame(self, chk):
         return unpack(self.chk_format, chk)
+
+    def chk_to_frame_iter(self, chk):
+        return iter_unpack(self.chk_format, chk)
