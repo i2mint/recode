@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>recode &#8212; recode 0.1.2 documentation</title>
+    <title>recode &#8212; recode 0.1.3 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -38,10 +38,12 @@
 <span class="sd">sequences, tabular data, and time-series.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterator</span>
 <span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">iter_unpack</span>
 <span class="kn">import</span> <span class="nn">struct</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">recode.util</span> <span class="kn">import</span> <span class="n">spy</span><span class="p">,</span> <span class="n">get_struct</span>
+
 
 <span class="n">Chunk</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
 <span class="n">Chunks</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Chunk</span><span class="p">]</span>
@@ -259,6 +261,55 @@
 
     <span class="k">def</span> <span class="nf">chk_to_frame_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chk</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">iter_unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">chk</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="specs_from_frames"><a class="viewcode-back" href="../module_docs/recode.html#recode.specs_from_frames">[docs]</a><span class="k">def</span> <span class="nf">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implicitly defines the codec specs based on the frames to encode/decode.</span>
+<span class="sd">    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If frames is an</span>
+<span class="sd">    iterable, then the iterator can be ignored like the following example.</span>
+<span class="sd">    &gt;&gt;&gt; frames = [1,2,3]</span>
+<span class="sd">    &gt;&gt;&gt; _, specs = specs_from_frames(frames)</span>
+<span class="sd">    &gt;&gt;&gt; print(specs)</span>
+<span class="sd">    StructCodecSpecs(chk_format=&#39;h&#39;, n_channels=1, chk_size_bytes=2)</span>
+<span class="sd">    &gt;&gt;&gt; encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)</span>
+<span class="sd">    &gt;&gt;&gt; decoder = ChunkedDecoder(</span>
+<span class="sd">    ...     chk_to_frame = specs.chk_to_frame,</span>
+<span class="sd">    ...     n_channels = specs.n_channels,</span>
+<span class="sd">    ...     chk_size_bytes = specs.chk_size_bytes</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; b = encoder(frames)</span>
+<span class="sd">    &gt;&gt;&gt; assert b == b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">    &gt;&gt;&gt; decoded_frames = list(decoder(b))</span>
+<span class="sd">    &gt;&gt;&gt; assert decoded_frames == frames</span>
+
+<span class="sd">    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames from the output like</span>
+<span class="sd">    in the following example.</span>
+
+<span class="sd">    &gt;&gt;&gt; frames = iter([[1.1,2.2],[3.3,4.4]])</span>
+<span class="sd">    &gt;&gt;&gt; frames, specs = specs_from_frames(frames)</span>
+<span class="sd">    &gt;&gt;&gt; print(specs)</span>
+<span class="sd">    StructCodecSpecs(chk_format=&#39;dd&#39;, n_channels=2, chk_size_bytes=16)</span>
+<span class="sd">    &gt;&gt;&gt; encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)</span>
+<span class="sd">    &gt;&gt;&gt; decoder = ChunkedDecoder(</span>
+<span class="sd">    ...     chk_to_frame = specs.chk_to_frame,</span>
+<span class="sd">    ...     n_channels = specs.n_channels,</span>
+<span class="sd">    ...     chk_size_bytes = specs.chk_size_bytes</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; b = encoder(frames)</span>
+<span class="sd">    &gt;&gt;&gt; decoded_frames = list(decoder(b))</span>
+<span class="sd">    &gt;&gt;&gt; assert decoded_frames == [(1.1,2.2),(3.3,4.4)]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">head</span><span class="p">,</span> <span class="n">frames</span> <span class="o">=</span> <span class="n">spy</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">format_char</span> <span class="o">=</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">n_channels</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">format_char</span> <span class="o">=</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">n_channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">format_char</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">n_channels</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
@@ -280,6 +331,7 @@
 <p><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../module_docs/recode.html">recode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_docs/recode/util.html">recode.util</a></li>
 </ul>
 
 <div class="relations">

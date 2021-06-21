@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>recode &#8212; recode 0.1.2 documentation</title>
+    <title>recode &#8212; recode 0.1.3 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -17,6 +17,7 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="recode.util" href="recode/util.html" />
     <link rel="prev" title="Welcome to recode’s documentation!" href="../index.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -152,6 +153,45 @@ An example of an IterativeDecorator can be seen below.</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt id="recode.specs_from_frames">
+<code class="sig-prename descclassname">recode.</code><code class="sig-name descname">specs_from_frames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frames</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode.html#specs_from_frames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.specs_from_frames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implicitly defines the codec specs based on the frames to encode/decode.
+specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If frames is an
+iterable, then the iterator can be ignored like the following example.
+&gt;&gt;&gt; frames = [1,2,3]
+&gt;&gt;&gt; _, specs = specs_from_frames(frames)
+&gt;&gt;&gt; print(specs)
+StructCodecSpecs(chk_format=’h’, n_channels=1, chk_size_bytes=2)
+&gt;&gt;&gt; encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
+&gt;&gt;&gt; decoder = ChunkedDecoder(
+…     chk_to_frame = specs.chk_to_frame,
+…     n_channels = specs.n_channels,
+…     chk_size_bytes = specs.chk_size_bytes
+… )
+&gt;&gt;&gt; b = encoder(frames)
+&gt;&gt;&gt; assert b == b’x01x00x02x00x03x00’
+&gt;&gt;&gt; decoded_frames = list(decoder(b))
+&gt;&gt;&gt; assert decoded_frames == frames</p>
+<p>If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames from the output like
+in the following example.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([[</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.2</span><span class="p">],[</span><span class="mf">3.3</span><span class="p">,</span><span class="mf">4.4</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+<span class="go">StructCodecSpecs(chk_format=&#39;dd&#39;, n_channels=2, chk_size_bytes=16)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">chk_to_frame</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">n_channels</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">chk_size_bytes</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">chk_size_bytes</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoded_frames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">decoded_frames</span> <span class="o">==</span> <span class="p">[(</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.2</span><span class="p">),(</span><span class="mf">3.3</span><span class="p">,</span><span class="mf">4.4</span><span class="p">)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 
 
@@ -174,6 +214,7 @@ An example of an IterativeDecorator can be seen below.</p>
 <p><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">recode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recode/util.html">recode.util</a></li>
 </ul>
 
 <div class="relations">
@@ -181,6 +222,7 @@ An example of an IterativeDecorator can be seen below.</p>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="../index.html" title="previous chapter">Welcome to recode’s documentation!</a></li>
+      <li>Next: <a href="recode/util.html" title="next chapter">recode.util</a></li>
   </ul></li>
 </ul>
 </div>
