@@ -35,3 +35,19 @@ def get_struct(str_type):
     """
     str_type = str(str_type)
     return type_to_struct[str_type]
+
+
+def list_of_dicts(cols, vals):
+    """
+    >>> cols = ['foo', 'bar']
+    >>> vals = [[1,2], [3,4], [5,6]]
+    >>> list_of_dicts(cols, vals)
+    [{'foo': 1, 'bar': 2}, {'foo': 3, 'bar': 4}, {'foo': 5, 'bar': 6}]
+    """
+    frames = []
+    for group in vals:
+        row = {}
+        for i in range(len(group)):
+            row[cols[i]] = group[i]
+        frames.append(row)
+    return frames

@@ -3,13 +3,14 @@ Make codecs for fixed size structured chunks serialization and deserialization o
 sequences, tabular data, and time-series.
 """
 from dataclasses import dataclass
-from typing import Iterable, Callable, Sequence, Union, Any, Iterator
+from typing import Iterable, Callable, Sequence, Union, Any
 from struct import pack, unpack, iter_unpack
 import struct
 from operator import itemgetter
-from recode.util import spy, get_struct
+from recode.util import spy, get_struct, list_of_dicts
 
 
+Meta = Sequence[bytes]
 Chunk = Sequence[bytes]
 Chunks = Iterable[Chunk]
 ByteChunker = Callable[[bytes], Chunks]
@@ -23,6 +24,9 @@ Decoder = Callable[[bytes], Iterable[Frame]]
 ChunkToFrame = Callable[[Chunk], Frame]
 FrameToChunk = Callable[[Frame], Chunk]
 
+MetaToFrame = Callable[[Meta], Frame]
+FrameToMeta = Callable[[Frame], Meta]
+
 
 @dataclass
 class ChunkedEncoder(Encoder):
@@ -30,6 +34,19 @@ class ChunkedEncoder(Encoder):
 
     def __call__(self, frames: Frames):
         return b''.join(map(self.frame_to_chk, frames))
+
+
+@dataclass
+class MetaEncoder(Encoder):
+    frame_to_chk: FrameToChunk
+    frame_to_meta: FrameToMeta
+
+    def __call__(self, frames: Frames):
+        meta = self.frame_to_meta(frames)
+        vals = list(map(list, (d.values() for d in frames)))
+        if len(vals[0]) == 1:
+            vals = [item for sublist in vals for item in sublist]
+        return meta + b''.join(map(self.frame_to_chk, vals))
 
 
 first_element = itemgetter(0)  # "equivalent" to lambda x: x[0]
@@ -60,6 +77,25 @@ class IterativeDecoder(Decoder):
     def __call__(self, b: bytes):
         iterator = self.chk_to_frame(b)
         return iterator
+
+
+@dataclass
+class MetaDecoder(Decoder):
+    chk_to_frame: ChunkToFrame
+    meta_to_frame: MetaToFrame
+    n_channels: int
+    chk_size_bytes: int
+
+    # ByteChunker
+    def chunker(self, b: bytes) -> Chunks:
+        # TODO: Check efficiency against other byte-specific chunkers
+        return map(bytes, zip(*([iter(b)] * self.chk_size_bytes)))
+
+    def __call__(self, b: bytes):
+        cols, split = self.meta_to_frame(b)
+        b = b[split:]
+        vals = map(self.chk_to_frame, self.chunker(b))
+        return list_of_dicts(cols, vals)
 
 
 def _split_chk_format(chk_format):
@@ -97,6 +133,27 @@ def _chk_format_is_for_single_channel(chk_format):
     >>> assert _chk_format_is_for_single_channel('@hq') == False
     """
     return _chk_format_to_n_channels(chk_format) == 1
+
+
+def frames_to_meta(frames):
+    r"""
+    >>> rows = [{'customer': 1}, {'customer': 2}, {'customer': 3}]
+    >>> assert frames_to_meta(rows) == b'\x08\x00customer'
+    """
+    cols = list(frames[0].keys())
+    s = '.'.join(cols)
+    return b'' + pack('h', len(s)) + s.encode()
+
+
+def meta_to_frames(meta):
+    r"""
+    >>> meta = b'\x1c\x00customer.apple.banana.tomato\x01\x00\x01\x00\x02\x00\x03\x00\x02\x00\
+    ... x03\x00\x02\x00\x05\x00\x01\x00\x03\x00\x04\x00\t\x00'
+    >>> assert meta_to_frames(meta)[0] == ['customer', 'apple', 'banana', 'tomato']
+    """
+    length = unpack('h', meta[:2])[0] + 2
+    cols = (meta[2:length]).decode().split('.')
+    return cols, length
 
 
 @dataclass
@@ -190,6 +247,19 @@ class StructCodecSpecs:
     >>> assert next(iter_frames) == frames[0]
     >>> next(iter_frames)
     (2, 2.2, 2, 2.2)
+
+    Along with using recode for the kinds of data we have looked at so far, it can also be applied to DataFrames when
+    they have been converted to a list of dicts using MetaEncoder and MetaDecoder. An example of this can be seen below.
+
+    >>> data = [{'foo': 1.1, 'bar': 2.2}, {'foo': 513.23, 'bar': 456.1}, {'foo': 32.0, 'bar': 6.7}]
+    >>> specs = StructCodecSpecs(chk_format='d', n_channels = 2)
+    >>> print(specs)
+    StructCodecSpecs(chk_format='dd', n_channels=2, chk_size_bytes=16)
+    >>> encoder = MetaEncoder(frame_to_chk = specs.frame_to_chk, frame_to_meta = frames_to_meta)
+    >>> decoder = MetaDecoder(chk_to_frame = specs.chk_to_frame, n_channels = specs.n_channels,
+    ...                      chk_size_bytes = specs.chk_size_bytes, meta_to_frame = meta_to_frames)
+    >>> b = encoder(data)
+    >>> assert decoder(b) == data
     """
     chk_format: str
     n_channels: int = None
@@ -270,8 +340,13 @@ def specs_from_frames(frames: Frames):
     if isinstance(head[0], (int, float)):
         format_char = get_struct(type(head[0]))
         n_channels = 1
-    else:
+    elif isinstance(head[0], list):
         format_char = get_struct(type(head[0][0]))
         n_channels = len(head[0])
+    elif isinstance(head[0], dict):
+        format_char = get_struct(type(list(head[0].values())[0]))
+        n_channels = len(head[0].keys())
+    else:
+        raise AttributeError('Unknown data format')
 
     return frames, StructCodecSpecs(format_char, n_channels=n_channels)
