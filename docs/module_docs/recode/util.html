@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>recode.util &#8212; recode 0.1.3 documentation</title>
+    <title>recode.util &#8212; recode 0.1.4 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -42,6 +42,17 @@
 <code class="sig-prename descclassname">recode.util.</code><code class="sig-name descname">get_struct</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">str_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#get_struct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.util.get_struct" title="Permalink to this definition">¶</a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s1">&#39;h&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="mf">1.001</span><span class="p">))</span> <span class="o">==</span> <span class="s1">&#39;d&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.util.list_of_dicts">
+<code class="sig-prename descclassname">recode.util.</code><code class="sig-name descname">list_of_dicts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cols</span></em>, <em class="sig-param"><span class="n">vals</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#list_of_dicts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.util.list_of_dicts" title="Permalink to this definition">¶</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vals</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_of_dicts</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
+<span class="go">[{&#39;foo&#39;: 1, &#39;bar&#39;: 2}, {&#39;foo&#39;: 3, &#39;bar&#39;: 4}, {&#39;foo&#39;: 5, &#39;bar&#39;: 6}]</span>
 </pre></div>
 </div>
 </dd></dl>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>recode &#8212; recode 0.1.3 documentation</title>
+    <title>recode &#8212; recode 0.1.4 documentation</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -52,6 +52,16 @@ sequences, tabular data, and time-series.</p>
 <dl class="py class">
 <dt id="recode.IterativeDecoder">
 <em class="property">class </em><code class="sig-prename descclassname">recode.</code><code class="sig-name descname">IterativeDecoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode.html#IterativeDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.IterativeDecoder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="recode.MetaDecoder">
+<em class="property">class </em><code class="sig-prename descclassname">recode.</code><code class="sig-name descname">MetaDecoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode.html#MetaDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.MetaDecoder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="recode.MetaEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">recode.</code><code class="sig-name descname">MetaEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode.html#MetaEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.MetaEncoder" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
@@ -149,6 +159,38 @@ An example of an IterativeDecorator can be seen below.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">next</span><span class="p">(</span><span class="n">iter_frames</span><span class="p">)</span> <span class="o">==</span> <span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">next</span><span class="p">(</span><span class="n">iter_frames</span><span class="p">)</span>
 <span class="go">(2, 2.2, 2, 2.2)</span>
+</pre></div>
+</div>
+<p>Along with using recode for the kinds of data we have looked at so far, it can also be applied to DataFrames when
+they have been converted to a list of dicts using MetaEncoder and MetaDecoder. An example of this can be seen below.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">:</span> <span class="mf">2.2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="mf">513.23</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">:</span> <span class="mf">456.1</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="mf">32.0</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">:</span> <span class="mf">6.7</span><span class="p">}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+<span class="go">StructCodecSpecs(chk_format=&#39;dd&#39;, n_channels=2, chk_size_bytes=16)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span> <span class="o">=</span> <span class="n">MetaEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frame_to_meta</span> <span class="o">=</span> <span class="n">frames_to_meta</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span> <span class="o">=</span> <span class="n">MetaDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">chk_size_bytes</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">chk_size_bytes</span><span class="p">,</span> <span class="n">meta_to_frame</span> <span class="o">=</span> <span class="n">meta_to_frames</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="n">data</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.frames_to_meta">
+<code class="sig-prename descclassname">recode.</code><code class="sig-name descname">frames_to_meta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frames</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode.html#frames_to_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.frames_to_meta" title="Permalink to this definition">¶</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rows</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;customer&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;customer&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;customer&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">frames_to_meta</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x08\x00</span><span class="s1">customer&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.meta_to_frames">
+<code class="sig-prename descclassname">recode.</code><code class="sig-name descname">meta_to_frames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">meta</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode.html#meta_to_frames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.meta_to_frames" title="Permalink to this definition">¶</a></dt>
+<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">meta</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x1c\x00</span><span class="s1">customer.apple.banana.tomato</span><span class="se">\x01\x00\x01\x00\x02\x00\x03\x00\x02\x00\</span>
+<span class="gp">... </span><span class="s1">x03</span><span class="se">\x00\x02\x00\x05\x00\x01\x00\x03\x00\x04\x00\t\x00</span><span class="s1">&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">meta_to_frames</span><span class="p">(</span><span class="n">meta</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;customer&#39;</span><span class="p">,</span> <span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;banana&#39;</span><span class="p">,</span> <span class="s1">&#39;tomato&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </dd></dl>
