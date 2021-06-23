@@ -331,6 +331,7 @@ def specs_from_frames(frames: Frames):
     return frames, StructCodecSpecs(format_char, n_channels=n_channels)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import doctest
+
     doctest.testmod()
