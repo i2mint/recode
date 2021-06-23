@@ -51,7 +51,7 @@ class MetaEncoder(Encoder):
 
 first_element = itemgetter(0)  # "equivalent" to lambda x: x[0]
 
-
+""" old version -- found to be much less efficient
 @dataclass
 class ChunkedDecoder(Decoder):
     chk_to_frame: ChunkToFrame
@@ -68,6 +68,19 @@ class ChunkedDecoder(Decoder):
         if self.n_channels == 1:
             return map(first_element, frames)
         return frames
+"""
+
+
+@dataclass
+class ChunkedDecoder(Decoder):
+    chk_to_frame: ChunkToFrame
+
+    def __call__(self, b: bytes):
+        iterator = self.chk_to_frame(b)
+        frame = list(iterator)
+        if len(frame[0]) == 1:
+            frame = [item for tup in frame for item in tup]
+        return frame
 
 
 @dataclass
@@ -83,18 +96,16 @@ class IterativeDecoder(Decoder):
 class MetaDecoder(Decoder):
     chk_to_frame: ChunkToFrame
     meta_to_frame: MetaToFrame
-    n_channels: int
-    chk_size_bytes: int
 
-    # ByteChunker
-    def chunker(self, b: bytes) -> Chunks:
-        # TODO: Check efficiency against other byte-specific chunkers
-        return map(bytes, zip(*([iter(b)] * self.chk_size_bytes)))
+    # # ByteChunker
+    # def chunker(self, b: bytes) -> Chunks:
+    #     # TODO: Check efficiency against other byte-specific chunkers
+    #     return map(bytes, zip(*([iter(b)] * self.chk_size_bytes)))
 
     def __call__(self, b: bytes):
         cols, split = self.meta_to_frame(b)
         b = b[split:]
-        vals = map(self.chk_to_frame, self.chunker(b))
+        vals = self.chk_to_frame(b)
         return list_of_dicts(cols, vals)
 
 
@@ -135,21 +146,21 @@ def _chk_format_is_for_single_channel(chk_format):
     return _chk_format_to_n_channels(chk_format) == 1
 
 
-def frames_to_meta(frames):
+def frame_to_meta(frame):
     r"""
     >>> rows = [{'customer': 1}, {'customer': 2}, {'customer': 3}]
-    >>> assert frames_to_meta(rows) == b'\x08\x00customer'
+    >>> assert frame_to_meta(rows) == b'\x08\x00customer'
     """
-    cols = list(frames[0].keys())
+    cols = list(frame[0].keys())
     s = '.'.join(cols)
     return b'' + pack('h', len(s)) + s.encode()
 
 
-def meta_to_frames(meta):
+def meta_to_frame(meta):
     r"""
     >>> meta = b'\x1c\x00customer.apple.banana.tomato\x01\x00\x01\x00\x02\x00\x03\x00\x02\x00\
     ... x03\x00\x02\x00\x05\x00\x01\x00\x03\x00\x04\x00\t\x00'
-    >>> assert meta_to_frames(meta)[0] == ['customer', 'apple', 'banana', 'tomato']
+    >>> assert meta_to_frame(meta)[0] == ['customer', 'apple', 'banana', 'tomato']
     """
     length = unpack('h', meta[:2])[0] + 2
     cols = (meta[2:length]).decode().split('.')
@@ -174,14 +185,8 @@ class StructCodecSpecs:
     >>> specs = StructCodecSpecs(chk_format='h')
     >>> print(specs)
     StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
-    >>>
     >>> encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
-    >>> decoder = ChunkedDecoder(
-    ...     chk_size_bytes=specs.chk_size_bytes,
-    ...     chk_to_frame=specs.chk_to_frame,
-    ...     n_channels=specs.n_channels
-    ... )
-    >>>
+    >>> decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
     >>> frames = [1, 2, 3]
     >>> b = encoder(frames)
     >>> assert b == b'\x01\x00\x02\x00\x03\x00'
@@ -195,18 +200,9 @@ class StructCodecSpecs:
     >>> specs = StructCodecSpecs(chk_format='@h', n_channels=2)
     >>> print(specs)
     StructCodecSpecs(chk_format='@hh', n_channels=2, chk_size_bytes=4)
-    >>>
-    >>> encoder = ChunkedEncoder(
-    ...     frame_to_chk=specs.frame_to_chk
-    ... )
-    >>> decoder = ChunkedDecoder(
-    ...     chk_size_bytes=specs.chk_size_bytes,
-    ...     chk_to_frame=specs.chk_to_frame,
-    ...     n_channels=specs.n_channels
-    ... )
-    >>>
+    >>> encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
+    >>> decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
     >>> frames = [(1, 2), (3, 4), (5, 6)]
-    >>>
     >>> b = encoder(frames)
     >>> assert b == b'\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\x06\x00'
     >>> decoded_frames = list(decoder(b))
@@ -219,13 +215,8 @@ class StructCodecSpecs:
     >>> specs = StructCodecSpecs(chk_format = '=hdh')
     >>> print(specs)
     StructCodecSpecs(chk_format='=hdh', n_channels=3, chk_size_bytes=12)
-    >>>
     >>> encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
-    >>> decoder = ChunkedDecoder(
-    ...     chk_size_bytes = specs.chk_size_bytes,
-    ...     chk_to_frame = specs.chk_to_frame,
-    ...     n_channels = specs.n_channels
-    ... )
+    >>> decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
     >>> frames = [(1, 2.45, 1), (3, 4.321, 3)]
     >>> b = encoder(frames)
     >>> assert b == b'\x01\x00\x9a\x99\x99\x99\x99\x99\x03@\x01\x00\x03\x00b\x10X9\xb4H\x11@\x03\x00'
@@ -240,7 +231,7 @@ class StructCodecSpecs:
     >>> print(specs)
     StructCodecSpecs(chk_format='hdhd', n_channels=4, chk_size_bytes=32)
     >>> encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
-    >>> decoder = IterativeDecoder(chk_to_frame = specs.chk_to_frame_iter)
+    >>> decoder = IterativeDecoder(chk_to_frame = specs.chk_to_frame)
     >>> frames = [(1,1.1,1,1.1),(2,2.2,2,2.2),(3,3.3,3,3.3)]
     >>> b = encoder(frames)
     >>> iter_frames = decoder(b)
@@ -255,9 +246,8 @@ class StructCodecSpecs:
     >>> specs = StructCodecSpecs(chk_format='d', n_channels = 2)
     >>> print(specs)
     StructCodecSpecs(chk_format='dd', n_channels=2, chk_size_bytes=16)
-    >>> encoder = MetaEncoder(frame_to_chk = specs.frame_to_chk, frame_to_meta = frames_to_meta)
-    >>> decoder = MetaDecoder(chk_to_frame = specs.chk_to_frame, n_channels = specs.n_channels,
-    ...                      chk_size_bytes = specs.chk_size_bytes, meta_to_frame = meta_to_frames)
+    >>> encoder = MetaEncoder(frame_to_chk = specs.frame_to_chk, frame_to_meta = frame_to_meta)
+    >>> decoder = MetaDecoder(chk_to_frame = specs.chk_to_frame, meta_to_frame = meta_to_frame)
     >>> b = encoder(data)
     >>> assert decoder(b) == data
     """
@@ -292,9 +282,6 @@ class StructCodecSpecs:
             return pack(self.chk_format, *frame)
 
     def chk_to_frame(self, chk):
-        return unpack(self.chk_format, chk)
-
-    def chk_to_frame_iter(self, chk):
         return iter_unpack(self.chk_format, chk)
 
 
@@ -308,11 +295,7 @@ def specs_from_frames(frames: Frames):
     >>> print(specs)
     StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
     >>> encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
-    >>> decoder = ChunkedDecoder(
-    ...     chk_to_frame = specs.chk_to_frame,
-    ...     n_channels = specs.n_channels,
-    ...     chk_size_bytes = specs.chk_size_bytes
-    ... )
+    >>> decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
     >>> b = encoder(frames)
     >>> assert b == b'\x01\x00\x02\x00\x03\x00'
     >>> decoded_frames = list(decoder(b))
@@ -326,11 +309,7 @@ def specs_from_frames(frames: Frames):
     >>> print(specs)
     StructCodecSpecs(chk_format='dd', n_channels=2, chk_size_bytes=16)
     >>> encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
-    >>> decoder = ChunkedDecoder(
-    ...     chk_to_frame = specs.chk_to_frame,
-    ...     n_channels = specs.n_channels,
-    ...     chk_size_bytes = specs.chk_size_bytes
-    ... )
+    >>> decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
     >>> b = encoder(frames)
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == [(1.1,2.2),(3.3,4.4)]
@@ -340,7 +319,7 @@ def specs_from_frames(frames: Frames):
     if isinstance(head[0], (int, float)):
         format_char = get_struct(type(head[0]))
         n_channels = 1
-    elif isinstance(head[0], list):
+    elif isinstance(head[0], (list, tuple)):
         format_char = get_struct(type(head[0][0]))
         n_channels = len(head[0])
     elif isinstance(head[0], dict):
@@ -350,3 +329,8 @@ def specs_from_frames(frames: Frames):
         raise AttributeError('Unknown data format')
 
     return frames, StructCodecSpecs(format_char, n_channels=n_channels)
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
