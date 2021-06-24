@@ -33,6 +33,7 @@ class ChunkedEncoder(Encoder):
     """
     Serializes numerical streams and sequences
     """
+
     frame_to_chk: FrameToChunk
 
     def __call__(self, frames: Frames):
@@ -44,6 +45,7 @@ class MetaEncoder(Encoder):
     """
     Serializes tabular data (must be formatted as list of dicts)
     """
+
     frame_to_chk: FrameToChunk
     frame_to_meta: FrameToMeta
 
@@ -63,6 +65,7 @@ class ChunkedDecoder(Decoder):
     """
     Deserializes numerical streams and sequences serialized by ChunkedEncoder
     """
+
     chk_to_frame: ChunkToFrame
 
     def __call__(self, b: bytes):
@@ -79,6 +82,7 @@ class IterativeDecoder(Decoder):
     Creates an iterator of deserialized chunks of numerical streams and sequences serialized
     by ChunkedEncoder
     """
+
     chk_to_frame: ChunkToFrame
 
     def __call__(self, b: bytes):
@@ -91,6 +95,7 @@ class MetaDecoder(Decoder):
     """
     Deserializes tabular data serialized by MetaEncoder
     """
+
     chk_to_frame: ChunkToFrame
     meta_to_frame: MetaToFrame
 
