@@ -146,17 +146,10 @@ Your Encoder will allow you to, you guessed it, encode your frames! There are tw
 ```python
 frame = [1,2,3]
 _, specs = specs_from_frames(frame)
-print(specs)
 encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
 b = encoder(frame)
 b
 ```
-
-    StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
-
-
-
-
 
     b'\x01\x00\x02\x00\x03\x00'
 
@@ -168,17 +161,10 @@ When using a `MetaEncoder`, an extra argument named frame_to_meta is required, w
 ```python
 frame = [{'foo': 1, 'bar': 1}, {'foo': 2, 'bar': 2}, {'foo': 3, 'bar': 4}]
 _, specs = specs_from_frames(frame)
-print(specs)
 encoder = MetaEncoder(frame_to_chk=specs.frame_to_chk, frame_to_meta=frame_to_meta)
 b = encoder(frame)
 b
 ```
-
-    StructCodecSpecs(chk_format='hh', n_channels=2, chk_size_bytes=4)
-
-
-
-
 
     b'\x07\x00foo.bar\x01\x00\x01\x00\x02\x00\x02\x00\x03\x00\x04\x00'
 
@@ -194,18 +180,11 @@ Either `ChunkedDecoder` or `IterativeDecoder` will work well for sequences, with
 ```python
 frame = [1,2,3]
 _, specs = specs_from_frames(frame)
-print(specs)
 encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
 decoder = ChunkedDecoder(specs.chk_to_frame)
 b = encoder(frame)
 list(decoder(b))
 ```
-
-    StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
-
-
-
-
 
     [1, 2, 3]
 
@@ -217,7 +196,6 @@ As is shown in the following example, an `IterativeDecoder` will return an unpac
 ```python
 frame = [[1,1],[2,2]]
 _, specs = specs_from_frames(frame)
-print(specs)
 encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
 decoder = IterativeDecoder(chk_to_frame=specs.chk_to_frame)
 b = encoder(frame)
@@ -226,13 +204,7 @@ print(type(iter_frames))
 next(iter_frames), next(iter_frames)
 ```
 
-    StructCodecSpecs(chk_format='hh', n_channels=2, chk_size_bytes=4)
     <class 'unpack_iterator'>
-
-
-
-
-
     ((1, 1), (2, 2))
 
 
@@ -243,19 +215,12 @@ When using a `MetaDecoder`, an extra argument named meta_to_frame is required, w
 ```python
 frame = [{'foo': 1, 'bar': 1}, {'foo': 2, 'bar': 2}, {'foo': 3, 'bar': 4}]
 _, specs = specs_from_frames(frame)
-print(specs)
 encoder = MetaEncoder(frame_to_chk=specs.frame_to_chk, frame_to_meta=frame_to_meta)
 decoder = MetaDecoder(chk_to_frame=specs.chk_to_frame, meta_to_frame=meta_to_frame)
 b = encoder(frame)
 decoded_frames = decoder(b)
 decoded_frames
 ```
-
-    StructCodecSpecs(chk_format='hh', n_channels=2, chk_size_bytes=4)
-
-
-
-
 
     [{'foo': 1, 'bar': 1}, {'foo': 2, 'bar': 2}, {'foo': 3, 'bar': 4}]
 
@@ -364,19 +329,6 @@ df
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -465,19 +417,6 @@ decoded_df
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
