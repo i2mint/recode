@@ -30,6 +30,9 @@ FrameToMeta = Callable[[Frame], Meta]
 
 @dataclass
 class ChunkedEncoder(Encoder):
+    """
+    Serializes numerical streams and sequences
+    """
     frame_to_chk: FrameToChunk
 
     def __call__(self, frames: Frames):
@@ -38,6 +41,9 @@ class ChunkedEncoder(Encoder):
 
 @dataclass
 class MetaEncoder(Encoder):
+    """
+    Serializes tabular data (must be formatted as list of dicts)
+    """
     frame_to_chk: FrameToChunk
     frame_to_meta: FrameToMeta
 
@@ -51,28 +57,12 @@ class MetaEncoder(Encoder):
 
 first_element = itemgetter(0)  # "equivalent" to lambda x: x[0]
 
-""" old version -- found to be much less efficient
-@dataclass
-class ChunkedDecoder(Decoder):
-    chk_to_frame: ChunkToFrame
-    n_channels: int
-    chk_size_bytes: int
-
-    # ByteChunker
-    def chunker(self, b: bytes) -> Chunks:
-        # TODO: Check efficiency against other byte-specific chunkers
-        return map(bytes, zip(*([iter(b)] * self.chk_size_bytes)))
-
-    def __call__(self, b: bytes):
-        frames = map(self.chk_to_frame, self.chunker(b))
-        if self.n_channels == 1:
-            return map(first_element, frames)
-        return frames
-"""
-
 
 @dataclass
 class ChunkedDecoder(Decoder):
+    """
+    Deserializes numerical streams and sequences serialized by ChunkedEncoder
+    """
     chk_to_frame: ChunkToFrame
 
     def __call__(self, b: bytes):
@@ -85,6 +75,10 @@ class ChunkedDecoder(Decoder):
 
 @dataclass
 class IterativeDecoder(Decoder):
+    """
+    Creates an iterator of deserialized chunks of numerical streams and sequences serialized
+    by ChunkedEncoder
+    """
     chk_to_frame: ChunkToFrame
 
     def __call__(self, b: bytes):
@@ -94,13 +88,11 @@ class IterativeDecoder(Decoder):
 
 @dataclass
 class MetaDecoder(Decoder):
+    """
+    Deserializes tabular data serialized by MetaEncoder
+    """
     chk_to_frame: ChunkToFrame
     meta_to_frame: MetaToFrame
-
-    # # ByteChunker
-    # def chunker(self, b: bytes) -> Chunks:
-    #     # TODO: Check efficiency against other byte-specific chunkers
-    #     return map(bytes, zip(*([iter(b)] * self.chk_size_bytes)))
 
     def __call__(self, b: bytes):
         cols, split = self.meta_to_frame(b)
@@ -111,6 +103,7 @@ class MetaDecoder(Decoder):
 
 def _split_chk_format(chk_format):
     """
+    Splits a struct format string into the byte order character and format characters
     >>> assert _split_chk_format('hq') == ('', 'hq')
     >>> assert _split_chk_format('@hq') == ('@', 'hq')
     """
@@ -121,6 +114,7 @@ def _split_chk_format(chk_format):
 
 def _format_chars_part_of_chk_format(chk_format):
     """
+    Returns the format character part of a struct format string
     >>> assert _format_chars_part_of_chk_format('!hh') == 'hh'
     >>> _format_chars_part_of_chk_format('q')
     'q'
@@ -131,6 +125,7 @@ def _format_chars_part_of_chk_format(chk_format):
 
 def _chk_format_to_n_channels(chk_format):
     """
+    Returns the number of channels defined a struct format string
     >>> assert _chk_format_to_n_channels('hq') == 2
     >>> _chk_format_to_n_channels('@hqt')
     3
@@ -140,6 +135,7 @@ def _chk_format_to_n_channels(chk_format):
 
 def _chk_format_is_for_single_channel(chk_format):
     """
+    Returns if a struct format string is designated for a single channel of data
     >>> assert _chk_format_is_for_single_channel('h') == True
     >>> assert _chk_format_is_for_single_channel('@hq') == False
     """
@@ -148,6 +144,7 @@ def _chk_format_is_for_single_channel(chk_format):
 
 def frame_to_meta(frame):
     r"""
+    Defines header for serialization of tabluar data
     >>> rows = [{'customer': 1}, {'customer': 2}, {'customer': 3}]
     >>> assert frame_to_meta(rows) == b'\x08\x00customer'
     """
@@ -158,6 +155,7 @@ def frame_to_meta(frame):
 
 def meta_to_frame(meta):
     r"""
+    Deserializes header for deserialization of tabular data
     >>> meta = b'\x1c\x00customer.apple.banana.tomato\x01\x00\x01\x00\x02\x00\x03\x00\x02\x00\
     ... x03\x00\x02\x00\x05\x00\x01\x00\x03\x00\x04\x00\t\x00'
     >>> assert meta_to_frame(meta)[0] == ['customer', 'apple', 'banana', 'tomato']
@@ -329,9 +327,3 @@ def specs_from_frames(frames: Frames):
         raise AttributeError('Unknown data format')
 
     return frames, StructCodecSpecs(format_char, n_channels=n_channels)
-
-
-if __name__ == '__main__':
-    import doctest
-
-    doctest.testmod()

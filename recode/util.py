@@ -51,9 +51,3 @@ def list_of_dicts(cols, vals):
             row[cols[i]] = group[i]
         frames.append(row)
     return frames
-
-
-if __name__ == '__main__':
-    import doctest
-
-    doctest.testmod()
