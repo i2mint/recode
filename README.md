@@ -5,6 +5,8 @@ sequences, tabular data, and time-series.
 
 To install:	```pip install recode```
 
+[Docs here](https://otosense.github.io/recode/module_docs/recode.html)
+
 # Functionality
 
 his notebook shows various examples of recode and it how it can be used with:
