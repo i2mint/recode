@@ -548,3 +548,9 @@ b = encoder(frames)
 decoded_frames = list(decoder(b))
 assert decoded_frames == [(1.1,2.2),(3.3,4.4)]
 ```
+
+# More
+
+[Example of recode functionality to read and write audio files](https://github.com/otosense/recode/wiki/Example-of-recode-functionality-to-read-and-write-audio-files)
+
+
