@@ -9,7 +9,7 @@ To install:	```pip install recode```
 
 # Functionality
 
-his notebook shows various examples of recode and it how it can be used with:
+This notebook shows various examples of recode and it how it can be used with:
 - Single channel numerical streams
 - Multi-channel numerical streams
 - DataFrames
