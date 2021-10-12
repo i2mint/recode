@@ -170,6 +170,23 @@ def meta_to_frame(meta):
     return cols, length
 
 
+def mk_encoder_and_decoder(
+    chk_format: str, n_channels: int = None, chk_size_bytes: int = None
+):
+    r"""
+    Enable the definition of codec specs based on `chk_format`,
+    format characters of the python struct module
+    (https://docs.python.org/3/library/struct.html#format-characters)
+
+    :param chk_format:
+    :return: A pair of functions: encoder and decoder
+    """
+    specs = StructCodecSpecs(chk_format, n_channels, chk_size_bytes)
+    encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
+    decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
+    return encoder, decoder
+
+
 @dataclass
 class StructCodecSpecs:
     r"""Enable the definition of codec specs based on format characters of the
@@ -178,12 +195,26 @@ class StructCodecSpecs:
 
     :param chk_format: The format of a chunk, as specified by the struct module
         See https://docs.python.org/3/library/struct.html#format-characters
-    :param n_channels: Only n_channels = 1 serves a purpose; to indicate that
+    :param n_channels: Number of channels. This int is either a confirmation of the
+        number of channels expressed by the `chk_format`, or (if and only if the
+        `chk_format` is a single character) to indicated that the `chk_format` should be
+        repeated `n_channels` times to create a multi-channel encoder where each channel
+        has the same encoding.
+    :param chk_size_bytes: Number of bytes in a chunk. The only purpose of this int is
+    to assert that the chunk size expressed by the `chk_format` is indeed the one
+    expected.
 
-    To utilise recode, first define your codec specs. If your frame is only one channel (ex. a list) then your format
-    string will include two characters, a byte character (@, =, <, >, !) and a format character. The format character
-    should match the data type of the samples in the frame so they are properly encoded/decoded. This can be seen in the
-    following example.
+    Note: All encoder/decoder (codec) specs can be expressed though the `chk_format`.
+    Yet, though `n_channels` and `chk_size_bytes` are both optional, it is advised to
+    include them in production code since they act as extra confirmation of the codec
+    to be used. Encoding and decoding problems can be hard to notice until much
+    later on downstream, and are therefore hard to debug.
+
+    To utilise recode, first define your codec specs. If your frame is only one channel
+    (ex. a list) then your format string will include two characters,
+    a byte character (@, =, <, >, !) and a format character. The format character
+    should match the data type of the samples in the frame so they are properly
+    encoded/decoded. This can be seen in thefollowing example.
 
     >>> specs = StructCodecSpecs(chk_format='h')
     >>> print(specs)
@@ -196,8 +227,10 @@ class StructCodecSpecs:
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    If your data has more than one channel, then there are two options. If all of the samples are of the same data type,
-    say integer, then your format string needs only one format character and then you can specify the number of channels
+    If your data has more than one channel, then there are two options.
+    If all of the samples are of the same data type,
+    say integer, then your format string needs only one format character and then you
+    can specify the number of channels
     in your data with the n_channels argument. This can be seen in the following example.
 
     >>> specs = StructCodecSpecs(chk_format='@h', n_channels=2)
@@ -211,8 +244,9 @@ class StructCodecSpecs:
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    On the other hand, if each channel has a different data type, say (int, float, int), then your format string needs
-    a format character for each of your channels. This can be seen in the following example, which also shows the use
+    On the other hand, if each channel has a different data type, say (int, float, int),
+    then your format string needs a format character for each of your channels.
+    This can be seen in the following example, which also shows the use
     of a different byte character (=).
 
     >>> specs = StructCodecSpecs(chk_format = '=hdh')
@@ -226,8 +260,10 @@ class StructCodecSpecs:
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements the struct.iter_unpack function.
-    IterativeDecoder only requires one argument, a chk_to_frame_iter function, and returns an iterator of each chunk.
+    Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements
+    the struct.iter_unpack function.
+    IterativeDecoder only requires one argument, a chk_to_frame_iter function,
+    and returns an iterator of each chunk.
     An example of an IterativeDecorator can be seen below.
 
     >>> specs = StructCodecSpecs(chk_format = 'hdhd')
@@ -242,8 +278,10 @@ class StructCodecSpecs:
     >>> next(iter_frames)
     (2, 2.2, 2, 2.2)
 
-    Along with using recode for the kinds of data we have looked at so far, it can also be applied to DataFrames when
-    they have been converted to a list of dicts using MetaEncoder and MetaDecoder. An example of this can be seen below.
+    Along with using recode for the kinds of data we have looked at so far,
+    it can also be applied to DataFrames when
+    they have been converted to a list of dicts using MetaEncoder and MetaDecoder.
+    An example of this can be seen below.
 
     >>> data = [{'foo': 1.1, 'bar': 2.2}, {'foo': 513.23, 'bar': 456.1}, {'foo': 32.0, 'bar': 6.7}]
     >>> specs = StructCodecSpecs(chk_format='d', n_channels = 2)
