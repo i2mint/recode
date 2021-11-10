@@ -553,6 +553,131 @@ assert decoded_frames == [(1.1,2.2),(3.3,4.4)]
 
 # More
 
-[Example of recode functionality to read and write audio files](https://github.com/otosense/recode/wiki/Example-of-recode-functionality-to-read-and-write-audio-files)
 
+## Example of recode functionality to read and write audio files
 
+In the below example we can see that the functionality of reading and writing audio to bytes is replicated in `recode`. 
+An example of a waveform audio file is first created using `mk_wf`. 
+Then, that example wave form is converted to bytes using `BytesIO` and `soundfile.write`. 
+Then, that same example wave form is converted to bytes using `recode` functionality. 
+Finally it can be seen through the assertions that `soundfile`'s read/write and `recode`'s encode/decode provide 
+the same functionality for audio files (aside from the header in `soundfile` as a result of the .wav format).
+
+```python
+import soundfile as sf
+from io import BytesIO
+from enum import Enum
+import numpy as np
+from recode import ChunkedDecoder, ChunkToFrame, ChunkedEncoder, StructCodecSpecs
+
+class Kind(Enum):
+    random = 'random'
+    increasing = 'increasing'
+
+def mk_wf(n_samples=2048, kind: Kind=Kind.random, **kwargs):
+    if kind == Kind.random:
+        dtype_str = kwargs.get('num_type', 'int16')
+        if dtype_str.startswith('int'):
+            low = kwargs.get('low', -30000)
+            high = kwargs.get('high', 30000)
+            wf = np.random.randint(low=low, high=high, size=n_samples, dtype=dtype_str)
+        else:
+            raise TypeError("Don't know how to handle this case")
+    else:
+        raise TypeError("Don't know how to handle this case")
+    return wf
+
+wf = mk_wf(25)
+sr = 10000
+
+file = BytesIO()
+sf.write(file, wf, sr, format = 'WAV')
+file.seek(0)
+b = file.read()
+
+specs = StructCodecSpecs('h')
+encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
+decoder = ChunkedDecoder(chk_size_bytes=specs.chk_size_bytes, 
+                         chk_to_frame=specs.chk_to_frame, 
+                         n_channels=specs.n_channels)
+d = encoder(wf)
+
+assert d == b[44:]
+
+sf_read = sf.read(BytesIO(b), dtype='int16')
+recode_read = list(decoder(d))
+
+assert np.all(sf_read[0] == recode_read)
+assert np.all(recode_read == wf)
+assert np.all(sf_read[0] == wf)
+```
+
+## Compare performance of IterativeDecoder and ChunkedDecoder
+
+Both `IterativeDecoder` and `ChunkedDecoder` work well with encoded sequences. 
+Additionally, an `IterativeDecoder` can replace the functionality of a `ChunkedDecoder` as the iterator 
+it returns can easily be converted to a list. 
+Because of this we will compare the efficiency of `IterativeDecoder` and `ChunkedDecoder` to see if we should replace the 
+functionality of `ChunkedDecoder` with `IterativeDecoder`.
+
+```python
+from hum.gen.sine_mix import freq_based_stationary_wf
+from recode import (ChunkedEncoder, 
+                    ChunkedDecoder, 
+                    IterativeDecoder, 
+                    StructCodecSpecs)
+```
+
+Create a synthetic waveform to test both decoders on:
+
+```python
+DFLT_N_SAMPLES = 21 * 2048
+DFLT_SR = 44100
+
+wf_mix = freq_based_stationary_wf(freqs=(200, 400, 600, 800), weights=None,
+                             n_samples = DFLT_N_SAMPLES*300, sr = DFLT_SR)
+```
+
+Define the decoders and encode the waveform:
+
+```python
+specs = StructCodecSpecs('d')
+encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
+decoder = ChunkedDecoder(
+    chk_size_bytes=specs.chk_size_bytes,
+    chk_to_frame=specs.chk_to_frame,
+    n_channels=specs.n_channels
+)
+idecoder = IterativeDecoder(chk_to_frame = specs.chk_to_frame_iter)
+b = encoder(wf_mix)
+```
+
+Helper function so the output of the decoders are in the same format:
+
+```python
+def it_to_list(it):
+    frame = list(it)
+    frame = [item for tup in frame for item in tup]
+    return frame
+```
+
+Performance of `ChunkedDecoder`:
+
+```python
+%timeit -r 2 -n 5 list(decoder(b))
+```
+```
+5.59 s ± 14.5 ms per loop (mean ± std. dev. of 2 runs, 5 loops each)
+```
+
+Performance of `IterativeDecoder`:
+
+```python
+%timeit -r 2 -n 5 it_to_list(idecoder(b))
+```
+```
+2.04 s ± 13.4 ms per loop (mean ± std. dev. of 2 runs, 5 loops each)
+```
+
+From these results, we can clearly see that we should replace the functionality of `ChunkedDecoder` with `IterativeDecoder` 
+as it is nearly three times more efficient.
