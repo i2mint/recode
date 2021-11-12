@@ -1,0 +1,4 @@
+recode
+======
+.. automodule:: recode
+   :members:

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>recode.audio &mdash; recode 0.1.19 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/toggleprompt.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="recode.base" href="base.html" />
+    <link rel="prev" title="recode" href="../recode.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> recode
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../recode.html">recode</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">recode.audio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">recode.base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html">recode.util</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">recode</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>recode.audio</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/recode/audio.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-recode.audio">
+<span id="recode-audio"></span><h1>recode.audio<a class="headerlink" href="#module-recode.audio" title="Permalink to this headline">¶</a></h1>
+<p>Encoding audio</p>
+<p>This module illustrates how one can use recode to make audio codecs.</p>
+<p>Make pcm encoders and decoders:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode</span><span class="p">,</span> <span class="n">decode</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoded</span> <span class="o">=</span> <span class="n">encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoded</span>
+<span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+</pre></div>
+</div>
+<p>Or just encode directly:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+</pre></div>
+</div>
+<p>Or decode directly:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+</pre></div>
+</div>
+<p>TODO: Use builtin wave module to handle wav format as well.</p>
+<dl class="py function">
+<dt id="recode.audio.decode_pcm">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_pcm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pcm_bytes</span><span class="p">:</span> <span class="n">bytes</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#decode_pcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_pcm" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+(Will try to figure it out)</p></li>
+<li><p><strong>n_channels</strong> – Number of channels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The decoded waveform</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode_pcm</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.audio.decode_wav_header_bytes">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_wav_header_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wav_header_bytes</span><span class="p">:</span> <span class="n">bytes</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../../_modules/recode/audio.html#decode_wav_header_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_wav_header_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dict of params decoded from a wav header</p>
+<p>For examples, see the <cite>encode_wav_header_bytes</cite> function, it’s inverse.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">recode.audio</span> <span class="kn">import</span> <span class="n">encode_wav_header_bytes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">header_bytes</span> <span class="o">=</span> <span class="n">encode_wav_header_bytes</span><span class="p">(</span><span class="mi">44100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">header_bytes</span><span class="p">)</span>  
+<span class="go">{&#39;sr&#39;: 44100,</span>
+<span class="go"> &#39;width_bytes&#39;: 2,</span>
+<span class="go"> &#39;n_channels&#39;: 3,</span>
+<span class="go"> &#39;nframes&#39;: 0,</span>
+<span class="go"> &#39;comptype&#39;: None}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.audio.encode_pcm">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">encode_pcm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">16</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#encode_pcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.encode_pcm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode waveform (e.g. list of numbers) into PCM bytes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wf</strong> – Waveform to encode</p></li>
+<li><p><strong>width</strong> – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+(will try to figure it out by itself)</p></li>
+<li><p><strong>n_channels</strong> – Number of channels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The pcm-bytes-encoded waveform</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.audio.encode_wav_header_bytes">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">encode_wav_header_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sr</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">width_bytes</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">nframes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">comptype</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; bytes<a class="reference internal" href="../../_modules/recode/audio.html#encode_wav_header_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.encode_wav_header_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a WAV header from given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sr</strong> – The sample rate (i.e. “frame rate” i.e. “chk_rate”)</p></li>
+<li><p><strong>width_bytes</strong> – The “sample width” in bytes</p></li>
+<li><p><strong>n_channels</strong> – Number of channels (default is 1)</p></li>
+<li><p><strong>nframes</strong> – Optional number of frames (default is 0).
+NOTE: If a wav file is to be read correctly, the num of frames (i.e.
+samples/chks) should be exactly the number you’ll actually be writing in the
+wave file.</p></li>
+<li><p><strong>comptype</strong> – No supported by python’s wave module (yet).</p></li>
+</ul>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">header_bytes</span> <span class="o">=</span> <span class="n">encode_wav_header_bytes</span><span class="p">(</span><span class="mi">44100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">header_bytes</span><span class="p">)</span>
+<span class="go">44</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">header_bytes</span><span class="p">[:</span><span class="mi">31</span><span class="p">]</span>
+<span class="go">b&#39;RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x03\x00D\xac\x00\x00\x98\t\x04&#39;</span>
+</pre></div>
+</div>
+<p>You can decode those params (including those you didn’t specify, but were
+defaulted) with the <cite>decode_wav_header_bytes</cite> inverse function.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">recode.audio</span> <span class="kn">import</span> <span class="n">decode_wav_header_bytes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">header_bytes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span>  
+<span class="go">{&#39;sr&#39;: 44100,</span>
+<span class="go"> &#39;width_bytes&#39;: 2,</span>
+<span class="go"> &#39;n_channels&#39;: 3,</span>
+<span class="go"> &#39;nframes&#39;: 0,</span>
+<span class="go"> &#39;comptype&#39;: None}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">encode_wav_header_bytes</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="n">header_bytes</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.audio.mk_pcm_audio_codec">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">mk_pcm_audio_codec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">16</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#mk_pcm_audio_codec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.mk_pcm_audio_codec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a (encoder, decoder) pair for PCM data with given width and n_channels.</p>
+<p>PCM data is what’s used in the uncompressed raw WAVE formats (such as used in CDs).
+See <a class="reference external" href="https://en.wikipedia.org/wiki/Pulse-code_modulation">https://en.wikipedia.org/wiki/Pulse-code_modulation</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+(Will try to figure it out)</p></li>
+<li><p><strong>n_channels</strong> – Number of channels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A (encoder, decoder) pair of functions that are inverse of each other</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode</span><span class="p">,</span> <span class="n">decode</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoded</span> <span class="o">=</span> <span class="n">encode</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoded</span>
+<span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+</pre></div>
+</div>
+<p>Let’s check over more combinations of width and n_channels that we can decode
+what we encode to get back the same thing:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wf</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;int16&#39;</span><span class="p">,</span> <span class="s1">&#39;paInt16&#39;</span><span class="p">,</span> <span class="s1">&#39;PCM_16&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;int32&#39;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">wf</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">encode</span><span class="p">,</span> <span class="n">decode</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span><span class="s1">&#39;int16&#39;</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">encoded</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">assert</span> <span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span> <span class="o">==</span> <span class="n">wf</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.audio.num_find_num_type_for">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">num_find_num_type_for</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span></em>, <em class="sig-param"><span class="n">target_num_sys</span><span class="o">=</span><span class="default_value">'struct'</span></em>, <em class="sig-param"><span class="n">num_sys_search_order</span><span class="o">=</span><span class="default_value">('n_bits', 'n_bytes', 'dtype', 'pyaudio', 'soundfile')</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#num_find_num_type_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.num_find_num_type_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the target_num_sys equivalent of input num checking multiple unit options</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.audio.num_type_for">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">num_type_for</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">num</span></em>, <em class="sig-param"><span class="n">num_sys</span><span class="o">=</span><span class="default_value">'n_bits'</span></em>, <em class="sig-param"><span class="n">target_num_sys</span><span class="o">=</span><span class="default_value">'struct'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#num_type_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.num_type_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate from one (sample width) number type to another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> – </p></li>
+<li><p><strong>num_sys</strong> – </p></li>
+<li><p><strong>target_num_sys</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">num_type_for</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;n_bits&quot;</span><span class="p">,</span> <span class="s2">&quot;soundfile&quot;</span><span class="p">)</span>
+<span class="go">&#39;PCM_16&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">num_type_for</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;n_bytes&quot;</span><span class="p">,</span> <span class="s2">&quot;soundfile&quot;</span><span class="p">)</span>
+<span class="go">&#39;PCM_24&#39;</span>
+</pre></div>
+</div>
+<p>Tip: Use with <cite>functools.partial</cite> when you have some fix translation endpoints.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_dtype_from_n_bytes</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">num_type_for</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s2">&quot;n_bytes&quot;</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">&quot;dtype&quot;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_dtype_from_n_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="go">&#39;float64&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../recode.html" class="btn btn-neutral float-left" title="recode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="base.html" class="btn btn-neutral float-right" title="recode.base" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
