@@ -7,9 +7,130 @@ To install:	```pip install recode```
 
 [Docs here](https://otosense.github.io/recode/module_docs/recode.html)
 
-# Functionality
+Make codecs for fixed size structured chunks serialization and deserialization of
+sequences, tabular data, and time-series.
 
-This notebook shows various examples of recode and it how it can be used with:
+The easiest and bigest bang for your buck is ``mk_encoder_and_decoder``
+
+```python
+>>> from recode import mk_encoder_and_decoder
+>>> encoder, decoder = mk_encoder_and_decoder()
+```
+
+``encoder`` will encode a list (or any iterable) of numbers into bytes
+
+```python
+>>> b = encoder([0, -3, 3.14])
+>>> b
+b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xc0\x1f\x85\xebQ\xb8\x1e\t@'
+
+```
+
+``decoder`` will decode those bytes to get you back your numbers
+
+```python
+>>> decoder(b)
+[0.0, -3.0, 3.14]
+```
+
+There's only really one argument you need to know about in ``mk_encoder_and_decoder``.
+The first argument, called `chk_format`, which is a string of characters from
+the "Format" column of the python 
+[format characters](https://docs.python.org/3/library/struct.html#format-characters)
+
+The length of the string specifies the number of "channels",
+and each individual character of the string specifies the kind of encoding you should
+apply to each "channel" (hold your horses, we'll explain).
+
+The one we've just been through is in fact
+
+```python
+>>> encoder, decoder = mk_encoder_and_decoder('d')
+```
+
+That is, it will expect that your data is a list of numbers, and they'll be encoded
+with the 'd' format character, that is 8-bytes doubles.
+That default is goo because it gives you a lot of room, but if you knew that you
+would only be dealing with 2-byte integers (as in most WAV audio waveforms),
+you would have chosen `h`:
+
+```python
+>>> encoder, decoder = mk_encoder_and_decoder('h')
+```
+
+What about those channels?
+Well, some times you need to encode/decode multi-channel streams, such as:
+
+```python
+>>> multi_channel_stream = [[3, -1], [4, -1], [5, -9]]
+```
+
+Say, for example, if you were dealing with stereo waveform
+(with the standard PCM_16 format), you'd do it this way:
+
+```python
+>>> encoder, decoder = mk_encoder_and_decoder('hh')
+>>> pcm_bytes = encoder(iter(multi_channel_stream))
+>>> pcm_bytes
+b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'
+>>> decoder(pcm_bytes)
+[(3, -1), (4, -1), (5, -9)]
+```
+
+
+The `n_channels` and `chk_size_bytes` arguments are there if you want to assert
+that your number of channels and chunk size are what you expect.
+Again, these are just for verification, because we know how easy it is to
+misspecify the `chk_format`, and how hard it can be to notice that we did.
+
+It is advised to use these in any production code, for the sanity of everyone!
+
+```python
+>>> mk_encoder_and_decoder('hhh', n_channels=2)
+Traceback (most recent call last):
+  ...
+AssertionError: You said there'd be 2 channels, but I inferred 3
+>>> mk_encoder_and_decoder('hhh', chk_size_bytes=3)
+Traceback (most recent call last):
+  ...
+AssertionError: The given chk_size_bytes 3 did not match the inferred (from chk_format) 6
+```
+
+Finally, so far we've done it this way:
+
+
+```python
+>>> encoder, decoder = mk_encoder_and_decoder('hHifd')
+```
+
+But see that what's actually returned is a NAMED tuple, which means that you can
+can also get one object that will have `.encode` and `.decode` properties:
+
+```python
+>>> codec = mk_encoder_and_decoder('hHifd')
+>>> to_encode = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
+>>> encoded = codec.encode(to_encode)
+>>> decoded = codec.decode(encoded)
+>>> decoded
+[(1, 2, 3, 4.0, 5.0), (6, 7, 8, 9.0, 10.0)]
+```
+
+And you can checkout the properties of your encoder and decoder (they
+should be the same)
+
+```python
+>>> codec.encode.chk_format
+'hHifd'
+>>> codec.encode.n_channels
+5
+>>> codec.encode.chk_size_bytes
+24
+```
+
+
+# Further functionality and under-the-hood peeps
+
+This section shows various examples of recode and it how it can be used with:
 - Single channel numerical streams
 - Multi-channel numerical streams
 - DataFrames
@@ -90,7 +211,21 @@ decoded_frames
 
 StructCodecSpecs is used to define the specs for making codecs for fixed size structured chunks serialization and deserialization of sequences, tabular data, and time-series. This definition is based on format strings of the [python struct module](https://docs.python.org/3/library/struct.html#format-strings).
 
-There are two ways to define StructCodecSpecs, the first being to explicitly define it using the StructCodecSpecs class. StructCodecSpecs takes three arguments: `chk_format`, `n_channels`, and `chk_size_bytes`. Only `chk_format` is required, as `n_channels` and `chk_size_bytes` can be determined based on `chk_format`. If `n_channels` is given, then `chk_format` should only contain one format character, as it will be assumed that all channels have the same data type. If this is not the case, then do not provide an argument for `n_channels` and instead pass a string with the format character matching the data type for each channel in the frame to `chk_format`. For example if the first channel contains integers and the second contains floats, then `chk_format = 'hd'`.
+There are two ways to define StructCodecSpecs, the first being to explicitly 
+define it using the StructCodecSpecs class. 
+StructCodecSpecs takes three arguments: `chk_format`, `n_channels`, 
+and `chk_size_bytes`. 
+
+Only `chk_format` is required, 
+as `n_channels` and `chk_size_bytes` can be determined based on `chk_format`. 
+If `n_channels` or  `chk_size_bytes` are given, they will be used to 
+assert that the values inferred from `chk_format` match.
+
+If this is not the case, then do not provide an argument for `n_channels` 
+and instead pass a string with the format character matching the data type for 
+each channel in the frame to `chk_format`. 
+For example if the first channel 
+contains integers and the second contains floats, then `chk_format = 'hd'`.
 
 
 ```python
@@ -482,7 +617,7 @@ assert decoded_frames == frames
 ## Multi-channel numerical stream
 ```python
 from recode import StructCodecSpecs, ChunkedEncoder, ChunkedDecoder
-specs = StructCodecSpecs(chk_format='@h', n_channels = 2)
+specs = StructCodecSpecs(chk_format='@hh', n_channels = 2)
 encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
 decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
 frames = [(1, 2), (3, 4), (5, 6)]
@@ -514,7 +649,7 @@ next(iter_frames)
 ```python
 from recode import StructCodecSpecs, MetaEncoder, MetaDecoder, frame_to_meta, meta_to_frame
 data = [{'foo': 1.1, 'bar': 2.2}, {'foo': 513.23, 'bar': 456.1}, {'foo': 32.0, 'bar': 6.7}]
-specs = StructCodecSpecs(chk_format='d', n_channels = 2)
+specs = StructCodecSpecs(chk_format='dd', n_channels = 2)
 encoder = MetaEncoder(frame_to_chk = specs.frame_to_chk, frame_to_meta = frame_to_meta)
 decoder = MetaDecoder(chk_to_frame = specs.chk_to_frame, meta_to_frame = meta_to_frame)
 b = encoder(data)

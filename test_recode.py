@@ -31,7 +31,8 @@ from typing import Iterator
     ],
 )
 def test_single_channel_chunk(chk_format, frame, n_channels):
-    specs = StructCodecSpecs(chk_format=chk_format, n_channels=n_channels)
+    n_channels = n_channels or 1
+    specs = StructCodecSpecs(chk_format=chk_format * n_channels)
     encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
     decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
     b = encoder(frame)
@@ -78,7 +79,8 @@ def test_single_channel_chunk(chk_format, frame, n_channels):
     ],
 )
 def test_multi_channel_chunk(chk_format, frame, n_channels):
-    specs = StructCodecSpecs(chk_format=chk_format, n_channels=n_channels)
+    n_channels = n_channels or 1
+    specs = StructCodecSpecs(chk_format=chk_format * n_channels)
     encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
     decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
     b = encoder(frame)
@@ -153,7 +155,8 @@ def test_single_channel_iter(chk_format, frame, n_channels):
     ],
 )
 def test_multi_channel_iter(chk_format, frame, n_channels):
-    specs = StructCodecSpecs(chk_format=chk_format, n_channels=n_channels)
+    n_channels = n_channels or 1
+    specs = StructCodecSpecs(chk_format=chk_format * n_channels)
     encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
     decoder = IterativeDecoder(chk_to_frame=specs.chk_to_frame)
     b = encoder(frame)
@@ -177,7 +180,8 @@ def test_multi_channel_iter(chk_format, frame, n_channels):
     ],
 )
 def test_tabular(chk_format, table, n_channels):
-    specs = StructCodecSpecs(chk_format=chk_format, n_channels=n_channels)
+    n_channels = n_channels or 1
+    specs = StructCodecSpecs(chk_format=chk_format * n_channels)
     encoder = MetaEncoder(frame_to_chk=specs.frame_to_chk, frame_to_meta=frame_to_meta)
     decoder = MetaDecoder(chk_to_frame=specs.chk_to_frame, meta_to_frame=meta_to_frame)
     b = encoder(table)

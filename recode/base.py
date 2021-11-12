@@ -5,7 +5,8 @@ from dataclasses import dataclass
 from typing import Iterable, Callable, Sequence, Union, Any
 from struct import pack, unpack, iter_unpack
 import struct
-from operator import itemgetter
+from operator import itemgetter, attrgetter
+from collections import namedtuple
 from recode.util import spy, get_struct, list_of_dicts
 
 
@@ -26,6 +27,117 @@ FrameToChunk = Callable[[Frame], Chunk]
 MetaToFrame = Callable[[Meta], Frame]
 FrameToMeta = Callable[[Frame], Meta]
 
+DFLT_CHK_FORMAT = 'd'
+
+codec_tuple = namedtuple('codec_tuple', field_names='encode decode')
+
+
+def mk_encoder_and_decoder(
+    chk_format: str = DFLT_CHK_FORMAT,
+    n_channels: int = None,
+    chk_size_bytes: int = None,
+):
+    r"""
+    Enable the definition of codec specs based on `chk_format`,
+    format characters of the python struct module
+    (https://docs.python.org/3/library/struct.html#format-characters)
+
+    :param chk_format: The format of a chunk, as specified by the struct module
+        The length of the string specifies the number of "channels",
+        and each individual character of the string specifies the kind of encoding
+        you should apply to each "channel" (hold your horses, we'll explain).
+        See https://docs.python.org/3/library/struct.html#format-characters
+    :param n_channels: Expected of channels. If given, will assert that the
+        number of channels expressed by the `chk_format` is indeed what is expected.
+        the number of channels expressed by the `chk_format`.
+    :param chk_size_bytes: Expected number of bytes per chunk.
+        If given, will assert that the chunk size expressed by the `chk_format` is
+        indeed the one expected.
+
+    :return: A (named)tuple with encode and decode functions
+
+    The easiest and bigest bang for your buck is ``mk_encoder_and_decoder``
+
+    >>> from recode import mk_encoder_and_decoder
+    >>> encoder, decoder = mk_encoder_and_decoder()
+    >>> b = encoder([0, -3, 3.14])
+    >>> b
+    b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xc0\x1f\x85\xebQ\xb8\x1e\t@'
+    >>> decoder(b)
+    [0.0, -3.0, 3.14]
+
+    What about those channels?
+    Well, some times you need to encode/decode multi-channel streams, such as:
+
+    >>> multi_channel_stream = [[3, -1], [4, -1], [5, -9]]
+
+    Say, for example, if you were dealing with stereo waveform
+    (with the standard PCM_16 format), you'd do it this way:
+
+    >>> encoder, decoder = mk_encoder_and_decoder('hh')
+    >>> pcm_bytes = encoder(iter(multi_channel_stream))
+    >>> pcm_bytes
+    b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'
+    >>> decoder(pcm_bytes)
+    [(3, -1), (4, -1), (5, -9)]
+
+
+    The `n_channels` and `chk_size_bytes` arguments are there if you want to assert
+    that your number of channels and chunk size are what you expect.
+    Again, these are just for verification, because we know how easy it is to
+    misspecify the `chk_format`, and how hard it can be to notice that we did.
+
+    It is advised to use these in any production code, for the sanity of everyone!
+
+    >>> mk_encoder_and_decoder('hhh', n_channels=2)
+    Traceback (most recent call last):
+      ...
+    AssertionError: You said there'd be 2 channels, but I inferred 3
+    >>> mk_encoder_and_decoder('hhh', chk_size_bytes=3)
+    Traceback (most recent call last):
+      ...
+    AssertionError: The given chk_size_bytes 3 did not match the inferred (from chk_format) 6
+
+    Finally, so far we've done it this way:
+
+    >>> encoder, decoder = mk_encoder_and_decoder('hHifd')
+
+    But see that what's actually returned is a NAMED tuple, which means that you can
+    can also get one object that will have `.encode` and `.decode` properties:
+
+    >>> codec = mk_encoder_and_decoder('hHifd')
+    >>> to_encode = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
+    >>> encoded = codec.encode(to_encode)
+    >>> decoded = codec.decode(encoded)
+    >>> decoded
+    [(1, 2, 3, 4.0, 5.0), (6, 7, 8, 9.0, 10.0)]
+
+    And you can checkout the properties of your encoder and decoder (they
+    should be the same)
+
+    >>> codec.encode.chk_format
+    'hHifd'
+    >>> codec.encode.n_channels
+    5
+    >>> codec.encode.chk_size_bytes
+    24
+
+    """
+    specs = StructCodecSpecs(chk_format, n_channels, chk_size_bytes)
+    encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
+    add_coding_attributes(encoder, specs)
+    decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
+    add_coding_attributes(decoder, specs)
+    codec = codec_tuple(encoder, decoder)
+    # add_coding_attributes(codec, specs)
+    return codec
+
+
+def add_coding_attributes(to_obj, from_obj):
+    to_obj.chk_format = from_obj.chk_format
+    to_obj.n_channels = from_obj.n_channels
+    to_obj.chk_size_bytes = from_obj.chk_size_bytes
+
 
 @dataclass
 class ChunkedEncoder(Encoder):
@@ -34,9 +146,15 @@ class ChunkedEncoder(Encoder):
     """
 
     frame_to_chk: FrameToChunk
+    chk_format = None
+    n_channels = None
+    chk_size_bytes = None
 
     def __call__(self, frames: Frames):
         return b''.join(map(self.frame_to_chk, frames))
+
+    def __eq__(self, other):
+        return self.chk_format == other.chk_format
 
 
 @dataclass
@@ -66,6 +184,9 @@ class ChunkedDecoder(Decoder):
     """
 
     chk_to_frame: ChunkToFrame
+    chk_format = None
+    n_channels = None
+    chk_size_bytes = None
 
     def __call__(self, b: bytes):
         iterator = self.chk_to_frame(b)
@@ -73,6 +194,9 @@ class ChunkedDecoder(Decoder):
         if len(frame[0]) == 1:
             frame = [item for tup in frame for item in tup]
         return frame
+
+    def __eq__(self, other):
+        return self.chk_format == other.chk_format
 
 
 @dataclass
@@ -105,7 +229,7 @@ class MetaDecoder(Decoder):
         return list_of_dicts(cols, vals)
 
 
-def _split_chk_format(chk_format):
+def _split_chk_format(chk_format: str = DFLT_CHK_FORMAT):
     """
     Splits a struct format string into the byte order character and format characters
     >>> assert _split_chk_format('hq') == ('', 'hq')
@@ -116,7 +240,7 @@ def _split_chk_format(chk_format):
     return '', chk_format
 
 
-def _format_chars_part_of_chk_format(chk_format):
+def _format_chars_part_of_chk_format(chk_format: str = DFLT_CHK_FORMAT):
     """
     Returns the format character part of a struct format string
     >>> assert _format_chars_part_of_chk_format('!hh') == 'hh'
@@ -127,7 +251,7 @@ def _format_chars_part_of_chk_format(chk_format):
     return format_chars
 
 
-def _chk_format_to_n_channels(chk_format):
+def _chk_format_to_n_channels(chk_format: str = DFLT_CHK_FORMAT):
     """
     Returns the number of channels defined a struct format string
     >>> assert _chk_format_to_n_channels('hq') == 2
@@ -137,7 +261,7 @@ def _chk_format_to_n_channels(chk_format):
     return len(_format_chars_part_of_chk_format(chk_format))
 
 
-def _chk_format_is_for_single_channel(chk_format):
+def _chk_format_is_for_single_channel(chk_format: str = DFLT_CHK_FORMAT):
     """
     Returns if a struct format string is designated for a single channel of data
     >>> assert _chk_format_is_for_single_channel('h') == True
@@ -169,23 +293,6 @@ def meta_to_frame(meta):
     return cols, length
 
 
-def mk_encoder_and_decoder(
-    chk_format: str, n_channels: int = None, chk_size_bytes: int = None
-):
-    r"""
-    Enable the definition of codec specs based on `chk_format`,
-    format characters of the python struct module
-    (https://docs.python.org/3/library/struct.html#format-characters)
-
-    :param chk_format:
-    :return: A pair of functions: encoder and decoder
-    """
-    specs = StructCodecSpecs(chk_format, n_channels, chk_size_bytes)
-    encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
-    decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
-    return encoder, decoder
-
-
 @dataclass
 class StructCodecSpecs:
     r"""Enable the definition of codec specs based on format characters of the
@@ -193,15 +300,16 @@ class StructCodecSpecs:
     (https://docs.python.org/3/library/struct.html#format-characters)
 
     :param chk_format: The format of a chunk, as specified by the struct module
+        The length of the string specifies the number of "channels",
+        and each individual character of the string specifies the kind of encoding
+        you should apply to each "channel" (hold your horses, we'll explain).
         See https://docs.python.org/3/library/struct.html#format-characters
-    :param n_channels: Number of channels. This int is either a confirmation of the
-        number of channels expressed by the `chk_format`, or (if and only if the
-        `chk_format` is a single character) to indicated that the `chk_format` should be
-        repeated `n_channels` times to create a multi-channel encoder where each channel
-        has the same encoding.
-    :param chk_size_bytes: Number of bytes in a chunk. The only purpose of this int is
-    to assert that the chunk size expressed by the `chk_format` is indeed the one
-    expected.
+    :param n_channels: Expected of channels. If given, will assert that the
+        number of channels expressed by the `chk_format` is indeed what is expected.
+        the number of channels expressed by the `chk_format`.
+    :param chk_size_bytes: Expected number of bytes per chunk.
+        If given, will assert that the chunk size expressed by the `chk_format` is
+        indeed the one expected.
 
     Note: All encoder/decoder (codec) specs can be expressed though the `chk_format`.
     Yet, though `n_channels` and `chk_size_bytes` are both optional, it is advised to
@@ -226,13 +334,9 @@ class StructCodecSpecs:
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    If your data has more than one channel, then there are two options.
-    If all of the samples are of the same data type,
-    say integer, then your format string needs only one format character and then you
-    can specify the number of channels
-    in your data with the n_channels argument. This can be seen in the following example.
+    The only reason (but it's a good one) to specify `n_channels` is to assert them.
 
-    >>> specs = StructCodecSpecs(chk_format='@h', n_channels=2)
+    >>> specs = StructCodecSpecs(chk_format='@hh', n_channels=2)
     >>> print(specs)
     StructCodecSpecs(chk_format='@hh', n_channels=2, chk_size_bytes=4)
     >>> encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
@@ -282,8 +386,10 @@ class StructCodecSpecs:
     they have been converted to a list of dicts using MetaEncoder and MetaDecoder.
     An example of this can be seen below.
 
-    >>> data = [{'foo': 1.1, 'bar': 2.2}, {'foo': 513.23, 'bar': 456.1}, {'foo': 32.0, 'bar': 6.7}]
-    >>> specs = StructCodecSpecs(chk_format='d', n_channels = 2)
+    >>> data = [{'foo': 1.1, 'bar': 2.2},
+    ...         {'foo': 513.23, 'bar': 456.1},
+    ...         {'foo': 32.0, 'bar': 6.7}]
+    >>> specs = StructCodecSpecs(chk_format='dd')
     >>> print(specs)
     StructCodecSpecs(chk_format='dd', n_channels=2, chk_size_bytes=16)
     >>> encoder = MetaEncoder(frame_to_chk = specs.frame_to_chk, frame_to_meta = frame_to_meta)
@@ -291,7 +397,7 @@ class StructCodecSpecs:
     >>> b = encoder(data)
     >>> assert decoder(b) == data
     """
-    chk_format: str
+    chk_format: str = DFLT_CHK_FORMAT
     n_channels: int = None
     chk_size_bytes: int = None
 
@@ -300,11 +406,10 @@ class StructCodecSpecs:
         if self.n_channels is None:
             self.n_channels = inferred_n_channels
         else:
-            assert (
-                inferred_n_channels == 1
-            ), 'if n_channels is given, chk_format needs to be for a single channel'
-            byte_order, format_chars = _split_chk_format(self.chk_format)
-            self.chk_format = byte_order + format_chars * self.n_channels
+            assert self.n_channels == inferred_n_channels, (
+                f"You said there'd be {self.n_channels} channels, "
+                f'but I inferred {inferred_n_channels}'
+            )
 
         chk_size_bytes = struct.calcsize(self.chk_format)
         if self.chk_size_bytes is None:
@@ -323,6 +428,9 @@ class StructCodecSpecs:
 
     def chk_to_frame(self, chk):
         return iter_unpack(self.chk_format, chk)
+
+    def __eq__(self, other):
+        return self.chk_format == other.chk_format
 
 
 def specs_from_frames(frames: Frames):
@@ -368,4 +476,6 @@ def specs_from_frames(frames: Frames):
     else:
         raise AttributeError('Unknown data format')
 
+    if n_channels is not None:
+        format_char = format_char * n_channels
     return frames, StructCodecSpecs(format_char, n_channels=n_channels)

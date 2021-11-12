@@ -64,7 +64,7 @@ def mk_pcm_audio_codec(width: Width = 16, n_channels: int = 1):
     ...         assert decode(encoded) == wf
     """
     struct_char = num_find_num_type_for(width)
-    return mk_encoder_and_decoder(struct_char, n_channels=n_channels)
+    return mk_encoder_and_decoder(struct_char * n_channels, n_channels=n_channels)
 
 
 def encode_pcm(wf: Waveform, width: Width = 16, n_channels: int = 1):
