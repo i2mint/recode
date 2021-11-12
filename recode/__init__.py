@@ -101,4 +101,12 @@ from recode.util import spy, get_struct, list_of_dicts
 from recode.base import *
 
 from recode.base import mk_encoder_and_decoder  # main interface function
-from recode.audio import mk_pcm_audio_codec
+from recode.audio import (
+    # encode_wav,
+    # decode_wav,
+    encode_wav_header_bytes,
+    decode_wav_header_bytes,
+    mk_pcm_audio_codec,
+    encode_wav_header_bytes,
+    decode_wav_header_bytes,
+)

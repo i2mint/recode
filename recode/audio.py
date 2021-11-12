@@ -25,10 +25,11 @@ b'\x01\x00\x02\x00\x03\x00'
 TODO: Use builtin wave module to handle wav format as well.
 
 """
-
+from io import BytesIO
 from typing import Union, Iterable
 from numbers import Number
 from recode.base import mk_encoder_and_decoder
+from wave import Wave_write, Wave_read
 
 Width = Union[str, int]
 Waveform = Iterable[Number]
@@ -84,7 +85,7 @@ def encode_pcm(wf: Waveform, width: Width = 16, n_channels: int = 1):
     return encode(wf)
 
 
-def decode_pcm(pcm_bytes: bytes, width: Width = 16, n_channels: int = 1):
+def decode_pcm(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
     r"""
 
     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
@@ -97,6 +98,136 @@ def decode_pcm(pcm_bytes: bytes, width: Width = 16, n_channels: int = 1):
     """
     _, decode = mk_pcm_audio_codec(width, n_channels)
     return decode(pcm_bytes)
+
+
+# def encode_wav(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):
+#     r"""Encode waveform (e.g. list of numbers) into PCM bytes.
+#
+#     :param wf: Waveform to encode
+#     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
+#         (will try to figure it out by itself)
+#     :param n_channels: Number of channels
+#     :return: The pcm-bytes-encoded waveform
+#
+#     >>> wav_bytes = encode_wav([1, 2, 3])
+#     b'\x01\x00\x02\x00\x03\x00'
+#
+#     """
+#     wf = list(wf)
+#     nframes = len(wf)
+#     wav_header_bytes = encode_wav_header_bytes(
+#         sr, width_bytes=width_bytes, n_channels=n_channels, nframes=nframes
+#     )
+#     encode, _ = mk_pcm_audio_codec(width_bytes, n_channels)
+#     return wav_header_bytes + encode(wf)
+#
+#
+# def decode_wav(wav_bytes: bytes):
+#     r"""
+#
+#     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
+#         (Will try to figure it out)
+#     :param n_channels: Number of channels
+#     :return: The decoded waveform
+#
+#     >>> decode_pcm(b'\x01\x00\x02\x00\x03\x00')
+#     [1, 2, 3]
+#     """
+#     wav_params = decode_wav_header_bytes(wav_bytes)
+#     sr = wav_params['sr']
+#     width = wav_params['width_bytes']
+#     n_channels = wav_params['n_channels']
+#     nframes = wav_params['nframes']
+#     n_data_bytes = nframes * width * n_channels
+#     header_size = len(wav_bytes) - n_data_bytes
+#
+#     _, decode = mk_pcm_audio_codec(width, n_channels)
+#     # return wav_bytes, header_size, sr, n_data_bytes, nframes, width
+#     # if header_size > len(wav_bytes):
+#     #     raise RuntimeError(f"{header_size=} > {len(wav_bytes)=}")
+#     return decode(wav_bytes[header_size:]), sr
+
+
+def encode_wav_header_bytes(
+    sr: int, width_bytes: int, *, n_channels: int = 1, nframes: int = 0, comptype=None,
+) -> bytes:
+    r"""Make a WAV header from given parameters.
+
+    :param sr: The sample rate (i.e. "frame rate" i.e. "chk_rate")
+    :param width_bytes: The "sample width" in bytes
+    :param n_channels: Number of channels (default is 1)
+    :param nframes: Optional number of frames (default is 0).
+        NOTE: If a wav file is to be read correctly, the num of frames (i.e.
+        samples/chks) should be exactly the number you'll actually be writing in the
+        wave file.
+    :param comptype: No supported by python's wave module (yet).
+
+    >>> header_bytes = encode_wav_header_bytes(44100, 2, n_channels=3)
+    >>> len(header_bytes)
+    44
+    >>> header_bytes[:31]
+    b'RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x03\x00D\xac\x00\x00\x98\t\x04'
+
+    You can decode those params (including those you didn't specify, but were
+    defaulted) with the `decode_wav_header_bytes` inverse function.
+
+    >>> from recode.audio import decode_wav_header_bytes
+    >>> params = decode_wav_header_bytes(header_bytes)
+    >>> params  # doctest: +NORMALIZE_WHITESPACE
+    {'sr': 44100,
+     'width_bytes': 2,
+     'n_channels': 3,
+     'nframes': 0,
+     'comptype': None}
+    >>> assert encode_wav_header_bytes(**params) == header_bytes
+
+    """
+    bio = BytesIO()
+    with Wave_write(bio) as obj:
+        obj.setnchannels(n_channels)
+        obj.setsampwidth(width_bytes)
+        obj.setframerate(sr)
+        # print(nframes)
+        # print(f"{obj.getnframes()=}")
+        if nframes:
+            obj.setnframes(nframes)
+            # print(f"{obj.getnframes()=}")
+        if comptype:
+            obj.setcomptype(comptype)
+
+        obj.writeframesraw(b'')
+        # print(f"{obj.getnframes()=}")
+        bio.seek(0)
+
+    return bio.read()
+
+
+def decode_wav_header_bytes(wav_header_bytes: bytes) -> dict:
+    """Get a dict of params decoded from a wav header
+
+    For examples, see the `encode_wav_header_bytes` function, it's inverse.
+
+    >>> from recode.audio import encode_wav_header_bytes
+    >>> header_bytes = encode_wav_header_bytes(44100, 2, n_channels=3)
+    >>> decode_wav_header_bytes(header_bytes)  # doctest: +NORMALIZE_WHITESPACE
+    {'sr': 44100,
+     'width_bytes': 2,
+     'n_channels': 3,
+     'nframes': 0,
+     'comptype': None}
+
+    """
+    wav_read_obj = Wave_read(BytesIO(wav_header_bytes))
+    params = wav_read_obj.getparams()
+    if params.comptype == 'NONE':  # it's the only one supported
+        comptype = None  # but we're making it compatible with encoding anyway
+    return dict(
+        sr=params.framerate,
+        width_bytes=params.sampwidth,
+        n_channels=params.nchannels,
+        nframes=params.nframes,
+        comptype=comptype,
+    )
 
 
 # TODO: Can optimize (index) the data below to make search functions faster
