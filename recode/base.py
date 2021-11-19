@@ -32,7 +32,7 @@ DFLT_CHK_FORMAT = 'd'
 codec_tuple = namedtuple('codec_tuple', field_names='encode decode')
 
 
-def mk_encoder_and_decoder(
+def mk_codec(
     chk_format: str = DFLT_CHK_FORMAT,
     n_channels: int = None,
     chk_size_bytes: int = None,
@@ -56,10 +56,10 @@ def mk_encoder_and_decoder(
 
     :return: A (named)tuple with encode and decode functions
 
-    The easiest and bigest bang for your buck is ``mk_encoder_and_decoder``
+    The easiest and bigest bang for your buck is ``mk_codec``
 
-    >>> from recode import mk_encoder_and_decoder
-    >>> encoder, decoder = mk_encoder_and_decoder()
+    >>> from recode import mk_codec
+    >>> encoder, decoder = mk_codec()
     >>> b = encoder([0, -3, 3.14])
     >>> b
     b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xc0\x1f\x85\xebQ\xb8\x1e\t@'
@@ -74,7 +74,7 @@ def mk_encoder_and_decoder(
     Say, for example, if you were dealing with stereo waveform
     (with the standard PCM_16 format), you'd do it this way:
 
-    >>> encoder, decoder = mk_encoder_and_decoder('hh')
+    >>> encoder, decoder = mk_codec('hh')
     >>> pcm_bytes = encoder(iter(multi_channel_stream))
     >>> pcm_bytes
     b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'
@@ -89,23 +89,23 @@ def mk_encoder_and_decoder(
 
     It is advised to use these in any production code, for the sanity of everyone!
 
-    >>> mk_encoder_and_decoder('hhh', n_channels=2)
+    >>> mk_codec('hhh', n_channels=2)
     Traceback (most recent call last):
       ...
     AssertionError: You said there'd be 2 channels, but I inferred 3
-    >>> mk_encoder_and_decoder('hhh', chk_size_bytes=3)
+    >>> mk_codec('hhh', chk_size_bytes=3)
     Traceback (most recent call last):
       ...
     AssertionError: The given chk_size_bytes 3 did not match the inferred (from chk_format) 6
 
     Finally, so far we've done it this way:
 
-    >>> encoder, decoder = mk_encoder_and_decoder('hHifd')
+    >>> encoder, decoder = mk_codec('hHifd')
 
     But see that what's actually returned is a NAMED tuple, which means that you can
     can also get one object that will have `.encode` and `.decode` properties:
 
-    >>> codec = mk_encoder_and_decoder('hHifd')
+    >>> codec = mk_codec('hHifd')
     >>> to_encode = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
     >>> encoded = codec.encode(to_encode)
     >>> decoded = codec.decode(encoded)
@@ -131,6 +131,9 @@ def mk_encoder_and_decoder(
     codec = codec_tuple(encoder, decoder)
     # add_coding_attributes(codec, specs)
     return codec
+
+
+mk_encoder_and_decoder = mk_codec  # backcompat alias
 
 
 def add_coding_attributes(to_obj, from_obj):

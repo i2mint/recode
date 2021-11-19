@@ -2,10 +2,10 @@ r"""
 Make codecs for fixed size structured chunks serialization and deserialization of
 sequences, tabular data, and time-series.
 
-The easiest and bigest bang for your buck is ``mk_encoder_and_decoder``
+The easiest and bigest bang for your buck is ``mk_codec``
 
->>> from recode import mk_encoder_and_decoder
->>> encoder, decoder = mk_encoder_and_decoder()
+>>> from recode import mk_codec
+>>> encoder, decoder = mk_codec()
 
 ``encoder`` will encode a list (or any iterable) of numbers into bytes
 
@@ -18,7 +18,7 @@ b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xc0\x1f\x85\xebQ\
 >>> decoder(b)
 [0.0, -3.0, 3.14]
 
-There's only really one argument you need to know about in ``mk_encoder_and_decoder``.
+There's only really one argument you need to know about in ``mk_codec``.
 The first argument, called `chk_format`, which is a string of characters from
 the "Format" column of
 https://docs.python.org/3/library/struct.html#format-characters
@@ -29,7 +29,7 @@ apply to each "channel" (hold your horses, we'll explain).
 
 The one we've just been through is in fact
 
->>> encoder, decoder = mk_encoder_and_decoder('d')
+>>> encoder, decoder = mk_codec('d')
 
 That is, it will expect that your data is a list of numbers, and they'll be encoded
 with the 'd' format character, that is 8-bytes doubles.
@@ -37,7 +37,7 @@ That default is goo because it gives you a lot of room, but if you knew that you
 would only be dealing with 2-byte integers (as in most WAV audio waveforms),
 you would have chosen `h`:
 
->>> encoder, decoder = mk_encoder_and_decoder('h')
+>>> encoder, decoder = mk_codec('h')
 
 What about those channels?
 Well, some times you need to encode/decode multi-channel streams, such as:
@@ -47,7 +47,7 @@ Well, some times you need to encode/decode multi-channel streams, such as:
 Say, for example, if you were dealing with stereo waveform
 (with the standard PCM_16 format), you'd do it this way:
 
->>> encoder, decoder = mk_encoder_and_decoder('hh')
+>>> encoder, decoder = mk_codec('hh')
 >>> pcm_bytes = encoder(iter(multi_channel_stream))
 >>> pcm_bytes
 b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'
@@ -62,23 +62,23 @@ misspecify the `chk_format`, and how hard it can be to notice that we did.
 
 It is advised to use these in any production code, for the sanity of everyone!
 
->>> mk_encoder_and_decoder('hhh', n_channels=2)
+>>> mk_codec('hhh', n_channels=2)
 Traceback (most recent call last):
   ...
 AssertionError: You said there'd be 2 channels, but I inferred 3
->>> mk_encoder_and_decoder('hhh', chk_size_bytes=3)
+>>> mk_codec('hhh', chk_size_bytes=3)
 Traceback (most recent call last):
   ...
 AssertionError: The given chk_size_bytes 3 did not match the inferred (from chk_format) 6
 
 Finally, so far we've done it this way:
 
->>> encoder, decoder = mk_encoder_and_decoder('hHifd')
+>>> encoder, decoder = mk_codec('hHifd')
 
 But see that what's actually returned is a NAMED tuple, which means that you can
 can also get one object that will have `.encode` and `.decode` properties:
 
->>> codec = mk_encoder_and_decoder('hHifd')
+>>> codec = mk_codec('hHifd')
 >>> to_encode = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
 >>> encoded = codec.encode(to_encode)
 >>> decoded = codec.decode(encoded)
@@ -96,11 +96,12 @@ should be the same)
 24
 
 """
+from recode.base import mk_codec  # main interface function
+mk_codec = mk_codec
 
 from recode.util import spy, get_struct, list_of_dicts
 from recode.base import *
 
-from recode.base import mk_encoder_and_decoder  # main interface function
 from recode.audio import (
     # encode_wav,
     # decode_wav,
