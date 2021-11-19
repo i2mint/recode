@@ -97,6 +97,7 @@ should be the same)
 
 """
 from recode.base import mk_codec  # main interface function
+
 mk_codec = mk_codec
 
 from recode.util import spy, get_struct, list_of_dicts
