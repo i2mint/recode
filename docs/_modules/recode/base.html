@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.base &mdash; recode 0.1.19 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.base &mdash; recode 0.1.20 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -105,7 +105,7 @@
 <span class="n">codec_tuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;codec_tuple&#39;</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="s1">&#39;encode decode&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="mk_encoder_and_decoder"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.mk_encoder_and_decoder">[docs]</a><span class="k">def</span> <span class="nf">mk_encoder_and_decoder</span><span class="p">(</span>
+<div class="viewcode-block" id="mk_codec"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.mk_codec">[docs]</a><span class="k">def</span> <span class="nf">mk_codec</span><span class="p">(</span>
     <span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">,</span>
     <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -129,10 +129,10 @@
 
 <span class="sd">    :return: A (named)tuple with encode and decode functions</span>
 
-<span class="sd">    The easiest and bigest bang for your buck is ``mk_encoder_and_decoder``</span>
+<span class="sd">    The easiest and bigest bang for your buck is ``mk_codec``</span>
 
-<span class="sd">    &gt;&gt;&gt; from recode import mk_encoder_and_decoder</span>
-<span class="sd">    &gt;&gt;&gt; encoder, decoder = mk_encoder_and_decoder()</span>
+<span class="sd">    &gt;&gt;&gt; from recode import mk_codec</span>
+<span class="sd">    &gt;&gt;&gt; encoder, decoder = mk_codec()</span>
 <span class="sd">    &gt;&gt;&gt; b = encoder([0, -3, 3.14])</span>
 <span class="sd">    &gt;&gt;&gt; b</span>
 <span class="sd">    b&#39;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xc0\x1f\x85\xebQ\xb8\x1e\t@&#39;</span>
@@ -147,7 +147,7 @@
 <span class="sd">    Say, for example, if you were dealing with stereo waveform</span>
 <span class="sd">    (with the standard PCM_16 format), you&#39;d do it this way:</span>
 
-<span class="sd">    &gt;&gt;&gt; encoder, decoder = mk_encoder_and_decoder(&#39;hh&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; encoder, decoder = mk_codec(&#39;hh&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; pcm_bytes = encoder(iter(multi_channel_stream))</span>
 <span class="sd">    &gt;&gt;&gt; pcm_bytes</span>
 <span class="sd">    b&#39;\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff&#39;</span>
@@ -162,23 +162,23 @@
 
 <span class="sd">    It is advised to use these in any production code, for the sanity of everyone!</span>
 
-<span class="sd">    &gt;&gt;&gt; mk_encoder_and_decoder(&#39;hhh&#39;, n_channels=2)</span>
+<span class="sd">    &gt;&gt;&gt; mk_codec(&#39;hhh&#39;, n_channels=2)</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">      ...</span>
 <span class="sd">    AssertionError: You said there&#39;d be 2 channels, but I inferred 3</span>
-<span class="sd">    &gt;&gt;&gt; mk_encoder_and_decoder(&#39;hhh&#39;, chk_size_bytes=3)</span>
+<span class="sd">    &gt;&gt;&gt; mk_codec(&#39;hhh&#39;, chk_size_bytes=3)</span>
 <span class="sd">    Traceback (most recent call last):</span>
 <span class="sd">      ...</span>
 <span class="sd">    AssertionError: The given chk_size_bytes 3 did not match the inferred (from chk_format) 6</span>
 
 <span class="sd">    Finally, so far we&#39;ve done it this way:</span>
 
-<span class="sd">    &gt;&gt;&gt; encoder, decoder = mk_encoder_and_decoder(&#39;hHifd&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; encoder, decoder = mk_codec(&#39;hHifd&#39;)</span>
 
 <span class="sd">    But see that what&#39;s actually returned is a NAMED tuple, which means that you can</span>
 <span class="sd">    can also get one object that will have `.encode` and `.decode` properties:</span>
 
-<span class="sd">    &gt;&gt;&gt; codec = mk_encoder_and_decoder(&#39;hHifd&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; codec = mk_codec(&#39;hHifd&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; to_encode = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]</span>
 <span class="sd">    &gt;&gt;&gt; encoded = codec.encode(to_encode)</span>
 <span class="sd">    &gt;&gt;&gt; decoded = codec.decode(encoded)</span>
@@ -204,6 +204,9 @@
     <span class="n">codec</span> <span class="o">=</span> <span class="n">codec_tuple</span><span class="p">(</span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span><span class="p">)</span>
     <span class="c1"># add_coding_attributes(codec, specs)</span>
     <span class="k">return</span> <span class="n">codec</span></div>
+
+
+<span class="n">mk_encoder_and_decoder</span> <span class="o">=</span> <span class="n">mk_codec</span>  <span class="c1"># backcompat alias</span>
 
 
 <span class="k">def</span> <span class="nf">add_coding_attributes</span><span class="p">(</span><span class="n">to_obj</span><span class="p">,</span> <span class="n">from_obj</span><span class="p">):</span>

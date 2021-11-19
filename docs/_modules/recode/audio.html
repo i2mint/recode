@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.19 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.audio &mdash; recode 0.1.20 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -101,7 +101,7 @@
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
 <span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
-<span class="kn">from</span> <span class="nn">recode.base</span> <span class="kn">import</span> <span class="n">mk_encoder_and_decoder</span>
+<span class="kn">from</span> <span class="nn">recode.base</span> <span class="kn">import</span> <span class="n">mk_codec</span>
 <span class="kn">from</span> <span class="nn">wave</span> <span class="kn">import</span> <span class="n">Wave_write</span><span class="p">,</span> <span class="n">Wave_read</span>
 
 <span class="n">Width</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
@@ -138,7 +138,7 @@
 <span class="sd">    ...         assert decode(encoded) == wf</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">struct_char</span> <span class="o">=</span> <span class="n">num_find_num_type_for</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">mk_encoder_and_decoder</span><span class="p">(</span><span class="n">struct_char</span> <span class="o">*</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">n_channels</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">mk_codec</span><span class="p">(</span><span class="n">struct_char</span> <span class="o">*</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">n_channels</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="encode_pcm"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_pcm">[docs]</a><span class="k">def</span> <span class="nf">encode_pcm</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
