@@ -138,6 +138,7 @@ def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
     ), f'Header size of wav bytes should be at least 44 bytes'
     return header_size
 
+
 #
 # def encode_wav(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):
 #     r"""Encode waveform (e.g. list of numbers) into PCM bytes.

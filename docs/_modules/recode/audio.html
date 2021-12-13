@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.21 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.audio &mdash; recode 0.1.22 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -173,6 +173,46 @@
     <span class="k">return</span> <span class="n">decode</span><span class="p">(</span><span class="n">pcm_bytes</span><span class="p">)</span></div>
 
 
+<span class="n">MIN_WAV_N_BYTES</span> <span class="o">=</span> <span class="mi">44</span>
+
+
+<div class="viewcode-block" id="decode_wav"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav">[docs]</a><span class="k">def</span> <span class="nf">decode_wav</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
+<span class="sd">        (Will try to figure it out)</span>
+<span class="sd">    :param n_channels: Number of channels</span>
+<span class="sd">    :return: The decoded waveform</span>
+
+<span class="sd">    &gt;&gt;&gt; decode_pcm(b&#39;\x01\x00\x02\x00\x03\x00&#39;)</span>
+<span class="sd">    [1, 2, 3]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="n">header_size</span> <span class="o">=</span> <span class="n">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
+    <span class="n">wf</span> <span class="o">=</span> <span class="n">decode_pcm</span><span class="p">(</span>
+        <span class="n">wav_bytes</span><span class="p">[</span><span class="n">header_size</span><span class="p">:],</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;width_bytes&#39;</span><span class="p">],</span>
+        <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;n_channels&#39;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">wf</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;sr&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="header_size_of_wav_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.header_size_of_wav_bytes">[docs]</a><span class="k">def</span> <span class="nf">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the header size&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">meta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="c1"># the header tells us how many samples (frames) of data there are, how many</span>
+    <span class="c1"># channels, and how many bytes each sample (frame) takes, so the header size is</span>
+    <span class="c1"># the total size (number of bytes), minus the product of those three quantities</span>
+    <span class="n">data_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;n_channels&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;width_bytes&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;nframes&#39;</span><span class="p">])</span>
+    <span class="n">header_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">data_size</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">header_size</span> <span class="o">&gt;=</span> <span class="n">MIN_WAV_N_BYTES</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Header size of wav bytes should be at least 44 bytes&#39;</span>
+    <span class="k">return</span> <span class="n">header_size</span></div>
+
+
+<span class="c1">#</span>
 <span class="c1"># def encode_wav(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):</span>
 <span class="c1">#     r&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes.</span>
 <span class="c1">#</span>
@@ -193,32 +233,6 @@
 <span class="c1">#     )</span>
 <span class="c1">#     encode, _ = mk_pcm_audio_codec(width_bytes, n_channels)</span>
 <span class="c1">#     return wav_header_bytes + encode(wf)</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
-<span class="c1"># def decode_wav(wav_bytes: bytes):</span>
-<span class="c1">#     r&quot;&quot;&quot;</span>
-<span class="c1">#</span>
-<span class="c1">#     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
-<span class="c1">#         (Will try to figure it out)</span>
-<span class="c1">#     :param n_channels: Number of channels</span>
-<span class="c1">#     :return: The decoded waveform</span>
-<span class="c1">#</span>
-<span class="c1">#     &gt;&gt;&gt; decode_pcm(b&#39;\x01\x00\x02\x00\x03\x00&#39;)</span>
-<span class="c1">#     [1, 2, 3]</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     wav_params = decode_wav_header_bytes(wav_bytes)</span>
-<span class="c1">#     sr = wav_params[&#39;sr&#39;]</span>
-<span class="c1">#     width = wav_params[&#39;width_bytes&#39;]</span>
-<span class="c1">#     n_channels = wav_params[&#39;n_channels&#39;]</span>
-<span class="c1">#     nframes = wav_params[&#39;nframes&#39;]</span>
-<span class="c1">#     n_data_bytes = nframes * width * n_channels</span>
-<span class="c1">#     header_size = len(wav_bytes) - n_data_bytes</span>
-<span class="c1">#</span>
-<span class="c1">#     _, decode = mk_pcm_audio_codec(width, n_channels)</span>
-<span class="c1">#     # return wav_bytes, header_size, sr, n_data_bytes, nframes, width</span>
-<span class="c1">#     # if header_size &gt; len(wav_bytes):</span>
-<span class="c1">#     #     raise RuntimeError(f&quot;{header_size=} &gt; {len(wav_bytes)=}&quot;)</span>
-<span class="c1">#     return decode(wav_bytes[header_size:]), sr</span>
 
 
 <div class="viewcode-block" id="encode_wav_header_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_header_bytes">[docs]</a><span class="k">def</span> <span class="nf">encode_wav_header_bytes</span><span class="p">(</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.21 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.audio &mdash; recode 0.1.22 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -119,6 +119,27 @@
 </dd></dl>
 
 <dl class="py function">
+<dt id="recode.audio.decode_wav">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_wav</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wav_bytes</span><span class="p">:</span> <span class="n">bytes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#decode_wav"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_wav" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+(Will try to figure it out)</p></li>
+<li><p><strong>n_channels</strong> – Number of channels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The decoded waveform</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode_pcm</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt id="recode.audio.decode_wav_header_bytes">
 <code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_wav_header_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wav_header_bytes</span><span class="p">:</span> <span class="n">bytes</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../../_modules/recode/audio.html#decode_wav_header_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_wav_header_bytes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a dict of params decoded from a wav header</p>
@@ -196,6 +217,12 @@ defaulted) with the <cite>decode_wav_header_bytes</cite> inverse function.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">encode_wav_header_bytes</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span> <span class="o">==</span> <span class="n">header_bytes</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="recode.audio.header_size_of_wav_bytes">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">header_size_of_wav_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wav_bytes</span><span class="p">:</span> <span class="n">bytes</span></em>, <em class="sig-param"><span class="n">meta</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#header_size_of_wav_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.header_size_of_wav_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the header size</p>
 </dd></dl>
 
 <dl class="py function">
