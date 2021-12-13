@@ -100,6 +100,45 @@ def decode_pcm(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
     return decode(pcm_bytes)
 
 
+MIN_WAV_N_BYTES = 44
+
+
+def decode_wav(wav_bytes: bytes):
+    r"""
+
+    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
+        (Will try to figure it out)
+    :param n_channels: Number of channels
+    :return: The decoded waveform
+
+    >>> decode_pcm(b'\x01\x00\x02\x00\x03\x00')
+    [1, 2, 3]
+    """
+    meta = decode_wav_header_bytes(wav_bytes)
+    header_size = header_size_of_wav_bytes(wav_bytes, meta)
+    wf = decode_pcm(
+        wav_bytes[header_size:],
+        width=meta['width_bytes'],
+        n_channels=meta['n_channels'],
+    )
+    return wf, meta['sr']
+
+
+def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
+    """Compute the header size"""
+    if meta is None:
+        meta = decode_wav_header_bytes(wav_bytes)
+    # the header tells us how many samples (frames) of data there are, how many
+    # channels, and how many bytes each sample (frame) takes, so the header size is
+    # the total size (number of bytes), minus the product of those three quantities
+    data_size = int(meta['n_channels'] * meta['width_bytes'] * meta['nframes'])
+    header_size = len(wav_bytes) - data_size
+    assert (
+        header_size >= MIN_WAV_N_BYTES
+    ), f'Header size of wav bytes should be at least 44 bytes'
+    return header_size
+
+#
 # def encode_wav(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):
 #     r"""Encode waveform (e.g. list of numbers) into PCM bytes.
 #
@@ -120,32 +159,6 @@ def decode_pcm(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
 #     )
 #     encode, _ = mk_pcm_audio_codec(width_bytes, n_channels)
 #     return wav_header_bytes + encode(wf)
-#
-#
-# def decode_wav(wav_bytes: bytes):
-#     r"""
-#
-#     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
-#         (Will try to figure it out)
-#     :param n_channels: Number of channels
-#     :return: The decoded waveform
-#
-#     >>> decode_pcm(b'\x01\x00\x02\x00\x03\x00')
-#     [1, 2, 3]
-#     """
-#     wav_params = decode_wav_header_bytes(wav_bytes)
-#     sr = wav_params['sr']
-#     width = wav_params['width_bytes']
-#     n_channels = wav_params['n_channels']
-#     nframes = wav_params['nframes']
-#     n_data_bytes = nframes * width * n_channels
-#     header_size = len(wav_bytes) - n_data_bytes
-#
-#     _, decode = mk_pcm_audio_codec(width, n_channels)
-#     # return wav_bytes, header_size, sr, n_data_bytes, nframes, width
-#     # if header_size > len(wav_bytes):
-#     #     raise RuntimeError(f"{header_size=} > {len(wav_bytes)=}")
-#     return decode(wav_bytes[header_size:]), sr
 
 
 def encode_wav_header_bytes(
