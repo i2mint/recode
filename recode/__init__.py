@@ -104,11 +104,12 @@ from recode.util import spy, get_struct, list_of_dicts
 from recode.base import *
 
 from recode.audio import (
-    # encode_wav,
-    # decode_wav,
+    # encode_wav_bytes,  # commented out because doesn't work
+    # ... see https://github.com/otosense/recode/issues/3
+    decode_wav_bytes,
     encode_wav_header_bytes,
     decode_wav_header_bytes,
     mk_pcm_audio_codec,
-    encode_wav_header_bytes,
-    decode_wav_header_bytes,
+    encode_pcm_bytes,
+    decode_pcm_bytes,
 )

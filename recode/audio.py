@@ -13,13 +13,13 @@ b'\x01\x00\x02\x00\x03\x00'
 
 Or just encode directly:
 
->>> encode_pcm([1, 2, 3])
+>>> encode_pcm_bytes([1, 2, 3])
 b'\x01\x00\x02\x00\x03\x00'
 
 
 Or decode directly:
 
->>> encode_pcm([1, 2, 3])
+>>> encode_pcm_bytes([1, 2, 3])
 b'\x01\x00\x02\x00\x03\x00'
 
 TODO: Use builtin wave module to handle wav format as well.
@@ -68,7 +68,7 @@ def mk_pcm_audio_codec(width: Width = 16, n_channels: int = 1):
     return mk_codec(struct_char * n_channels, n_channels=n_channels)
 
 
-def encode_pcm(wf: Waveform, width: Width = 16, n_channels: int = 1):
+def encode_pcm_bytes(wf: Waveform, width: Width = 16, n_channels: int = 1):
     r"""Encode waveform (e.g. list of numbers) into PCM bytes.
 
     :param wf: Waveform to encode
@@ -77,7 +77,7 @@ def encode_pcm(wf: Waveform, width: Width = 16, n_channels: int = 1):
     :param n_channels: Number of channels
     :return: The pcm-bytes-encoded waveform
 
-    >>> encode_pcm([1, 2, 3])
+    >>> encode_pcm_bytes([1, 2, 3])
     b'\x01\x00\x02\x00\x03\x00'
 
     """
@@ -85,7 +85,7 @@ def encode_pcm(wf: Waveform, width: Width = 16, n_channels: int = 1):
     return encode(wf)
 
 
-def decode_pcm(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
+def decode_pcm_bytes(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
     r"""
 
     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
@@ -93,7 +93,7 @@ def decode_pcm(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
     :param n_channels: Number of channels
     :return: The decoded waveform
 
-    >>> decode_pcm(b'\x01\x00\x02\x00\x03\x00')
+    >>> decode_pcm_bytes(b'\x01\x00\x02\x00\x03\x00')
     [1, 2, 3]
     """
     _, decode = mk_pcm_audio_codec(width, n_channels)
@@ -103,7 +103,7 @@ def decode_pcm(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
 MIN_WAV_N_BYTES = 44
 
 
-def decode_wav(wav_bytes: bytes):
+def decode_wav_bytes(wav_bytes: bytes):
     r"""
 
     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
@@ -111,12 +111,12 @@ def decode_wav(wav_bytes: bytes):
     :param n_channels: Number of channels
     :return: The decoded waveform
 
-    >>> decode_pcm(b'\x01\x00\x02\x00\x03\x00')
+    >>> decode_pcm_bytes(b'\x01\x00\x02\x00\x03\x00')
     [1, 2, 3]
     """
     meta = decode_wav_header_bytes(wav_bytes)
     header_size = header_size_of_wav_bytes(wav_bytes, meta)
-    wf = decode_pcm(
+    wf = decode_pcm_bytes(
         wav_bytes[header_size:],
         width=meta['width_bytes'],
         n_channels=meta['n_channels'],
@@ -139,8 +139,8 @@ def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
     return header_size
 
 
-#
-# def encode_wav(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):
+# TODO: Repair. See https://github.com/otosense/recode/issues/3
+# def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):
 #     r"""Encode waveform (e.g. list of numbers) into PCM bytes.
 #
 #     :param wf: Waveform to encode
