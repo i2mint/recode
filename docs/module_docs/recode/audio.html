@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.23 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.audio &mdash; recode 0.1.24 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -133,8 +133,16 @@
 <dd class="field-even"><p>The decoded waveform</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode_pcm_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="go">[1, 2, 3]</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wav_bytes</span> <span class="o">=</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="sa">b</span><span class="s1">&#39;RIFF.</span><span class="se">\x00\x00\x00</span><span class="s1">WAVEfmt </span><span class="se">\x10\x00\x00\x00\x01\x00\x01\x00</span><span class="s1">&#39;</span>  <span class="c1"># header</span>
+<span class="gp">... </span>    <span class="sa">b</span><span class="s1">&#39;*</span><span class="se">\x00\x00\x00</span><span class="s1">T</span><span class="se">\x00\x00\x00\x02\x00\x10\x00</span><span class="s1">data</span><span class="se">\n\x00\x00\x00</span><span class="s1">&#39;</span>  <span class="c1"># header</span>
+<span class="gp">... </span>    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff</span><span class="s1">&#39;</span>  <span class="c1"># data</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wf</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">decode_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wf</span>
+<span class="go">[0, 1, -1, 2, -2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sr</span>
+<span class="go">42</span>
 </pre></div>
 </div>
 </dd></dl>
