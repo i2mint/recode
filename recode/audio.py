@@ -111,8 +111,16 @@ def decode_wav_bytes(wav_bytes: bytes):
     :param n_channels: Number of channels
     :return: The decoded waveform
 
-    >>> decode_pcm_bytes(b'\x01\x00\x02\x00\x03\x00')
-    [1, 2, 3]
+    >>> wav_bytes = (
+    ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'  # header
+    ...     b'*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00'  # header
+    ...     b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'  # data
+    ... )
+    >>> wf, sr = decode_wav_bytes(wav_bytes)
+    >>> wf
+    [0, 1, -1, 2, -2]
+    >>> sr
+    42
     """
     meta = decode_wav_header_bytes(wav_bytes)
     header_size = header_size_of_wav_bytes(wav_bytes, meta)

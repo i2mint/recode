@@ -8,6 +8,7 @@ from recode import (
     meta_to_frame,
     StructCodecSpecs,
     specs_from_frames,
+    decode_wav_bytes,
 )
 import pytest
 from typing import Iterator
@@ -223,3 +224,49 @@ def test_implicit_specs(chk_format, frame, n_channels):
     _, specs = specs_from_frames(frame)
     assert specs.chk_format == chk_format
     assert specs.n_channels == n_channels
+
+
+# ------ testing wav related things -----------------------------------------------------
+
+
+def wf_to_wav_bytes_with_soundfile(wf, sr=44100, dtype='int16', subtype='PCM_16'):
+    """Just used to MAKE some test data (uses non-builtins)"""
+    import soundfile as sf
+    import io
+    import numpy as np
+
+    b = io.BytesIO()
+    sf.write(
+        b, np.array(wf).astype(dtype), samplerate=sr, format='wav', subtype=subtype
+    )
+    b.seek(0)
+    return b.read()
+
+
+# Was used to make a little case for decode_wav_bytes doctest
+# little_wf = [0, 1, -1, 2, -2]
+# little_wf_wav_bytes = wf_to_wav_bytes_with_soundfile(little_wf)
+from itertools import chain
+
+big_wf = [0] + list(chain.from_iterable(([x, -x] for x in range(32768))))
+big_wf_bytes_file = 'test_wf.wav'
+
+
+def mk_test_wav_file():
+    """To make the test_wf.wav test file (uses non-builtins)"""
+    big_wf_wav_bytes = wf_to_wav_bytes_with_soundfile(big_wf)
+
+    with open(big_wf_bytes_file, 'wb') as fp:
+        fp.write(big_wf_wav_bytes)
+
+
+def test_decode_wav_bytes():
+    with open(big_wf_bytes_file, 'rb') as fp:
+        b = fp.read()
+
+    wf, sr = decode_wav_bytes(b)
+    assert list(wf) == list(big_wf)
+    assert sr == 44100
+
+
+# mk_test_wav_file()
