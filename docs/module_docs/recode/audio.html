@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.22 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.audio &mdash; recode 0.1.23 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -87,19 +87,19 @@
 </pre></div>
 </div>
 <p>Or just encode directly:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm_bytes</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
 </pre></div>
 </div>
 <p>Or decode directly:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm_bytes</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
 </pre></div>
 </div>
 <p>TODO: Use builtin wave module to handle wav format as well.</p>
 <dl class="py function">
-<dt id="recode.audio.decode_pcm">
-<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_pcm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pcm_bytes</span><span class="p">:</span> <span class="n">bytes</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#decode_pcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_pcm" title="Permalink to this definition">¶</a></dt>
+<dt id="recode.audio.decode_pcm_bytes">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_pcm_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pcm_bytes</span><span class="p">:</span> <span class="n">bytes</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#decode_pcm_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_pcm_bytes" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -112,15 +112,15 @@
 <dd class="field-even"><p>The decoded waveform</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode_pcm</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode_pcm_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="go">[1, 2, 3]</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.audio.decode_wav">
-<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_wav</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wav_bytes</span><span class="p">:</span> <span class="n">bytes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#decode_wav"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_wav" title="Permalink to this definition">¶</a></dt>
+<dt id="recode.audio.decode_wav_bytes">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">decode_wav_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wav_bytes</span><span class="p">:</span> <span class="n">bytes</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#decode_wav_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.decode_wav_bytes" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -133,7 +133,7 @@
 <dd class="field-even"><p>The decoded waveform</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode_pcm</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode_pcm_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="go">[1, 2, 3]</span>
 </pre></div>
 </div>
@@ -157,8 +157,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.audio.encode_pcm">
-<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">encode_pcm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">16</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#encode_pcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.encode_pcm" title="Permalink to this definition">¶</a></dt>
+<dt id="recode.audio.encode_pcm_bytes">
+<code class="sig-prename descclassname">recode.audio.</code><code class="sig-name descname">encode_pcm_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">16</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/audio.html#encode_pcm_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.audio.encode_pcm_bytes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encode waveform (e.g. list of numbers) into PCM bytes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -173,7 +173,7 @@
 <dd class="field-even"><p>The pcm-bytes-encoded waveform</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode_pcm_bytes</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
 <span class="go">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
 </pre></div>
 </div>
