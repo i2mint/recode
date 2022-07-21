@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.23 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.audio &mdash; recode 0.1.24 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -184,8 +184,16 @@
 <span class="sd">    :param n_channels: Number of channels</span>
 <span class="sd">    :return: The decoded waveform</span>
 
-<span class="sd">    &gt;&gt;&gt; decode_pcm_bytes(b&#39;\x01\x00\x02\x00\x03\x00&#39;)</span>
-<span class="sd">    [1, 2, 3]</span>
+<span class="sd">    &gt;&gt;&gt; wav_bytes = (</span>
+<span class="sd">    ...     b&#39;RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00&#39;  # header</span>
+<span class="sd">    ...     b&#39;*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00&#39;  # header</span>
+<span class="sd">    ...     b&#39;\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff&#39;  # data</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; wf, sr = decode_wav_bytes(wav_bytes)</span>
+<span class="sd">    &gt;&gt;&gt; wf</span>
+<span class="sd">    [0, 1, -1, 2, -2]</span>
+<span class="sd">    &gt;&gt;&gt; sr</span>
+<span class="sd">    42</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
     <span class="n">header_size</span> <span class="o">=</span> <span class="n">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
