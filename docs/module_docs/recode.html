@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode &mdash; recode 0.1.26 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <title>recode &mdash; recode 0.1.27 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -31,11 +31,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> recode
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            recode
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,8 +66,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>recode</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">recode</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/module_docs/recode.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -134,11 +138,11 @@ misspecify the <cite>chk_format</cite>, and how hard it can be to notice that we
 <p>It is advised to use these in any production code, for the sanity of everyone!</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mk_codec</span><span class="p">(</span><span class="s1">&#39;hhh&#39;</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
+<span class="w">  </span><span class="c">...</span>
 <span class="gr">AssertionError</span>: <span class="n">You said there&#39;d be 2 channels, but I inferred 3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mk_codec</span><span class="p">(</span><span class="s1">&#39;hhh&#39;</span><span class="p">,</span> <span class="n">chk_size_bytes</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
+<span class="w">  </span><span class="c">...</span>
 <span class="gr">AssertionError</span>: <span class="n">The given chk_size_bytes 3 did not match the inferred (from chk_format) 6</span>
 </pre></div>
 </div>

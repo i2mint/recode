@@ -27,9 +27,9 @@ FrameToChunk = Callable[[Frame], Chunk]
 MetaToFrame = Callable[[Meta], Frame]
 FrameToMeta = Callable[[Frame], Meta]
 
-DFLT_CHK_FORMAT = "d"
+DFLT_CHK_FORMAT = 'd'
 
-codec_tuple = namedtuple("codec_tuple", field_names="encode decode")
+codec_tuple = namedtuple('codec_tuple', field_names='encode decode')
 
 
 def mk_codec(
@@ -154,7 +154,7 @@ class ChunkedEncoder(Encoder):
     chk_size_bytes = None
 
     def __call__(self, frames: Frames):
-        return b"".join(map(self.frame_to_chk, frames))
+        return b''.join(map(self.frame_to_chk, frames))
 
     def __eq__(self, other):
         return self.chk_format == other.chk_format
@@ -174,7 +174,7 @@ class MetaEncoder(Encoder):
         vals = list(map(list, (d.values() for d in frames)))
         if len(vals[0]) == 1:
             vals = [item for sublist in vals for item in sublist]
-        return meta + b"".join(map(self.frame_to_chk, vals))
+        return meta + b''.join(map(self.frame_to_chk, vals))
 
 
 first_element = itemgetter(0)  # "equivalent" to lambda x: x[0]
@@ -199,7 +199,7 @@ class ChunkedDecoder(Decoder):
         return frame
 
     def __eq__(self, other):
-        return self.chk_format == getattr(other, "chk_format", None)
+        return self.chk_format == getattr(other, 'chk_format', None)
 
 
 @dataclass
@@ -238,9 +238,9 @@ def _split_chk_format(chk_format: str = DFLT_CHK_FORMAT):
     >>> assert _split_chk_format('hq') == ('', 'hq')
     >>> assert _split_chk_format('@hq') == ('@', 'hq')
     """
-    if chk_format[0] in "@=<>!":
+    if chk_format[0] in '@=<>!':
         return chk_format[0], chk_format[1:]
-    return "", chk_format
+    return '', chk_format
 
 
 def _format_chars_part_of_chk_format(chk_format: str = DFLT_CHK_FORMAT):
@@ -280,8 +280,8 @@ def frame_to_meta(frame):
     >>> assert frame_to_meta(rows) == b'\x08\x00customer'
     """
     cols = list(frame[0].keys())
-    s = ".".join(cols)
-    return b"" + pack("h", len(s)) + s.encode()
+    s = '.'.join(cols)
+    return b'' + pack('h', len(s)) + s.encode()
 
 
 def meta_to_frame(meta):
@@ -291,8 +291,8 @@ def meta_to_frame(meta):
     ... x03\x00\x02\x00\x05\x00\x01\x00\x03\x00\x04\x00\t\x00'
     >>> assert meta_to_frame(meta)[0] == ['customer', 'apple', 'banana', 'tomato']
     """
-    length = unpack("h", meta[:2])[0] + 2
-    cols = (meta[2:length]).decode().split(".")
+    length = unpack('h', meta[:2])[0] + 2
+    cols = (meta[2:length]).decode().split('.')
     return cols, length
 
 
@@ -411,7 +411,7 @@ class StructCodecSpecs:
         else:
             assert self.n_channels == inferred_n_channels, (
                 f"You said there'd be {self.n_channels} channels, "
-                f"but I inferred {inferred_n_channels}"
+                f'but I inferred {inferred_n_channels}'
             )
 
         chk_size_bytes = struct.calcsize(self.chk_format)
@@ -419,8 +419,8 @@ class StructCodecSpecs:
             self.chk_size_bytes = chk_size_bytes
         else:
             assert self.chk_size_bytes == chk_size_bytes, (
-                f"The given chk_size_bytes {self.chk_size_bytes} did not match the "
-                f"inferred (from chk_format) {chk_size_bytes}"
+                f'The given chk_size_bytes {self.chk_size_bytes} did not match the '
+                f'inferred (from chk_format) {chk_size_bytes}'
             )
 
     def frame_to_chk(self, frame):
@@ -477,7 +477,7 @@ def specs_from_frames(frames: Frames):
         format_char = get_struct(type(list(head[0].values())[0]))
         n_channels = len(head[0].keys())
     else:
-        raise AttributeError("Unknown data format")
+        raise AttributeError('Unknown data format')
 
     if n_channels is not None:
         format_char = format_char * n_channels
