@@ -439,8 +439,8 @@ class StructCodecSpecs:
 def specs_from_frames(frames: Frames):
     r"""
     Implicitly defines the codec specs based on the frames to encode/decode.
-    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If frames is an
-    iterable, then the iterator can be ignored like the following example.
+    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If 
+    frames is an iterable, then the iterator can be ignored like the following example.
     >>> frames = [1,2,3]
     >>> _, specs = specs_from_frames(frames)
     >>> print(specs)
@@ -452,8 +452,8 @@ def specs_from_frames(frames: Frames):
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames from the output like
-    in the following example.
+    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames 
+    from the output like in the following example.
 
     >>> frames = iter([[1.1,2.2],[3.3,4.4]])
     >>> frames, specs = specs_from_frames(frames)
@@ -466,19 +466,15 @@ def specs_from_frames(frames: Frames):
     >>> assert decoded_frames == [(1.1,2.2),(3.3,4.4)]
     """
     head, frames = spy(frames)
+    head = head[0]
 
-    if isinstance(head[0], (int, float)):
-        format_char = get_struct(type(head[0]))
-        n_channels = 1
-    elif isinstance(head[0], (list, tuple)):
-        format_char = get_struct(type(head[0][0]))
-        n_channels = len(head[0])
-    elif isinstance(head[0], dict):
-        format_char = get_struct(type(list(head[0].values())[0]))
-        n_channels = len(head[0].keys())
+    if isinstance(head, (int, float)):
+        format_char = get_struct(type(head))
+    elif isinstance(head, (list, tuple)):
+        format_char = ''.join(get_struct(type(elmt)) for elmt in head)
+    elif isinstance(head, dict):
+        format_char = ''.join(get_struct(type(value)) for value in head.values())
     else:
         raise AttributeError('Unknown data format')
 
-    if n_channels is not None:
-        format_char = format_char * n_channels
-    return frames, StructCodecSpecs(format_char, n_channels=n_channels)
+    return frames, StructCodecSpecs(format_char)
