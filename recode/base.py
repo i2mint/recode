@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Iterable, Callable, Sequence, Union, Any
 from struct import pack, unpack, iter_unpack
 import struct
-from operator import itemgetter, attrgetter
+from operator import itemgetter
 from collections import namedtuple
 from recode.util import spy, get_struct, list_of_dicts
 
@@ -173,7 +173,7 @@ class MetaEncoder(Encoder):
         meta = self.frame_to_meta(frames)
         vals = list(map(list, (d.values() for d in frames)))
         if len(vals[0]) == 1:
-            vals = [item for sublist in vals for item in sublist]
+            vals = [item[0] for item in vals]
         return meta + b''.join(map(self.frame_to_chk, vals))
 
 
@@ -195,7 +195,7 @@ class ChunkedDecoder(Decoder):
         iterator = self.chk_to_frame(b)
         frame = list(iterator)
         if len(frame[0]) == 1:
-            frame = [item for tup in frame for item in tup]
+            frame = [item[0] for item in frame]
         return frame
 
     def __eq__(self, other):
@@ -303,28 +303,26 @@ class StructCodecSpecs:
     (https://docs.python.org/3/library/struct.html#format-characters)
 
     :param chk_format: The format of a chunk, as specified by the struct module
-        The length of the string specifies the number of "channels",
-        and each individual character of the string specifies the kind of encoding
-        you should apply to each "channel" (hold your horses, we'll explain).
         See https://docs.python.org/3/library/struct.html#format-characters
-    :param n_channels: Expected of channels. If given, will assert that the
+    :param n_channels: Expected number of channels. If given, will assert that the
         number of channels expressed by the `chk_format` is indeed what is expected.
-        the number of channels expressed by the `chk_format`.
     :param chk_size_bytes: Expected number of bytes per chunk.
         If given, will assert that the chunk size expressed by the `chk_format` is
         indeed the one expected.
 
-    Note: All encoder/decoder (codec) specs can be expressed though the `chk_format`.
+    Note: All encoder/decoder (codec) specs can be expressed through the `chk_format`.
     Yet, though `n_channels` and `chk_size_bytes` are both optional, it is advised to
     include them in production code since they act as extra confirmation of the codec
     to be used. Encoding and decoding problems can be hard to notice until much
     later on downstream, and are therefore hard to debug.
 
-    To utilise recode, first define your codec specs. If your frame is only one channel
-    (ex. a list) then your format string will include two characters,
-    a byte character (@, =, <, >, !) and a format character. The format character
-    should match the data type of the samples in the frame so they are properly
-    encoded/decoded. This can be seen in thefollowing example.
+    To utilise recode, first define your codec specs. If your frame is only one channel,
+    then your format string will include two characters maximum: an optional special character to 
+    control the byte order, size and alignment (@, =, <, >, !), and a format character to specify 
+    the type of data being packed/unpacked. The format character should match the data type of the 
+    samples in the frame so they are properly encoded/decoded. 
+    
+    This can be seen in the following example.
 
     >>> specs = StructCodecSpecs(chk_format='h')
     >>> print(specs)
@@ -366,10 +364,9 @@ class StructCodecSpecs:
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements
-    the struct.iter_unpack function.
-    IterativeDecoder only requires one argument, a chk_to_frame_iter function,
-    and returns an iterator of each chunk.
+    You can also use the IterativeDecoder which will return an iterator of frames instead of the 
+    full list of frames.
+    IterativeDecoder can be instanciated and called in the same way as ChunkedDecoder.
     An example of an IterativeDecorator can be seen below.
 
     >>> specs = StructCodecSpecs(chk_format = 'hdhd')
@@ -426,8 +423,7 @@ class StructCodecSpecs:
     def frame_to_chk(self, frame):
         if self.n_channels == 1:
             return pack(self.chk_format, frame)
-        else:
-            return pack(self.chk_format, *frame)
+        return pack(self.chk_format, *frame)
 
     def chk_to_frame(self, chk):
         return iter_unpack(self.chk_format, chk)
