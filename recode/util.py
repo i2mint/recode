@@ -44,10 +44,4 @@ def list_of_dicts(cols, vals):
     >>> list_of_dicts(cols, vals)
     [{'foo': 1, 'bar': 2}, {'foo': 3, 'bar': 4}, {'foo': 5, 'bar': 6}]
     """
-    frames = []
-    for group in vals:
-        row = {}
-        for i in range(len(group)):
-            row[cols[i]] = group[i]
-        frames.append(row)
-    return frames
+    return [dict(zip(cols, group)) for group in vals]
