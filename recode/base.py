@@ -37,26 +37,19 @@ def mk_codec(
     n_channels: int = None,
     chk_size_bytes: int = None,
 ):
-    r"""
-    Enable the definition of codec specs based on `chk_format`,
-    format characters of the python struct module
+    r"""Enable the definition of codec specs based on format characters of the
+    python struct module
     (https://docs.python.org/3/library/struct.html#format-characters)
 
     :param chk_format: The format of a chunk, as specified by the struct module
-        The length of the string specifies the number of "channels",
-        and each individual character of the string specifies the kind of encoding
-        you should apply to each "channel" (hold your horses, we'll explain).
         See https://docs.python.org/3/library/struct.html#format-characters
-    :param n_channels: Expected of channels. If given, will assert that the
+    :param n_channels: Expected number of channels. If given, will assert that the
         number of channels expressed by the `chk_format` is indeed what is expected.
-        the number of channels expressed by the `chk_format`.
     :param chk_size_bytes: Expected number of bytes per chunk.
         If given, will assert that the chunk size expressed by the `chk_format` is
         indeed the one expected.
 
     :return: A (named)tuple with encode and decode functions
-
-    The easiest and bigest bang for your buck is ``mk_codec``
 
     >>> from recode import mk_codec
     >>> encoder, decoder = mk_codec()
@@ -80,7 +73,6 @@ def mk_codec(
     b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'
     >>> decoder(pcm_bytes)
     [(3, -1), (4, -1), (5, -9)]
-
 
     The `n_channels` and `chk_size_bytes` arguments are there if you want to assert
     that your number of channels and chunk size are what you expect.
@@ -365,9 +357,9 @@ class StructCodecSpecs:
     >>> assert decoded_frames == frames
 
     You can also use the IterativeDecoder which will return an iterator of frames instead of the 
-    full list of frames.
-    IterativeDecoder can be instanciated and called in the same way as ChunkedDecoder.
-    An example of an IterativeDecorator can be seen below.
+    full list of frames, similar to what struct.iter_unpack does.
+    IterativeDecoder can be instantiated and called in the same way as ChunkedDecoder.
+    An example of IterativeDecorator can be seen below.
 
     >>> specs = StructCodecSpecs(chk_format = 'hdhd')
     >>> print(specs)
