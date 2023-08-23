@@ -149,9 +149,9 @@ class ChunkedEncoder(Encoder):
     """
 
     frame_to_chk: FrameToChunk
-    chk_format = None
-    n_channels = None
-    chk_size_bytes = None
+    chk_format: str = None
+    n_channels: int = None
+    chk_size_bytes: int = None
 
     def __call__(self, frames: Frames):
         return b''.join(map(self.frame_to_chk, frames))
@@ -187,9 +187,9 @@ class ChunkedDecoder(Decoder):
     """
 
     chk_to_frame: ChunkToFrame
-    chk_format = None
-    n_channels = None
-    chk_size_bytes = None
+    chk_format: str = None
+    n_channels: int = None
+    chk_size_bytes: int = None
 
     def __call__(self, b: bytes):
         iterator = self.chk_to_frame(b)
