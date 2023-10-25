@@ -171,12 +171,7 @@ def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
 
 
 def encode_wav_header_bytes(
-    sr: int,
-    width_bytes: int,
-    *,
-    n_channels: int = 1,
-    nframes: int = 0,
-    comptype=None,
+    sr: int, width_bytes: int, *, n_channels: int = 1, nframes: int = 0, comptype=None,
 ) -> bytes:
     r"""Make a WAV header from given parameters.
 
