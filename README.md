@@ -38,10 +38,6 @@ The first argument, called `chk_format`, which is a string of characters from
 the "Format" column of the python 
 [format characters](https://docs.python.org/3/library/struct.html#format-characters)
 
-The length of the string specifies the number of "channels",
-and each individual character of the string specifies the kind of encoding you should
-apply to each "channel" (hold your horses, we'll explain).
-
 The one we've just been through is in fact
 
 ```python
@@ -50,7 +46,7 @@ The one we've just been through is in fact
 
 That is, it will expect that your data is a list of numbers, and they'll be encoded
 with the 'd' format character, that is 8-bytes doubles.
-That default is goo because it gives you a lot of room, but if you knew that you
+That default is good because it gives you a lot of room, but if you knew that you
 would only be dealing with 2-byte integers (as in most WAV audio waveforms),
 you would have chosen `h`:
 
@@ -70,7 +66,7 @@ Say, for example, if you were dealing with stereo waveform
 
 ```python
 >>> encoder, decoder = mk_codec('hh')
->>> pcm_bytes = encoder(iter(multi_channel_stream))
+>>> pcm_bytes = encoder(multi_channel_stream)
 >>> pcm_bytes
 b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'
 >>> decoder(pcm_bytes)
@@ -194,7 +190,7 @@ Once you need your original frame again, define a decoder and decode your frame
 
 ```python
 decoder = ChunkedDecoder(specs.chk_to_frame)
-decoded_frames = list(decoder(b))
+decoded_frames = decoder(b)
 decoded_frames
 ```
 
@@ -241,7 +237,7 @@ specs
 
 
 
-The second way to define StructCodecSpecs is to use `specs_from_frames` which will implictly define StructCodecSpecs based on the frame that is going to be encoded/decoded. This function will return a tuple containing an iterator of the passed frame and the defined StructCodecSpecs. The first element of the tuple can be ignored if the frame passed is not an iterator.
+The second way to define StructCodecSpecs is to use `specs_from_frames` which will implictly define StructCodecSpecs based on the frame that is going to be encoded/decoded. This function will return a tuple containing a reconstituted version of the iterator given as an input, and the defined StructCodecSpecs. The first element of the tuple can be ignored if the frame passed is not an iterator.
 
 
 ```python
@@ -311,7 +307,7 @@ b
 
 Next up your Decoder will allow you to decode your encoded bytes. There are three Encoders currently defined in recode: `ChunkedDecoder`, `IterativeDecoder`, and `MetaDecoder`.
 
-Either `ChunkedDecoder` or `IterativeDecoder` will work well for sequences, with the only difference being that `IterativeDecoder` returns an iterator of decoded chunks while `ChunkedDecoder` returns a mapping which can be converted to an iterable. `MetaDecoder` works best for tabular data encoded with `MetaEncoder`. 
+Either `ChunkedDecoder` or `IterativeDecoder` will work well for sequences, with the only difference being that `IterativeDecoder` returns an iterator of decoded chunks while `ChunkedDecoder` returns the whole list of decoded chunks. `MetaDecoder` works best for tabular data encoded with `MetaEncoder`. 
 
 
 ```python
@@ -320,14 +316,14 @@ _, specs = specs_from_frames(frame)
 encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
 decoder = ChunkedDecoder(specs.chk_to_frame)
 b = encoder(frame)
-list(decoder(b))
+decoder(b)
 ```
 
     [1, 2, 3]
 
 
 
-As is shown in the following example, an `IterativeDecoder` will return an unpack_iterator which which can easily be converted to a standard iterable like a list, or be used as an iterator.
+As is shown in the following example, an `IterativeDecoder` will return an unpack_iterator.
 
 
 ```python
@@ -609,7 +605,7 @@ decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
 frames = [1, 2, 3]
 b = encoder(frames)
 assert b == b'\x01\x00\x02\x00\x03\x00'
-decoded_frames = list(decoder(b))
+decoded_frames = decoder(b)
 assert decoded_frames == frames
 ```
 
@@ -623,7 +619,7 @@ decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
 frames = [(1, 2), (3, 4), (5, 6)]
 b = encoder(frames)
 assert b == b'\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\x06\x00'
-decoded_frames = list(decoder(b))
+decoded_frames = decoder(b)
 assert decoded_frames == frames
 ```
 
@@ -667,10 +663,9 @@ encoder = ChunkedEncoder(frame_to_chk = specs.frame_to_chk)
 decoder = ChunkedDecoder(chk_to_frame=specs.chk_to_frame)
 b = encoder(frames)
 assert b == b'\x01\x00\x02\x00\x03\x00'
-decoded_frames = list(decoder(b))
+decoded_frames = decoder(b)
 decoded_frames
 ```
-
 	[1, 2, 3]
 
 
@@ -713,8 +708,8 @@ def mk_wf(n_samples=2048, kind: Kind=Kind.random, **kwargs):
     if kind == Kind.random:
         dtype_str = kwargs.get('num_type', 'int16')
         if dtype_str.startswith('int'):
-            low = kwargs.get('low', -30000)
-            high = kwargs.get('high', 30000)
+            low = kwargs.get('low', int(-2**15))
+            high = kwargs.get('high', int(2**15-1))
             wf = np.random.randint(low=low, high=high, size=n_samples, dtype=dtype_str)
         else:
             raise TypeError("Don't know how to handle this case")
@@ -740,79 +735,9 @@ d = encoder(wf)
 assert d == b[44:]
 
 sf_read = sf.read(BytesIO(b), dtype='int16')
-recode_read = list(decoder(d))
+recode_read = decoder(d)
 
 assert np.all(sf_read[0] == recode_read)
 assert np.all(recode_read == wf)
 assert np.all(sf_read[0] == wf)
 ```
-
-## Compare performance of IterativeDecoder and ChunkedDecoder
-
-Both `IterativeDecoder` and `ChunkedDecoder` work well with encoded sequences. 
-Additionally, an `IterativeDecoder` can replace the functionality of a `ChunkedDecoder` as the iterator 
-it returns can easily be converted to a list. 
-Because of this we will compare the efficiency of `IterativeDecoder` and `ChunkedDecoder` to see if we should replace the 
-functionality of `ChunkedDecoder` with `IterativeDecoder`.
-
-```python
-from hum.gen.sine_mix import freq_based_stationary_wf
-from recode import (ChunkedEncoder, 
-                    ChunkedDecoder, 
-                    IterativeDecoder, 
-                    StructCodecSpecs)
-```
-
-Create a synthetic waveform to test both decoders on:
-
-```python
-DFLT_N_SAMPLES = 21 * 2048
-DFLT_SR = 44100
-
-wf_mix = freq_based_stationary_wf(freqs=(200, 400, 600, 800), weights=None,
-                             n_samples = DFLT_N_SAMPLES*300, sr = DFLT_SR)
-```
-
-Define the decoders and encode the waveform:
-
-```python
-specs = StructCodecSpecs('d')
-encoder = ChunkedEncoder(frame_to_chk=specs.frame_to_chk)
-decoder = ChunkedDecoder(
-    chk_size_bytes=specs.chk_size_bytes,
-    chk_to_frame=specs.chk_to_frame,
-    n_channels=specs.n_channels
-)
-idecoder = IterativeDecoder(chk_to_frame = specs.chk_to_frame_iter)
-b = encoder(wf_mix)
-```
-
-Helper function so the output of the decoders are in the same format:
-
-```python
-def it_to_list(it):
-    frame = list(it)
-    frame = [item for tup in frame for item in tup]
-    return frame
-```
-
-Performance of `ChunkedDecoder`:
-
-```python
-%timeit -r 2 -n 5 list(decoder(b))
-```
-```
-5.59 s ± 14.5 ms per loop (mean ± std. dev. of 2 runs, 5 loops each)
-```
-
-Performance of `IterativeDecoder`:
-
-```python
-%timeit -r 2 -n 5 it_to_list(idecoder(b))
-```
-```
-2.04 s ± 13.4 ms per loop (mean ± std. dev. of 2 runs, 5 loops each)
-```
-
-From these results, we can clearly see that we should replace the functionality of `ChunkedDecoder` with `IterativeDecoder` 
-as it is nearly three times more efficient.

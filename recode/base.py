@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Iterable, Callable, Sequence, Union, Any
 from struct import pack, unpack, iter_unpack
 import struct
-from operator import itemgetter, attrgetter
+from operator import itemgetter
 from collections import namedtuple
 from recode.util import spy, get_struct, list_of_dicts
 
@@ -37,26 +37,19 @@ def mk_codec(
     n_channels: int = None,
     chk_size_bytes: int = None,
 ):
-    r"""
-    Enable the definition of codec specs based on `chk_format`,
-    format characters of the python struct module
+    r"""Enable the definition of codec specs based on format characters of the
+    python struct module
     (https://docs.python.org/3/library/struct.html#format-characters)
 
     :param chk_format: The format of a chunk, as specified by the struct module
-        The length of the string specifies the number of "channels",
-        and each individual character of the string specifies the kind of encoding
-        you should apply to each "channel" (hold your horses, we'll explain).
         See https://docs.python.org/3/library/struct.html#format-characters
-    :param n_channels: Expected of channels. If given, will assert that the
+    :param n_channels: Expected number of channels. If given, will assert that the
         number of channels expressed by the `chk_format` is indeed what is expected.
-        the number of channels expressed by the `chk_format`.
     :param chk_size_bytes: Expected number of bytes per chunk.
         If given, will assert that the chunk size expressed by the `chk_format` is
         indeed the one expected.
 
     :return: A (named)tuple with encode and decode functions
-
-    The easiest and bigest bang for your buck is ``mk_codec``
 
     >>> from recode import mk_codec
     >>> encoder, decoder = mk_codec()
@@ -80,7 +73,6 @@ def mk_codec(
     b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'
     >>> decoder(pcm_bytes)
     [(3, -1), (4, -1), (5, -9)]
-
 
     The `n_channels` and `chk_size_bytes` arguments are there if you want to assert
     that your number of channels and chunk size are what you expect.
@@ -149,9 +141,9 @@ class ChunkedEncoder(Encoder):
     """
 
     frame_to_chk: FrameToChunk
-    chk_format = None
-    n_channels = None
-    chk_size_bytes = None
+    chk_format: str = None
+    n_channels: int = None
+    chk_size_bytes: int = None
 
     def __call__(self, frames: Frames):
         return b''.join(map(self.frame_to_chk, frames))
@@ -173,7 +165,7 @@ class MetaEncoder(Encoder):
         meta = self.frame_to_meta(frames)
         vals = list(map(list, (d.values() for d in frames)))
         if len(vals[0]) == 1:
-            vals = [item for sublist in vals for item in sublist]
+            vals = [item[0] for item in vals]
         return meta + b''.join(map(self.frame_to_chk, vals))
 
 
@@ -187,15 +179,15 @@ class ChunkedDecoder(Decoder):
     """
 
     chk_to_frame: ChunkToFrame
-    chk_format = None
-    n_channels = None
-    chk_size_bytes = None
+    chk_format: str = None
+    n_channels: int = None
+    chk_size_bytes: int = None
 
     def __call__(self, b: bytes):
         iterator = self.chk_to_frame(b)
         frame = list(iterator)
         if len(frame[0]) == 1:
-            frame = [item for tup in frame for item in tup]
+            frame = [item[0] for item in frame]
         return frame
 
     def __eq__(self, other):
@@ -303,28 +295,26 @@ class StructCodecSpecs:
     (https://docs.python.org/3/library/struct.html#format-characters)
 
     :param chk_format: The format of a chunk, as specified by the struct module
-        The length of the string specifies the number of "channels",
-        and each individual character of the string specifies the kind of encoding
-        you should apply to each "channel" (hold your horses, we'll explain).
         See https://docs.python.org/3/library/struct.html#format-characters
-    :param n_channels: Expected of channels. If given, will assert that the
+    :param n_channels: Expected number of channels. If given, will assert that the
         number of channels expressed by the `chk_format` is indeed what is expected.
-        the number of channels expressed by the `chk_format`.
     :param chk_size_bytes: Expected number of bytes per chunk.
         If given, will assert that the chunk size expressed by the `chk_format` is
         indeed the one expected.
 
-    Note: All encoder/decoder (codec) specs can be expressed though the `chk_format`.
+    Note: All encoder/decoder (codec) specs can be expressed through the `chk_format`.
     Yet, though `n_channels` and `chk_size_bytes` are both optional, it is advised to
     include them in production code since they act as extra confirmation of the codec
     to be used. Encoding and decoding problems can be hard to notice until much
     later on downstream, and are therefore hard to debug.
 
-    To utilise recode, first define your codec specs. If your frame is only one channel
-    (ex. a list) then your format string will include two characters,
-    a byte character (@, =, <, >, !) and a format character. The format character
-    should match the data type of the samples in the frame so they are properly
-    encoded/decoded. This can be seen in thefollowing example.
+    To utilise recode, first define your codec specs. If your frame is only one channel,
+    then your format string will include two characters maximum: an optional special character to 
+    control the byte order, size and alignment (@, =, <, >, !), and a format character to specify 
+    the type of data being packed/unpacked. The format character should match the data type of the 
+    samples in the frame so they are properly encoded/decoded. 
+    
+    This can be seen in the following example.
 
     >>> specs = StructCodecSpecs(chk_format='h')
     >>> print(specs)
@@ -366,11 +356,10 @@ class StructCodecSpecs:
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements
-    the struct.iter_unpack function.
-    IterativeDecoder only requires one argument, a chk_to_frame_iter function,
-    and returns an iterator of each chunk.
-    An example of an IterativeDecorator can be seen below.
+    You can also use the IterativeDecoder which will return an iterator of frames instead of the 
+    full list of frames, similar to what struct.iter_unpack does.
+    IterativeDecoder can be instantiated and called in the same way as ChunkedDecoder.
+    An example of IterativeDecorator can be seen below.
 
     >>> specs = StructCodecSpecs(chk_format = 'hdhd')
     >>> print(specs)
@@ -426,8 +415,7 @@ class StructCodecSpecs:
     def frame_to_chk(self, frame):
         if self.n_channels == 1:
             return pack(self.chk_format, frame)
-        else:
-            return pack(self.chk_format, *frame)
+        return pack(self.chk_format, *frame)
 
     def chk_to_frame(self, chk):
         return iter_unpack(self.chk_format, chk)
@@ -439,8 +427,8 @@ class StructCodecSpecs:
 def specs_from_frames(frames: Frames):
     r"""
     Implicitly defines the codec specs based on the frames to encode/decode.
-    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If frames is an
-    iterable, then the iterator can be ignored like the following example.
+    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If 
+    frames is an iterable, then the iterator can be ignored like the following example.
     >>> frames = [1,2,3]
     >>> _, specs = specs_from_frames(frames)
     >>> print(specs)
@@ -452,8 +440,8 @@ def specs_from_frames(frames: Frames):
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames from the output like
-    in the following example.
+    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames 
+    from the output like in the following example.
 
     >>> frames = iter([[1.1,2.2],[3.3,4.4]])
     >>> frames, specs = specs_from_frames(frames)
@@ -466,19 +454,15 @@ def specs_from_frames(frames: Frames):
     >>> assert decoded_frames == [(1.1,2.2),(3.3,4.4)]
     """
     head, frames = spy(frames)
+    head = head[0]
 
-    if isinstance(head[0], (int, float)):
-        format_char = get_struct(type(head[0]))
-        n_channels = 1
-    elif isinstance(head[0], (list, tuple)):
-        format_char = get_struct(type(head[0][0]))
-        n_channels = len(head[0])
-    elif isinstance(head[0], dict):
-        format_char = get_struct(type(list(head[0].values())[0]))
-        n_channels = len(head[0].keys())
+    if isinstance(head, (int, float)):
+        format_char = get_struct(type(head))
+    elif isinstance(head, (list, tuple)):
+        format_char = ''.join(get_struct(type(elmt)) for elmt in head)
+    elif isinstance(head, dict):
+        format_char = ''.join(get_struct(type(value)) for value in head.values())
     else:
         raise AttributeError('Unknown data format')
 
-    if n_channels is not None:
-        format_char = format_char * n_channels
-    return frames, StructCodecSpecs(format_char, n_channels=n_channels)
+    return frames, StructCodecSpecs(format_char)

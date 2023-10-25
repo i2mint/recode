@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.base &mdash; recode 0.1.27 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.base &mdash; recode 0.1.28 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -82,7 +82,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">iter_unpack</span>
 <span class="kn">import</span> <span class="nn">struct</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span><span class="p">,</span> <span class="n">attrgetter</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span> <span class="nn">recode.util</span> <span class="kn">import</span> <span class="n">spy</span><span class="p">,</span> <span class="n">get_struct</span><span class="p">,</span> <span class="n">list_of_dicts</span>
 
@@ -114,26 +114,19 @@
     <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Enable the definition of codec specs based on `chk_format`,</span>
-<span class="sd">    format characters of the python struct module</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Enable the definition of codec specs based on format characters of the</span>
+<span class="sd">    python struct module</span>
 <span class="sd">    (https://docs.python.org/3/library/struct.html#format-characters)</span>
 
 <span class="sd">    :param chk_format: The format of a chunk, as specified by the struct module</span>
-<span class="sd">        The length of the string specifies the number of &quot;channels&quot;,</span>
-<span class="sd">        and each individual character of the string specifies the kind of encoding</span>
-<span class="sd">        you should apply to each &quot;channel&quot; (hold your horses, we&#39;ll explain).</span>
 <span class="sd">        See https://docs.python.org/3/library/struct.html#format-characters</span>
-<span class="sd">    :param n_channels: Expected of channels. If given, will assert that the</span>
+<span class="sd">    :param n_channels: Expected number of channels. If given, will assert that the</span>
 <span class="sd">        number of channels expressed by the `chk_format` is indeed what is expected.</span>
-<span class="sd">        the number of channels expressed by the `chk_format`.</span>
 <span class="sd">    :param chk_size_bytes: Expected number of bytes per chunk.</span>
 <span class="sd">        If given, will assert that the chunk size expressed by the `chk_format` is</span>
 <span class="sd">        indeed the one expected.</span>
 
 <span class="sd">    :return: A (named)tuple with encode and decode functions</span>
-
-<span class="sd">    The easiest and bigest bang for your buck is ``mk_codec``</span>
 
 <span class="sd">    &gt;&gt;&gt; from recode import mk_codec</span>
 <span class="sd">    &gt;&gt;&gt; encoder, decoder = mk_codec()</span>
@@ -157,7 +150,6 @@
 <span class="sd">    b&#39;\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff&#39;</span>
 <span class="sd">    &gt;&gt;&gt; decoder(pcm_bytes)</span>
 <span class="sd">    [(3, -1), (4, -1), (5, -9)]</span>
-
 
 <span class="sd">    The `n_channels` and `chk_size_bytes` arguments are there if you want to assert</span>
 <span class="sd">    that your number of channels and chunk size are what you expect.</span>
@@ -226,9 +218,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">frame_to_chk</span><span class="p">:</span> <span class="n">FrameToChunk</span>
-    <span class="n">chk_format</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">n_channels</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">chk_size_bytes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frames</span><span class="p">))</span>
@@ -250,7 +242,7 @@
         <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_to_meta</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">)))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">vals</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">vals</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">meta</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">vals</span><span class="p">))</span></div>
 
 
@@ -264,15 +256,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">ChunkToFrame</span>
-    <span class="n">chk_format</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">n_channels</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">chk_size_bytes</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">frame</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">tup</span><span class="p">]</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">frame</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">frame</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -380,28 +372,26 @@
 <span class="sd">    (https://docs.python.org/3/library/struct.html#format-characters)</span>
 
 <span class="sd">    :param chk_format: The format of a chunk, as specified by the struct module</span>
-<span class="sd">        The length of the string specifies the number of &quot;channels&quot;,</span>
-<span class="sd">        and each individual character of the string specifies the kind of encoding</span>
-<span class="sd">        you should apply to each &quot;channel&quot; (hold your horses, we&#39;ll explain).</span>
 <span class="sd">        See https://docs.python.org/3/library/struct.html#format-characters</span>
-<span class="sd">    :param n_channels: Expected of channels. If given, will assert that the</span>
+<span class="sd">    :param n_channels: Expected number of channels. If given, will assert that the</span>
 <span class="sd">        number of channels expressed by the `chk_format` is indeed what is expected.</span>
-<span class="sd">        the number of channels expressed by the `chk_format`.</span>
 <span class="sd">    :param chk_size_bytes: Expected number of bytes per chunk.</span>
 <span class="sd">        If given, will assert that the chunk size expressed by the `chk_format` is</span>
 <span class="sd">        indeed the one expected.</span>
 
-<span class="sd">    Note: All encoder/decoder (codec) specs can be expressed though the `chk_format`.</span>
+<span class="sd">    Note: All encoder/decoder (codec) specs can be expressed through the `chk_format`.</span>
 <span class="sd">    Yet, though `n_channels` and `chk_size_bytes` are both optional, it is advised to</span>
 <span class="sd">    include them in production code since they act as extra confirmation of the codec</span>
 <span class="sd">    to be used. Encoding and decoding problems can be hard to notice until much</span>
 <span class="sd">    later on downstream, and are therefore hard to debug.</span>
 
-<span class="sd">    To utilise recode, first define your codec specs. If your frame is only one channel</span>
-<span class="sd">    (ex. a list) then your format string will include two characters,</span>
-<span class="sd">    a byte character (@, =, &lt;, &gt;, !) and a format character. The format character</span>
-<span class="sd">    should match the data type of the samples in the frame so they are properly</span>
-<span class="sd">    encoded/decoded. This can be seen in thefollowing example.</span>
+<span class="sd">    To utilise recode, first define your codec specs. If your frame is only one channel,</span>
+<span class="sd">    then your format string will include two characters maximum: an optional special character to </span>
+<span class="sd">    control the byte order, size and alignment (@, =, &lt;, &gt;, !), and a format character to specify </span>
+<span class="sd">    the type of data being packed/unpacked. The format character should match the data type of the </span>
+<span class="sd">    samples in the frame so they are properly encoded/decoded. </span>
+<span class="sd">    </span>
+<span class="sd">    This can be seen in the following example.</span>
 
 <span class="sd">    &gt;&gt;&gt; specs = StructCodecSpecs(chk_format=&#39;h&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; print(specs)</span>
@@ -443,11 +433,10 @@
 <span class="sd">    &gt;&gt;&gt; decoded_frames = list(decoder(b))</span>
 <span class="sd">    &gt;&gt;&gt; assert decoded_frames == frames</span>
 
-<span class="sd">    Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements</span>
-<span class="sd">    the struct.iter_unpack function.</span>
-<span class="sd">    IterativeDecoder only requires one argument, a chk_to_frame_iter function,</span>
-<span class="sd">    and returns an iterator of each chunk.</span>
-<span class="sd">    An example of an IterativeDecorator can be seen below.</span>
+<span class="sd">    You can also use the IterativeDecoder which will return an iterator of frames instead of the </span>
+<span class="sd">    full list of frames, similar to what struct.iter_unpack does.</span>
+<span class="sd">    IterativeDecoder can be instantiated and called in the same way as ChunkedDecoder.</span>
+<span class="sd">    An example of IterativeDecorator can be seen below.</span>
 
 <span class="sd">    &gt;&gt;&gt; specs = StructCodecSpecs(chk_format = &#39;hdhd&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; print(specs)</span>
@@ -503,8 +492,7 @@
     <span class="k">def</span> <span class="nf">frame_to_chk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="o">*</span><span class="n">frame</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="o">*</span><span class="n">frame</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">chk_to_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chk</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">iter_unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">chk</span><span class="p">)</span>
@@ -516,8 +504,8 @@
 <div class="viewcode-block" id="specs_from_frames"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.specs_from_frames">[docs]</a><span class="k">def</span> <span class="nf">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implicitly defines the codec specs based on the frames to encode/decode.</span>
-<span class="sd">    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If frames is an</span>
-<span class="sd">    iterable, then the iterator can be ignored like the following example.</span>
+<span class="sd">    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If </span>
+<span class="sd">    frames is an iterable, then the iterator can be ignored like the following example.</span>
 <span class="sd">    &gt;&gt;&gt; frames = [1,2,3]</span>
 <span class="sd">    &gt;&gt;&gt; _, specs = specs_from_frames(frames)</span>
 <span class="sd">    &gt;&gt;&gt; print(specs)</span>
@@ -529,8 +517,8 @@
 <span class="sd">    &gt;&gt;&gt; decoded_frames = list(decoder(b))</span>
 <span class="sd">    &gt;&gt;&gt; assert decoded_frames == frames</span>
 
-<span class="sd">    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames from the output like</span>
-<span class="sd">    in the following example.</span>
+<span class="sd">    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames </span>
+<span class="sd">    from the output like in the following example.</span>
 
 <span class="sd">    &gt;&gt;&gt; frames = iter([[1.1,2.2],[3.3,4.4]])</span>
 <span class="sd">    &gt;&gt;&gt; frames, specs = specs_from_frames(frames)</span>
@@ -543,22 +531,18 @@
 <span class="sd">    &gt;&gt;&gt; assert decoded_frames == [(1.1,2.2),(3.3,4.4)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">head</span><span class="p">,</span> <span class="n">frames</span> <span class="o">=</span> <span class="n">spy</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="n">format_char</span> <span class="o">=</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">n_channels</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="n">format_char</span> <span class="o">=</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">n_channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">format_char</span> <span class="o">=</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">n_channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">head</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="n">format_char</span> <span class="o">=</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">head</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">format_char</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">elmt</span><span class="p">))</span> <span class="k">for</span> <span class="n">elmt</span> <span class="ow">in</span> <span class="n">head</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">format_char</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">))</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">head</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Unknown data format&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">n_channels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">format_char</span> <span class="o">=</span> <span class="n">format_char</span> <span class="o">*</span> <span class="n">n_channels</span>
-    <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">format_char</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">n_channels</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">format_char</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

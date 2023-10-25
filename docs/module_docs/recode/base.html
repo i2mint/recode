@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.base &mdash; recode 0.1.27 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.base &mdash; recode 0.1.28 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -82,13 +82,13 @@
 <p>Base recode objects</p>
 <dl class="py class">
 <dt id="recode.base.ChunkedDecoder">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">ChunkedDecoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span><span class="p">, </span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.ChunkedDecoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">ChunkedDecoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span><span class="p">, </span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.ChunkedDecoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deserializes numerical streams and sequences serialized by ChunkedEncoder</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="recode.base.ChunkedEncoder">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">ChunkedEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame_to_chk</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">, </span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.ChunkedEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">ChunkedEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame_to_chk</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">, </span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.ChunkedEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serializes numerical streams and sequences</p>
 </dd></dl>
 
@@ -121,29 +121,26 @@ python struct module
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>chk_format</strong> – The format of a chunk, as specified by the struct module
-The length of the string specifies the number of “channels”,
-and each individual character of the string specifies the kind of encoding
-you should apply to each “channel” (hold your horses, we’ll explain).
 See <a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a></p></li>
-<li><p><strong>n_channels</strong> – Expected of channels. If given, will assert that the
-number of channels expressed by the <cite>chk_format</cite> is indeed what is expected.
-the number of channels expressed by the <cite>chk_format</cite>.</p></li>
+<li><p><strong>n_channels</strong> – Expected number of channels. If given, will assert that the
+number of channels expressed by the <cite>chk_format</cite> is indeed what is expected.</p></li>
 <li><p><strong>chk_size_bytes</strong> – Expected number of bytes per chunk.
 If given, will assert that the chunk size expressed by the <cite>chk_format</cite> is
 indeed the one expected.</p></li>
 </ul>
 </dd>
 </dl>
-<p>Note: All encoder/decoder (codec) specs can be expressed though the <cite>chk_format</cite>.
+<p>Note: All encoder/decoder (codec) specs can be expressed through the <cite>chk_format</cite>.
 Yet, though <cite>n_channels</cite> and <cite>chk_size_bytes</cite> are both optional, it is advised to
 include them in production code since they act as extra confirmation of the codec
 to be used. Encoding and decoding problems can be hard to notice until much
 later on downstream, and are therefore hard to debug.</p>
-<p>To utilise recode, first define your codec specs. If your frame is only one channel
-(ex. a list) then your format string will include two characters,
-a byte character (&#64;, =, &lt;, &gt;, !) and a format character. The format character
-should match the data type of the samples in the frame so they are properly
-encoded/decoded. This can be seen in thefollowing example.</p>
+<p>To utilise recode, first define your codec specs. If your frame is only one channel,
+then your format string will include two characters maximum: an optional special character to
+control the byte order, size and alignment (&#64;, =, &lt;, &gt;, !), and a format character to specify
+the type of data being packed/unpacked. The format character should match the data type of the
+samples in the frame so they are properly encoded/decoded.</p>
+<p>This can be seen in the following example.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
 <span class="go">StructCodecSpecs(chk_format=&#39;h&#39;, n_channels=1, chk_size_bytes=2)</span>
@@ -185,11 +182,10 @@ of a different byte character (=).</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">decoded_frames</span> <span class="o">==</span> <span class="n">frames</span>
 </pre></div>
 </div>
-<p>Along with a ChunkedDecoder, you can also use an IterativeDecoder which implements
-the struct.iter_unpack function.
-IterativeDecoder only requires one argument, a chk_to_frame_iter function,
-and returns an iterator of each chunk.
-An example of an IterativeDecorator can be seen below.</p>
+<p>You can also use the IterativeDecoder which will return an iterator of frames instead of the
+full list of frames, similar to what struct.iter_unpack does.
+IterativeDecoder can be instantiated and called in the same way as ChunkedDecoder.
+An example of IterativeDecorator can be seen below.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span> <span class="o">=</span> <span class="s1">&#39;hdhd&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
 <span class="go">StructCodecSpecs(chk_format=&#39;hdhd&#39;, n_channels=4, chk_size_bytes=32)</span>
@@ -257,20 +253,16 @@ An example of this can be seen below.</p>
 <dl class="py function">
 <dt id="recode.base.mk_codec">
 <code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">mk_codec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'d'</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#mk_codec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.mk_codec" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable the definition of codec specs based on <cite>chk_format</cite>,
-format characters of the python struct module
+<dd><p>Enable the definition of codec specs based on format characters of the
+python struct module
 (<a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>chk_format</strong> – The format of a chunk, as specified by the struct module
-The length of the string specifies the number of “channels”,
-and each individual character of the string specifies the kind of encoding
-you should apply to each “channel” (hold your horses, we’ll explain).
 See <a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a></p></li>
-<li><p><strong>n_channels</strong> – Expected of channels. If given, will assert that the
-number of channels expressed by the <cite>chk_format</cite> is indeed what is expected.
-the number of channels expressed by the <cite>chk_format</cite>.</p></li>
+<li><p><strong>n_channels</strong> – Expected number of channels. If given, will assert that the
+number of channels expressed by the <cite>chk_format</cite> is indeed what is expected.</p></li>
 <li><p><strong>chk_size_bytes</strong> – Expected number of bytes per chunk.
 If given, will assert that the chunk size expressed by the <cite>chk_format</cite> is
 indeed the one expected.</p></li>
@@ -280,7 +272,6 @@ indeed the one expected.</p></li>
 <dd class="field-even"><p>A (named)tuple with encode and decode functions</p>
 </dd>
 </dl>
-<p>The easiest and bigest bang for your buck is <code class="docutils literal notranslate"><span class="pre">mk_codec</span></code></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">recode</span> <span class="kn">import</span> <span class="n">mk_codec</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">])</span>
@@ -349,20 +340,16 @@ should be the same)</p>
 <dl class="py function">
 <dt id="recode.base.mk_encoder_and_decoder">
 <code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">mk_encoder_and_decoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'d'</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#recode.base.mk_encoder_and_decoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enable the definition of codec specs based on <cite>chk_format</cite>,
-format characters of the python struct module
+<dd><p>Enable the definition of codec specs based on format characters of the
+python struct module
 (<a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>chk_format</strong> – The format of a chunk, as specified by the struct module
-The length of the string specifies the number of “channels”,
-and each individual character of the string specifies the kind of encoding
-you should apply to each “channel” (hold your horses, we’ll explain).
 See <a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a></p></li>
-<li><p><strong>n_channels</strong> – Expected of channels. If given, will assert that the
-number of channels expressed by the <cite>chk_format</cite> is indeed what is expected.
-the number of channels expressed by the <cite>chk_format</cite>.</p></li>
+<li><p><strong>n_channels</strong> – Expected number of channels. If given, will assert that the
+number of channels expressed by the <cite>chk_format</cite> is indeed what is expected.</p></li>
 <li><p><strong>chk_size_bytes</strong> – Expected number of bytes per chunk.
 If given, will assert that the chunk size expressed by the <cite>chk_format</cite> is
 indeed the one expected.</p></li>
@@ -372,7 +359,6 @@ indeed the one expected.</p></li>
 <dd class="field-even"><p>A (named)tuple with encode and decode functions</p>
 </dd>
 </dl>
-<p>The easiest and bigest bang for your buck is <code class="docutils literal notranslate"><span class="pre">mk_codec</span></code></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">recode</span> <span class="kn">import</span> <span class="n">mk_codec</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">])</span>
@@ -442,8 +428,8 @@ should be the same)</p>
 <dt id="recode.base.specs_from_frames">
 <code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">specs_from_frames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frames</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#specs_from_frames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.specs_from_frames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implicitly defines the codec specs based on the frames to encode/decode.
-specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If frames is an
-iterable, then the iterator can be ignored like the following example.
+specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If
+frames is an iterable, then the iterator can be ignored like the following example.
 &gt;&gt;&gt; frames = [1,2,3]
 &gt;&gt;&gt; _, specs = specs_from_frames(frames)
 &gt;&gt;&gt; print(specs)
@@ -454,8 +440,8 @@ StructCodecSpecs(chk_format=’h’, n_channels=1, chk_size_bytes=2)
 &gt;&gt;&gt; assert b == b’x01x00x02x00x03x00’
 &gt;&gt;&gt; decoded_frames = list(decoder(b))
 &gt;&gt;&gt; assert decoded_frames == frames</p>
-<p>If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames from the output like
-in the following example.</p>
+<p>If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames
+from the output like in the following example.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([[</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.2</span><span class="p">],[</span><span class="mf">3.3</span><span class="p">,</span><span class="mf">4.4</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
