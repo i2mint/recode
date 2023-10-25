@@ -171,7 +171,12 @@ def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
 
 
 def encode_wav_header_bytes(
-    sr: int, width_bytes: int, *, n_channels: int = 1, nframes: int = 0, comptype=None,
+    sr: int,
+    width_bytes: int,
+    *,
+    n_channels: int = 1,
+    nframes: int = 0,
+    comptype=None,
 ) -> bytes:
     r"""Make a WAV header from given parameters.
 
@@ -250,6 +255,42 @@ def decode_wav_header_bytes(wav_header_bytes: bytes) -> dict:
         nframes=params.nframes,
         comptype=comptype,
     )
+
+
+# TODO: Untested. Test.
+# TODO: Could generalize to accept open file pointer directly too.
+#  -> Tip: Change input name to file and wrap such that context manager just returns
+#   the file pointer as is, if file is not a string.
+# TODO: How could we get this efficient "only read header" with wavs in zip files?
+def extract_wav_header_from_file(filepath):
+    """Extracts the header of a WAV file, given it's filepath.
+
+    This function is useful for reading the header of a WAV file without having to read
+    the entire file into memory.
+    This is useful when WAV files are large and/or numerous.
+
+    Args:
+        filename (str): The path to the WAV file.
+
+    Returns:
+        bytes: The bytes of the WAV file header.
+    """
+    # Initially read the first 44 bytes
+    with open(filepath, 'rb') as file:
+        header = file.read(44)
+
+        # Unpack the ChunkSize (bytes 4-8) and Subchunk2Size (bytes 40-44)
+        chunk_size = int.from_bytes(header[4:8], byteorder='little')
+        subchunk2_size = int.from_bytes(header[40:44], byteorder='little')
+
+        # Calculate the total header size
+        header_size = chunk_size + 8 - subchunk2_size
+
+        # If the header is larger than 44 bytes, read the remaining bytes
+        if header_size > 44:
+            header += file.read(header_size - 44)
+
+    return header
 
 
 # TODO: Can optimize (index) the data below to make search functions faster
