@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.base &mdash; recode 0.1.29 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>recode.base &mdash; recode 0.1.30 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -226,7 +226,7 @@
         <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frames</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">chk_format</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;chk_format&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MetaEncoder"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.MetaEncoder">[docs]</a><span class="nd">@dataclass</span>
@@ -498,7 +498,7 @@
         <span class="k">return</span> <span class="n">iter_unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">chk</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">chk_format</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;chk_format&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="specs_from_frames"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.specs_from_frames">[docs]</a><span class="k">def</span> <span class="nf">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
