@@ -149,7 +149,7 @@ class ChunkedEncoder(Encoder):
         return b''.join(map(self.frame_to_chk, frames))
 
     def __eq__(self, other):
-        return self.chk_format == other.chk_format
+        return self.chk_format == getattr(other, 'chk_format', None)
 
 
 @dataclass
@@ -421,7 +421,7 @@ class StructCodecSpecs:
         return iter_unpack(self.chk_format, chk)
 
     def __eq__(self, other):
-        return self.chk_format == other.chk_format
+        return self.chk_format == getattr(other, 'chk_format', None)
 
 
 def specs_from_frames(frames: Frames):
