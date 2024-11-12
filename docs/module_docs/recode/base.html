@@ -1,24 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.base &mdash; recode 0.1.30 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script src="../../_static/toggleprompt.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
+  <title>recode.base &mdash; recode 0.1.31 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+
+  
+      <script src="../../_static/jquery.js"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+      <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/toggleprompt.js"></script>
+      <script src="../../_static/clipboard.min.js"></script>
+      <script src="../../_static/copybutton.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -45,11 +47,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../recode.html">recode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="audio.html">recode.audio</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">recode.base</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">recode.base</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.ChunkedDecoder"><code class="docutils literal notranslate"><span class="pre">ChunkedDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.ChunkedEncoder"><code class="docutils literal notranslate"><span class="pre">ChunkedEncoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.IterativeDecoder"><code class="docutils literal notranslate"><span class="pre">IterativeDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.MetaDecoder"><code class="docutils literal notranslate"><span class="pre">MetaDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.MetaEncoder"><code class="docutils literal notranslate"><span class="pre">MetaEncoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.StructCodecSpecs"><code class="docutils literal notranslate"><span class="pre">StructCodecSpecs</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.codec_tuple"><code class="docutils literal notranslate"><span class="pre">codec_tuple</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#recode.base.codec_tuple.decode"><code class="docutils literal notranslate"><span class="pre">codec_tuple.decode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recode.base.codec_tuple.encode"><code class="docutils literal notranslate"><span class="pre">codec_tuple.encode</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.frame_to_meta"><code class="docutils literal notranslate"><span class="pre">frame_to_meta()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.meta_to_frame"><code class="docutils literal notranslate"><span class="pre">meta_to_frame()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.mk_codec"><code class="docutils literal notranslate"><span class="pre">mk_codec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.mk_encoder_and_decoder"><code class="docutils literal notranslate"><span class="pre">mk_encoder_and_decoder()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.base.specs_from_frames"><code class="docutils literal notranslate"><span class="pre">specs_from_frames()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="util.html">recode.util</a></li>
 </ul>
 
@@ -78,47 +98,47 @@
            <div itemprop="articleBody">
              
   <section id="module-recode.base">
-<span id="recode-base"></span><h1>recode.base<a class="headerlink" href="#module-recode.base" title="Permalink to this headline">¶</a></h1>
+<span id="recode-base"></span><h1>recode.base<a class="headerlink" href="#module-recode.base" title="Permalink to this heading"></a></h1>
 <p>Base recode objects</p>
 <dl class="py class">
-<dt id="recode.base.ChunkedDecoder">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">ChunkedDecoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span><span class="p">, </span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.ChunkedDecoder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.ChunkedDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">ChunkedDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk_to_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk_size_bytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedDecoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.ChunkedDecoder" title="Permalink to this definition"></a></dt>
 <dd><p>Deserializes numerical streams and sequences serialized by ChunkedEncoder</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="recode.base.ChunkedEncoder">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">ChunkedEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame_to_chk</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">, </span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.ChunkedEncoder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.ChunkedEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">ChunkedEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_to_chk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk_size_bytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#ChunkedEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.ChunkedEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Serializes numerical streams and sequences</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="recode.base.IterativeDecoder">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">IterativeDecoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span><span class="p">, </span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#IterativeDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.IterativeDecoder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.IterativeDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">IterativeDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk_to_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#IterativeDecoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.IterativeDecoder" title="Permalink to this definition"></a></dt>
 <dd><p>Creates an iterator of deserialized chunks of numerical streams and sequences serialized
 by ChunkedEncoder</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="recode.base.MetaDecoder">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">MetaDecoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span><span class="p">, </span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">meta_to_frame</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span><span class="p">, </span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#MetaDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.MetaDecoder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.MetaDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">MetaDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk_to_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta_to_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#MetaDecoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.MetaDecoder" title="Permalink to this definition"></a></dt>
 <dd><p>Deserializes tabular data serialized by MetaEncoder</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="recode.base.MetaEncoder">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">MetaEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame_to_chk</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">, </span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">frame_to_meta</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">, </span>Sequence<span class="p">[</span>bytes<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#MetaEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.MetaEncoder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.MetaEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">MetaEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_to_chk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_to_meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#MetaEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.MetaEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Serializes tabular data (must be formatted as list of dicts)</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="recode.base.StructCodecSpecs">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">StructCodecSpecs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'d'</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#StructCodecSpecs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.StructCodecSpecs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.StructCodecSpecs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">StructCodecSpecs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk_size_bytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#StructCodecSpecs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.StructCodecSpecs" title="Permalink to this definition"></a></dt>
 <dd><p>Enable the definition of codec specs based on format characters of the
 python struct module
 (<a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a>)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>chk_format</strong> – The format of a chunk, as specified by the struct module
 See <a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a></p></li>
@@ -218,46 +238,46 @@ An example of this can be seen below.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="recode.base.codec_tuple">
-<em class="property">class </em><code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">codec_tuple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">encode</span></em>, <em class="sig-param"><span class="n">decode</span></em><span class="sig-paren">)</span><a class="headerlink" href="#recode.base.codec_tuple" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.codec_tuple">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">codec_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#recode.base.codec_tuple" title="Permalink to this definition"></a></dt>
 <dd><dl class="py attribute">
-<dt id="recode.base.codec_tuple.decode">
-<code class="sig-name descname">decode</code><a class="headerlink" href="#recode.base.codec_tuple.decode" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.codec_tuple.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><a class="headerlink" href="#recode.base.codec_tuple.decode" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="recode.base.codec_tuple.encode">
-<code class="sig-name descname">encode</code><a class="headerlink" href="#recode.base.codec_tuple.encode" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.codec_tuple.encode">
+<span class="sig-name descname"><span class="pre">encode</span></span><a class="headerlink" href="#recode.base.codec_tuple.encode" title="Permalink to this definition"></a></dt>
 <dd><p>Alias for field number 0</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.base.frame_to_meta">
-<code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">frame_to_meta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frame</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#frame_to_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.frame_to_meta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.frame_to_meta">
+<span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">frame_to_meta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#frame_to_meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.frame_to_meta" title="Permalink to this definition"></a></dt>
 <dd><p>Defines header for serialization of tabluar data
 &gt;&gt;&gt; rows = [{‘customer’: 1}, {‘customer’: 2}, {‘customer’: 3}]
 &gt;&gt;&gt; assert frame_to_meta(rows) == b’x08x00customer’</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.base.meta_to_frame">
-<code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">meta_to_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">meta</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#meta_to_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.meta_to_frame" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.meta_to_frame">
+<span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">meta_to_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#meta_to_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.meta_to_frame" title="Permalink to this definition"></a></dt>
 <dd><p>Deserializes header for deserialization of tabular data
 &gt;&gt;&gt; meta = b’x1cx00customer.apple.banana.tomatox01x00x01x00x02x00x03x00x02x00… x03x00x02x00x05x00x01x00x03x00x04x00tx00’
 &gt;&gt;&gt; assert meta_to_frame(meta)[0] == [‘customer’, ‘apple’, ‘banana’, ‘tomato’]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.base.mk_codec">
-<code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">mk_codec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'d'</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#mk_codec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.mk_codec" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.mk_codec">
+<span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">mk_codec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk_size_bytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#mk_codec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.mk_codec" title="Permalink to this definition"></a></dt>
 <dd><p>Enable the definition of codec specs based on format characters of the
 python struct module
 (<a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a>)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>chk_format</strong> – The format of a chunk, as specified by the struct module
 See <a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a></p></li>
@@ -268,7 +288,7 @@ If given, will assert that the chunk size expressed by the <cite>chk_format</cit
 indeed the one expected.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A (named)tuple with encode and decode functions</p>
 </dd>
 </dl>
@@ -338,13 +358,13 @@ should be the same)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.base.mk_encoder_and_decoder">
-<code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">mk_encoder_and_decoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chk_format</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'d'</span></em>, <em class="sig-param"><span class="n">n_channels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">chk_size_bytes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#recode.base.mk_encoder_and_decoder" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.mk_encoder_and_decoder">
+<span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">mk_encoder_and_decoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chk_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chk_size_bytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#recode.base.mk_encoder_and_decoder" title="Permalink to this definition"></a></dt>
 <dd><p>Enable the definition of codec specs based on format characters of the
 python struct module
 (<a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a>)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>chk_format</strong> – The format of a chunk, as specified by the struct module
 See <a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">https://docs.python.org/3/library/struct.html#format-characters</a></p></li>
@@ -355,7 +375,7 @@ If given, will assert that the chunk size expressed by the <cite>chk_format</cit
 indeed the one expected.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A (named)tuple with encode and decode functions</p>
 </dd>
 </dl>
@@ -425,8 +445,8 @@ should be the same)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.base.specs_from_frames">
-<code class="sig-prename descclassname">recode.base.</code><code class="sig-name descname">specs_from_frames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frames</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>Union<span class="p">[</span>Any<span class="p">, </span>Sequence<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#specs_from_frames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.base.specs_from_frames" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.base.specs_from_frames">
+<span class="sig-prename descclassname"><span class="pre">recode.base.</span></span><span class="sig-name descname"><span class="pre">specs_from_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/base.html#specs_from_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.base.specs_from_frames" title="Permalink to this definition"></a></dt>
 <dd><p>Implicitly defines the codec specs based on the frames to encode/decode.
 specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If
 frames is an iterable, then the iterator can be ignored like the following example.

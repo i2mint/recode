@@ -1,24 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; recode 0.1.30 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script src="_static/toggleprompt.js"></script>
-        <script src="_static/clipboard.min.js"></script>
-        <script src="_static/copybutton.js"></script>
+  <title>&lt;no title&gt; &mdash; recode 0.1.31 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+
+  
+      <script src="_static/jquery.js"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+      <script src="_static/doctools.js"></script>
+      <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/toggleprompt.js"></script>
+      <script src="_static/clipboard.min.js"></script>
+      <script src="_static/copybutton.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -43,7 +45,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/recode.html">recode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/recode/audio.html">recode.audio</a></li>
@@ -76,12 +78,44 @@
            <div itemprop="articleBody">
              
   <div class="toctree-wrapper compound">
-<p><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/recode.html">recode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/audio.html">recode.audio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/base.html">recode.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/util.html">recode.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/audio.html">recode.audio</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.decode_pcm_bytes"><code class="docutils literal notranslate"><span class="pre">decode_pcm_bytes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.decode_wav_bytes"><code class="docutils literal notranslate"><span class="pre">decode_wav_bytes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.decode_wav_header_bytes"><code class="docutils literal notranslate"><span class="pre">decode_wav_header_bytes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.encode_pcm_bytes"><code class="docutils literal notranslate"><span class="pre">encode_pcm_bytes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.encode_wav_header_bytes"><code class="docutils literal notranslate"><span class="pre">encode_wav_header_bytes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.extract_wav_header_from_file"><code class="docutils literal notranslate"><span class="pre">extract_wav_header_from_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.header_size_of_wav_bytes"><code class="docutils literal notranslate"><span class="pre">header_size_of_wav_bytes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.mk_pcm_audio_codec"><code class="docutils literal notranslate"><span class="pre">mk_pcm_audio_codec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.num_find_num_type_for"><code class="docutils literal notranslate"><span class="pre">num_find_num_type_for()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.num_type_for"><code class="docutils literal notranslate"><span class="pre">num_type_for()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/base.html">recode.base</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.ChunkedDecoder"><code class="docutils literal notranslate"><span class="pre">ChunkedDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.ChunkedEncoder"><code class="docutils literal notranslate"><span class="pre">ChunkedEncoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.IterativeDecoder"><code class="docutils literal notranslate"><span class="pre">IterativeDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.MetaDecoder"><code class="docutils literal notranslate"><span class="pre">MetaDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.MetaEncoder"><code class="docutils literal notranslate"><span class="pre">MetaEncoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.StructCodecSpecs"><code class="docutils literal notranslate"><span class="pre">StructCodecSpecs</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.codec_tuple"><code class="docutils literal notranslate"><span class="pre">codec_tuple</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.frame_to_meta"><code class="docutils literal notranslate"><span class="pre">frame_to_meta()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.meta_to_frame"><code class="docutils literal notranslate"><span class="pre">meta_to_frame()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.mk_codec"><code class="docutils literal notranslate"><span class="pre">mk_codec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.mk_encoder_and_decoder"><code class="docutils literal notranslate"><span class="pre">mk_encoder_and_decoder()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.specs_from_frames"><code class="docutils literal notranslate"><span class="pre">specs_from_frames()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/util.html">recode.util</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.get_struct"><code class="docutils literal notranslate"><span class="pre">get_struct()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.list_of_dicts"><code class="docutils literal notranslate"><span class="pre">list_of_dicts()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.spy"><code class="docutils literal notranslate"><span class="pre">spy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.take"><code class="docutils literal notranslate"><span class="pre">take()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 
