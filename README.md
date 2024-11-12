@@ -5,7 +5,7 @@ sequences, tabular data, and time-series.
 
 To install:	```pip install recode```
 
-[Docs here](https://otosense.github.io/recode/module_docs/recode.html)
+[Docmentation](https://i2mint.github.io/recode/)
 
 Make codecs for fixed size structured chunks serialization and deserialization of
 sequences, tabular data, and time-series.
