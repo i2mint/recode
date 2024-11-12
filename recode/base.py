@@ -1,29 +1,28 @@
 """Base recode objects"""
 
-
 from dataclasses import dataclass
-from typing import Iterable, Callable, Sequence, Union, Any
+from typing import Union, Iterator, Callable, Collection, Sequence, ByteString
 from struct import pack, unpack, iter_unpack
 import struct
 from operator import itemgetter
 from collections import namedtuple
 from recode.util import spy, get_struct, list_of_dicts
 
+Sample = Union[int, float]
+Frame = Union[Sample, Collection[Sample]]
+Frames = Union[Sequence[Frame], Iterator[Frame]]
 
-Meta = Sequence[bytes]
-Chunk = Sequence[bytes]
-Chunks = Iterable[Chunk]
-ByteChunker = Callable[[bytes], Chunks]
-Sample = Any  # but usually a number
-Frame = Union[Sample, Sequence[Sample]]
-Frames = Iterable[Frame]
+Chunk = ByteString
+Chunks = Union[ByteString, Iterator[ByteString]]
 
-Encoder = Callable[[Frames], bytes]
-Decoder = Callable[[bytes], Iterable[Frame]]
-
-ChunkToFrame = Callable[[Chunk], Frame]
 FrameToChunk = Callable[[Frame], Chunk]
+ChunkToFrame = Callable[[Chunk], Frame]
+IterChunkToFrame = Callable[[Chunk], Iterator[Frame]]
 
+Encoder = Callable[[Frames], Chunks]
+Decoder = Callable[[Chunks], Frames]
+
+Meta = ByteString
 MetaToFrame = Callable[[Meta], Frame]
 FrameToMeta = Callable[[Frame], Meta]
 
@@ -146,7 +145,12 @@ class ChunkedEncoder(Encoder):
     chk_size_bytes: int = None
 
     def __call__(self, frames: Frames):
-        return b''.join(map(self.frame_to_chk, frames))
+        bytes_iterator = map(self.frame_to_chk, frames)
+        if isinstance(frames, Iterator):
+            return bytes_iterator
+        if isinstance(frames, Sequence):
+            return b''.join(bytes_iterator)
+        raise TypeError(f'frames was of type {type(frames)}??')
 
     def __eq__(self, other):
         return self.chk_format == getattr(other, 'chk_format', None)
@@ -183,12 +187,12 @@ class ChunkedDecoder(Decoder):
     n_channels: int = None
     chk_size_bytes: int = None
 
-    def __call__(self, b: bytes):
-        iterator = self.chk_to_frame(b)
-        frame = list(iterator)
-        if len(frame[0]) == 1:
-            frame = [item[0] for item in frame]
-        return frame
+    def __call__(self, chunks: Chunks):
+        if isinstance(chunks, ByteString):
+            return self.chk_to_frame(chunks)
+        if isinstance(chunks, Iterator):
+            return map(self.chk_to_frame, chunks)
+        raise TypeError(f'chunks was of type {type(chunks)}??')
 
     def __eq__(self, other):
         return self.chk_format == getattr(other, 'chk_format', None)
@@ -201,12 +205,15 @@ class IterativeDecoder(Decoder):
     by ChunkedEncoder
     """
 
-    chk_to_frame: ChunkToFrame
+    iter_chk_to_frame: IterChunkToFrame
 
-    def __call__(self, b: bytes):
-        iterator = self.chk_to_frame(b)
-        return iterator
-
+    def __call__(self, chunks: Chunks):
+        if isinstance(chunks, ByteString):
+            return self.iter_chk_to_frame(chunks)
+        if isinstance(chunks, Iterator):
+            return map(self.iter_chk_to_frame, chunks)
+        raise TypeError(f'chunks was of type {type(chunks)}??')
+    
 
 @dataclass
 class MetaDecoder(Decoder):
@@ -309,7 +316,7 @@ class StructCodecSpecs:
     later on downstream, and are therefore hard to debug.
 
     To utilise recode, first define your codec specs. If your frame is only one channel,
-    then your format string will include two characters maximum: an optional special character to 
+    then your format string will include two characters maximum: an optional prefix character to 
     control the byte order, size and alignment (@, =, <, >, !), and a format character to specify 
     the type of data being packed/unpacked. The format character should match the data type of the 
     samples in the frame so they are properly encoded/decoded. 
@@ -418,6 +425,13 @@ class StructCodecSpecs:
         return pack(self.chk_format, *frame)
 
     def chk_to_frame(self, chk):
+        # We use list(iter_unpack(...)) because it's faster than map(unpack, ...) 
+        frame = list(iter_unpack(self.chk_format, chk))
+        if len(frame[0]) == 1:
+            frame = [item[0] for item in frame]
+        return frame
+    
+    def iter_chk_to_frame(self, chk):
         return iter_unpack(self.chk_format, chk)
 
     def __eq__(self, other):
