@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.33 documentation</title>
+  <title>recode.audio &mdash; recode 0.1.34 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=449df4d2"></script>
+      <script src="../../_static/documentation_options.js?v=8f14641f"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -90,7 +90,7 @@
 <span class="sd">&gt;&gt;&gt; wf</span>
 <span class="sd">[1, 2, 3]</span>
 
-<span class="sd">The wav codecs are based on pcm codecs along with wav header codecs </span>
+<span class="sd">The wav codecs are based on pcm codecs along with wav header codecs</span>
 <span class="sd">(i.e. parsing and generation -- using the builtin `wave` package).</span>
 
 <span class="sd">Make pcm encoders and decoders:</span>
@@ -227,10 +227,10 @@
     <span class="n">header_size</span> <span class="o">=</span> <span class="n">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
     <span class="n">wf</span> <span class="o">=</span> <span class="n">decode_pcm_bytes</span><span class="p">(</span>
         <span class="n">wav_bytes</span><span class="p">[</span><span class="n">header_size</span><span class="p">:],</span>
-        <span class="n">width</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;width_bytes&#39;</span><span class="p">],</span>
-        <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;n_channels&#39;</span><span class="p">],</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;width_bytes&quot;</span><span class="p">],</span>
+        <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;n_channels&quot;</span><span class="p">],</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">wf</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;sr&#39;</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">wf</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;sr&quot;</span><span class="p">]</span></div>
 
 
 
@@ -243,11 +243,11 @@
     <span class="c1"># the header tells us how many samples (frames) of data there are, how many</span>
     <span class="c1"># channels, and how many bytes each sample (frame) takes, so the header size is</span>
     <span class="c1"># the total size (number of bytes), minus the product of those three quantities</span>
-    <span class="n">data_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;n_channels&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;width_bytes&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;nframes&#39;</span><span class="p">])</span>
+    <span class="n">data_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;n_channels&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;width_bytes&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;nframes&quot;</span><span class="p">])</span>
     <span class="n">header_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">data_size</span>
     <span class="k">assert</span> <span class="p">(</span>
         <span class="n">header_size</span> <span class="o">&gt;=</span> <span class="n">MIN_WAV_N_BYTES</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Header size of wav bytes should be at least 44 bytes&#39;</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Header size of wav bytes should be at least 44 bytes&quot;</span>
     <span class="k">return</span> <span class="n">header_size</span></div>
 
 
@@ -284,16 +284,16 @@
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        wf: Waveform to encode (iterable of numbers)</span>
 <span class="sd">        sr: Sample rate in Hz</span>
 <span class="sd">        width_bytes: The width of a sample in bytes</span>
 <span class="sd">        n_channels: Number of channels</span>
-<span class="sd">        </span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        bytes: The complete WAV file bytes (header + data)</span>
-<span class="sd">        </span>
+
 <span class="sd">    Examples:</span>
 
 <span class="sd">    &gt;&gt;&gt; wav_bytes = encode_wav_bytes([0, 1, -1, 2, -2], sr=42)</span>
@@ -313,7 +313,7 @@
 <span class="sd">    [0, 1, -1, 2, -2]</span>
 <span class="sd">    &gt;&gt;&gt; decoded_sr</span>
 <span class="sd">    42</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Convert iterable to list to ensure we can get the length</span>
     <span class="n">wf</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
@@ -344,7 +344,12 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_header_bytes</span><span class="p">(</span>
-    <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a WAV header from given parameters.</span>
 
@@ -380,7 +385,7 @@
 <span class="sd">     &#39;n_channels&#39;: 3,</span>
 <span class="sd">     &#39;nframes&#39;: 100,</span>
 <span class="sd">     &#39;comptype&#39;: None}</span>
-<span class="sd">    </span>
+
 <span class="sd">    Note: encoding the decoded params might not produce the identical header</span>
 <span class="sd">    bytes if the wave module&#39;s internal header generation varies slightly,</span>
 <span class="sd">    or if the original header contained extra chunks not handled here.</span>
@@ -397,7 +402,7 @@
             <span class="n">obj</span><span class="o">.</span><span class="n">setcomptype</span><span class="p">(</span><span class="n">comptype</span><span class="p">)</span>
 
         <span class="c1"># This writes the header with the specified nframes count</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="n">bio</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">bio</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -407,7 +412,12 @@
 <div class="viewcode-block" id="encode_wav_header_bytes">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_header_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_header_bytes</span><span class="p">(</span>
-    <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a WAV header from given parameters.</span>
 
@@ -453,7 +463,7 @@
         <span class="k">if</span> <span class="n">comptype</span><span class="p">:</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">setcomptype</span><span class="p">(</span><span class="n">comptype</span><span class="p">)</span>
 
-        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="c1"># print(f&quot;{obj.getnframes()=}&quot;)</span>
         <span class="n">bio</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -480,7 +490,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">wav_read_obj</span> <span class="o">=</span> <span class="n">Wave_read</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">))</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">wav_read_obj</span><span class="o">.</span><span class="n">getparams</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">comptype</span> <span class="o">==</span> <span class="s1">&#39;NONE&#39;</span><span class="p">:</span>  <span class="c1"># it&#39;s the only one supported</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">comptype</span> <span class="o">==</span> <span class="s2">&quot;NONE&quot;</span><span class="p">:</span>  <span class="c1"># it&#39;s the only one supported</span>
         <span class="n">comptype</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># but we&#39;re making it compatible with encoding anyway</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">sr</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">framerate</span><span class="p">,</span>
@@ -513,12 +523,12 @@
 <span class="sd">        bytes: The bytes of the WAV file header.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Initially read the first 44 bytes</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
 
         <span class="c1"># Unpack the ChunkSize (bytes 4-8) and Subchunk2Size (bytes 40-44)</span>
-        <span class="n">chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
-        <span class="n">subchunk2_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">40</span><span class="p">:</span><span class="mi">44</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;little&quot;</span><span class="p">)</span>
+        <span class="n">subchunk2_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">40</span><span class="p">:</span><span class="mi">44</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;little&quot;</span><span class="p">)</span>
 
         <span class="c1"># Calculate the total header size</span>
         <span class="n">header_size</span> <span class="o">=</span> <span class="n">chunk_size</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">subchunk2_size</span>
@@ -534,60 +544,60 @@
 <span class="c1"># TODO: Can optimize (index) the data below to make search functions faster</span>
 <span class="n">num_type_synonyms</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;int16&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;soundfile&#39;</span><span class="p">:</span> <span class="s1">&#39;PCM_16&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;pyaudio&#39;</span><span class="p">:</span> <span class="s1">&#39;paInt16&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;n_bits&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="s1">&#39;n_bytes&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s1">&#39;struct&#39;</span><span class="p">:</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int16&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_16&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt16&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;int8&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;soundfile&#39;</span><span class="p">:</span> <span class="s1">&#39;PCM_S8&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;pyaudio&#39;</span><span class="p">:</span> <span class="s1">&#39;paInt8&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;n_bits&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s1">&#39;n_bytes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;struct&#39;</span><span class="p">:</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_S8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;int24&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;soundfile&#39;</span><span class="p">:</span> <span class="s1">&#39;PCM_24&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;pyaudio&#39;</span><span class="p">:</span> <span class="s1">&#39;paInt24&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;n_bits&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-        <span class="s1">&#39;n_bytes&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s1">&#39;struct&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int24&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_24&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt24&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;int32&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;soundfile&#39;</span><span class="p">:</span> <span class="s1">&#39;PCM_32&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;pyaudio&#39;</span><span class="p">:</span> <span class="s1">&#39;paInt32&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;n_bits&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="s1">&#39;n_bytes&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s1">&#39;struct&#39;</span><span class="p">:</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int32&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_32&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt32&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;uint8&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;soundfile&#39;</span><span class="p">:</span> <span class="s1">&#39;PCM_U8&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;pyaudio&#39;</span><span class="p">:</span> <span class="s1">&#39;paUInt8&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;n_bits&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s1">&#39;n_bytes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;struct&#39;</span><span class="p">:</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_U8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paUInt8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float32&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;soundfile&#39;</span><span class="p">:</span> <span class="s1">&#39;FLOAT&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;pyaudio&#39;</span><span class="p">:</span> <span class="s1">&#39;paFloat32&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;n_bits&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="s1">&#39;n_bytes&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s1">&#39;struct&#39;</span><span class="p">:</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;FLOAT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paFloat32&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;soundfile&#39;</span><span class="p">:</span> <span class="s1">&#39;DOUBLE&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;pyaudio&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;n_bits&#39;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-        <span class="s1">&#39;n_bytes&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s1">&#39;struct&#39;</span><span class="p">:</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;DOUBLE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">]</span>
 
@@ -596,21 +606,21 @@
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_find_num_type_for">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">num_find_num_type_for</span><span class="p">(</span>
     <span class="n">num</span><span class="p">,</span>
-    <span class="n">target_num_sys</span><span class="o">=</span><span class="s1">&#39;struct&#39;</span><span class="p">,</span>
-    <span class="n">num_sys_search_order</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;n_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;n_bytes&#39;</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">,</span> <span class="s1">&#39;pyaudio&#39;</span><span class="p">,</span> <span class="s1">&#39;soundfile&#39;</span><span class="p">),</span>
+    <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">&quot;struct&quot;</span><span class="p">,</span>
+    <span class="n">num_sys_search_order</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;n_bits&quot;</span><span class="p">,</span> <span class="s2">&quot;n_bytes&quot;</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="s2">&quot;pyaudio&quot;</span><span class="p">,</span> <span class="s2">&quot;soundfile&quot;</span><span class="p">),</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the target_num_sys equivalent of input num checking multiple unit options&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">num_sys</span> <span class="ow">in</span> <span class="n">num_sys_search_order</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="s1">&#39;Just try the next num_sys...&#39;</span></div>
+            <span class="s2">&quot;Just try the next num_sys...&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="num_type_for">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_type_for">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s1">&#39;n_bits&#39;</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s1">&#39;struct&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s2">&quot;n_bits&quot;</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">&quot;struct&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate from one (sample width) number type to another.</span>
 
 <span class="sd">    :param num:</span>
@@ -638,9 +648,9 @@
                 <span class="k">return</span> <span class="n">d</span><span class="p">[</span><span class="n">target_num_sys</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;Did not find any </span><span class="si">{</span><span class="n">target_num_sys</span><span class="si">}</span><span class="s1"> entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Did not find any </span><span class="si">{</span><span class="n">target_num_sys</span><span class="si">}</span><span class="s2"> entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Did not find any entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Did not find any entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 </pre></div>
 
