@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.base &mdash; recode 0.1.31 documentation</title>
+  <title>recode.base &mdash; recode 0.1.32 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -80,13 +80,13 @@
 <span></span><span class="sd">&quot;&quot;&quot;Base recode objects&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">iter_unpack</span>
-<span class="kn">import</span> <span class="nn">struct</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
-<span class="kn">from</span> <span class="nn">recode.util</span> <span class="kn">import</span> <span class="n">spy</span><span class="p">,</span> <span class="n">get_struct</span><span class="p">,</span> <span class="n">list_of_dicts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">struct</span><span class="w"> </span><span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span><span class="p">,</span> <span class="n">iter_unpack</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">recode.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">spy</span><span class="p">,</span> <span class="n">get_struct</span><span class="p">,</span> <span class="n">list_of_dicts</span>
 
 
 <span class="n">Meta</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
@@ -111,7 +111,7 @@
 <span class="n">codec_tuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;codec_tuple&#39;</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="s1">&#39;encode decode&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="mk_codec"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.mk_codec">[docs]</a><span class="k">def</span> <span class="nf">mk_codec</span><span class="p">(</span>
+<div class="viewcode-block" id="mk_codec"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.mk_codec">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">mk_codec</span><span class="p">(</span>
     <span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">,</span>
     <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -207,14 +207,14 @@
 <span class="n">mk_encoder_and_decoder</span> <span class="o">=</span> <span class="n">mk_codec</span>  <span class="c1"># backcompat alias</span>
 
 
-<span class="k">def</span> <span class="nf">add_coding_attributes</span><span class="p">(</span><span class="n">to_obj</span><span class="p">,</span> <span class="n">from_obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_coding_attributes</span><span class="p">(</span><span class="n">to_obj</span><span class="p">,</span> <span class="n">from_obj</span><span class="p">):</span>
     <span class="n">to_obj</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">=</span> <span class="n">from_obj</span><span class="o">.</span><span class="n">chk_format</span>
     <span class="n">to_obj</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">=</span> <span class="n">from_obj</span><span class="o">.</span><span class="n">n_channels</span>
     <span class="n">to_obj</span><span class="o">.</span><span class="n">chk_size_bytes</span> <span class="o">=</span> <span class="n">from_obj</span><span class="o">.</span><span class="n">chk_size_bytes</span>
 
 
 <div class="viewcode-block" id="ChunkedEncoder"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.ChunkedEncoder">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ChunkedEncoder</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ChunkedEncoder</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Serializes numerical streams and sequences</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -224,15 +224,15 @@
     <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frames</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;chk_format&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MetaEncoder"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.MetaEncoder">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">MetaEncoder</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetaEncoder</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Serializes tabular data (must be formatted as list of dicts)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -240,7 +240,7 @@
     <span class="n">frame_to_chk</span><span class="p">:</span> <span class="n">FrameToChunk</span>
     <span class="n">frame_to_meta</span><span class="p">:</span> <span class="n">FrameToMeta</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_to_meta</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">)))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -252,7 +252,7 @@
 
 
 <div class="viewcode-block" id="ChunkedDecoder"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.ChunkedDecoder">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ChunkedDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ChunkedDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Deserializes numerical streams and sequences serialized by ChunkedEncoder</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -262,19 +262,19 @@
     <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">frame</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">frame</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;chk_format&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="IterativeDecoder"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.IterativeDecoder">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">IterativeDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IterativeDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates an iterator of deserialized chunks of numerical streams and sequences serialized</span>
 <span class="sd">    by ChunkedEncoder</span>
@@ -282,13 +282,13 @@
 
     <span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">ChunkToFrame</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">iterator</span></div>
 
 
 <div class="viewcode-block" id="MetaDecoder"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.MetaDecoder">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">MetaDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetaDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Deserializes tabular data serialized by MetaEncoder</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -296,14 +296,14 @@
     <span class="n">chk_to_frame</span><span class="p">:</span> <span class="n">ChunkToFrame</span>
     <span class="n">meta_to_frame</span><span class="p">:</span> <span class="n">MetaToFrame</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="n">cols</span><span class="p">,</span> <span class="n">split</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meta_to_frame</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">split</span><span class="p">:]</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">list_of_dicts</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_split_chk_format</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_split_chk_format</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits a struct format string into the byte order character and format characters</span>
 <span class="sd">    &gt;&gt;&gt; assert _split_chk_format(&#39;hq&#39;) == (&#39;&#39;, &#39;hq&#39;)</span>
@@ -314,7 +314,7 @@
     <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">chk_format</span>
 
 
-<span class="k">def</span> <span class="nf">_format_chars_part_of_chk_format</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_format_chars_part_of_chk_format</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the format character part of a struct format string</span>
 <span class="sd">    &gt;&gt;&gt; assert _format_chars_part_of_chk_format(&#39;!hh&#39;) == &#39;hh&#39;</span>
@@ -325,7 +325,7 @@
     <span class="k">return</span> <span class="n">format_chars</span>
 
 
-<span class="k">def</span> <span class="nf">_chk_format_to_n_channels</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_chk_format_to_n_channels</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the number of channels defined a struct format string</span>
 <span class="sd">    &gt;&gt;&gt; assert _chk_format_to_n_channels(&#39;hq&#39;) == 2</span>
@@ -335,7 +335,7 @@
     <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">_format_chars_part_of_chk_format</span><span class="p">(</span><span class="n">chk_format</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_chk_format_is_for_single_channel</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_chk_format_is_for_single_channel</span><span class="p">(</span><span class="n">chk_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_CHK_FORMAT</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns if a struct format string is designated for a single channel of data</span>
 <span class="sd">    &gt;&gt;&gt; assert _chk_format_is_for_single_channel(&#39;h&#39;) == True</span>
@@ -344,7 +344,7 @@
     <span class="k">return</span> <span class="n">_chk_format_to_n_channels</span><span class="p">(</span><span class="n">chk_format</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 
 
-<div class="viewcode-block" id="frame_to_meta"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.frame_to_meta">[docs]</a><span class="k">def</span> <span class="nf">frame_to_meta</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
+<div class="viewcode-block" id="frame_to_meta"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.frame_to_meta">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">frame_to_meta</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Defines header for serialization of tabluar data</span>
 <span class="sd">    &gt;&gt;&gt; rows = [{&#39;customer&#39;: 1}, {&#39;customer&#39;: 2}, {&#39;customer&#39;: 3}]</span>
@@ -355,7 +355,7 @@
     <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="n">pack</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="meta_to_frame"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.meta_to_frame">[docs]</a><span class="k">def</span> <span class="nf">meta_to_frame</span><span class="p">(</span><span class="n">meta</span><span class="p">):</span>
+<div class="viewcode-block" id="meta_to_frame"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.meta_to_frame">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">meta_to_frame</span><span class="p">(</span><span class="n">meta</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Deserializes header for deserialization of tabular data</span>
 <span class="sd">    &gt;&gt;&gt; meta = b&#39;\x1c\x00customer.apple.banana.tomato\x01\x00\x01\x00\x02\x00\x03\x00\x02\x00\</span>
@@ -368,7 +368,7 @@
 
 
 <div class="viewcode-block" id="StructCodecSpecs"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.StructCodecSpecs">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">StructCodecSpecs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StructCodecSpecs</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Enable the definition of codec specs based on format characters of the</span>
 <span class="sd">    python struct module</span>
 <span class="sd">    (https://docs.python.org/3/library/struct.html#format-characters)</span>
@@ -472,7 +472,7 @@
     <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">chk_size_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">inferred_n_channels</span> <span class="o">=</span> <span class="n">_chk_format_to_n_channels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">=</span> <span class="n">inferred_n_channels</span>
@@ -491,19 +491,19 @@
                 <span class="sa">f</span><span class="s1">&#39;inferred (from chk_format) </span><span class="si">{</span><span class="n">chk_size_bytes</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">frame_to_chk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">frame_to_chk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="o">*</span><span class="n">frame</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">chk_to_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chk</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chk_to_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chk</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">iter_unpack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span><span class="p">,</span> <span class="n">chk</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_format</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s1">&#39;chk_format&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="specs_from_frames"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.specs_from_frames">[docs]</a><span class="k">def</span> <span class="nf">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
+<div class="viewcode-block" id="specs_from_frames"><a class="viewcode-back" href="../../module_docs/recode/base.html#recode.base.specs_from_frames">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">:</span> <span class="n">Frames</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implicitly defines the codec specs based on the frames to encode/decode.</span>
 <span class="sd">    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If </span>

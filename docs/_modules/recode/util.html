@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.util &mdash; recode 0.1.31 documentation</title>
+  <title>recode.util &mdash; recode 0.1.32 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -81,17 +81,17 @@
 <span class="sd">Utils for use throughout the package</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span><span class="p">,</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">islice</span><span class="p">,</span> <span class="n">chain</span>
 
 
-<div class="viewcode-block" id="take"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.take">[docs]</a><span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
+<div class="viewcode-block" id="take"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.take">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">take</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; assert take(3, [1,2,3,4,5]) == [1,2,3]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="spy"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.spy">[docs]</a><span class="k">def</span> <span class="nf">spy</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="spy"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.spy">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">spy</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; peek, it = spy([1,2,3], 1)</span>
 <span class="sd">    &gt;&gt;&gt; assert peek == [1]</span>
@@ -107,7 +107,7 @@
 <span class="n">type_to_struct</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;&lt;class &#39;int&#39;&gt;&quot;</span><span class="p">:</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s2">&quot;&lt;class &#39;float&#39;&gt;&quot;</span><span class="p">:</span> <span class="s1">&#39;d&#39;</span><span class="p">}</span>
 
 
-<div class="viewcode-block" id="get_struct"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.get_struct">[docs]</a><span class="k">def</span> <span class="nf">get_struct</span><span class="p">(</span><span class="n">str_type</span><span class="p">):</span>
+<div class="viewcode-block" id="get_struct"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.get_struct">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_struct</span><span class="p">(</span><span class="n">str_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; assert get_struct(type(1)) == &#39;h&#39;</span>
 <span class="sd">    &gt;&gt;&gt; assert get_struct(type(1.001)) == &#39;d&#39;</span>
@@ -116,7 +116,7 @@
     <span class="k">return</span> <span class="n">type_to_struct</span><span class="p">[</span><span class="n">str_type</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="list_of_dicts"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.list_of_dicts">[docs]</a><span class="k">def</span> <span class="nf">list_of_dicts</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">vals</span><span class="p">):</span>
+<div class="viewcode-block" id="list_of_dicts"><a class="viewcode-back" href="../../module_docs/recode/util.html#recode.util.list_of_dicts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">list_of_dicts</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">vals</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &gt;&gt;&gt; cols = [&#39;foo&#39;, &#39;bar&#39;]</span>
 <span class="sd">    &gt;&gt;&gt; vals = [[1,2], [3,4], [5,6]]</span>
