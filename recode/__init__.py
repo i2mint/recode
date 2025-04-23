@@ -96,6 +96,7 @@ should be the same)
 24
 
 """
+
 from recode.base import mk_codec  # main interface function
 
 mk_codec = mk_codec
@@ -104,8 +105,7 @@ from recode.util import spy, get_struct, list_of_dicts
 from recode.base import *
 
 from recode.audio import (
-    # encode_wav_bytes,  # commented out because doesn't work
-    # ... see https://github.com/otosense/recode/issues/3
+    encode_wav_bytes,
     decode_wav_bytes,
     encode_wav_header_bytes,
     decode_wav_header_bytes,
