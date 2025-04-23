@@ -11,7 +11,7 @@ b'RIFF*\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00*\x00\x00\x00T\x00\x0
 >>> wf
 [1, 2, 3]
 
-The wav codecs are based on pcm codecs along with wav header codecs 
+The wav codecs are based on pcm codecs along with wav header codecs
 (i.e. parsing and generation -- using the builtin `wave` package).
 
 Make pcm encoders and decoders:
@@ -137,10 +137,10 @@ def decode_wav_bytes(wav_bytes: bytes):
     header_size = header_size_of_wav_bytes(wav_bytes, meta)
     wf = decode_pcm_bytes(
         wav_bytes[header_size:],
-        width=meta['width_bytes'],
-        n_channels=meta['n_channels'],
+        width=meta["width_bytes"],
+        n_channels=meta["n_channels"],
     )
-    return wf, meta['sr']
+    return wf, meta["sr"]
 
 
 def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
@@ -150,11 +150,11 @@ def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
     # the header tells us how many samples (frames) of data there are, how many
     # channels, and how many bytes each sample (frame) takes, so the header size is
     # the total size (number of bytes), minus the product of those three quantities
-    data_size = int(meta['n_channels'] * meta['width_bytes'] * meta['nframes'])
+    data_size = int(meta["n_channels"] * meta["width_bytes"] * meta["nframes"])
     header_size = len(wav_bytes) - data_size
     assert (
         header_size >= MIN_WAV_N_BYTES
-    ), f'Header size of wav bytes should be at least 44 bytes'
+    ), f"Header size of wav bytes should be at least 44 bytes"
     return header_size
 
 
@@ -188,16 +188,16 @@ def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
 
 def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):
     r"""Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.
-    
+
     Args:
         wf: Waveform to encode (iterable of numbers)
         sr: Sample rate in Hz
         width_bytes: The width of a sample in bytes
         n_channels: Number of channels
-        
+
     Returns:
         bytes: The complete WAV file bytes (header + data)
-        
+
     Examples:
 
     >>> wav_bytes = encode_wav_bytes([0, 1, -1, 2, -2], sr=42)
@@ -217,7 +217,7 @@ def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: in
     [0, 1, -1, 2, -2]
     >>> decoded_sr
     42
-    
+
     """
     # Convert iterable to list to ensure we can get the length
     wf = list(wf)
@@ -247,7 +247,12 @@ def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: in
 
 
 def encode_wav_header_bytes(
-    sr: int, width_bytes: int, *, n_channels: int = 1, nframes: int = 0, comptype=None,
+    sr: int,
+    width_bytes: int,
+    *,
+    n_channels: int = 1,
+    nframes: int = 0,
+    comptype=None,
 ) -> bytes:
     r"""Make a WAV header from given parameters.
 
@@ -283,7 +288,7 @@ def encode_wav_header_bytes(
      'n_channels': 3,
      'nframes': 100,
      'comptype': None}
-    
+
     Note: encoding the decoded params might not produce the identical header
     bytes if the wave module's internal header generation varies slightly,
     or if the original header contained extra chunks not handled here.
@@ -300,7 +305,7 @@ def encode_wav_header_bytes(
             obj.setcomptype(comptype)
 
         # This writes the header with the specified nframes count
-        obj.writeframesraw(b'')
+        obj.writeframesraw(b"")
 
     bio.seek(0)
     return bio.read()
@@ -308,7 +313,12 @@ def encode_wav_header_bytes(
 
 
 def encode_wav_header_bytes(
-    sr: int, width_bytes: int, *, n_channels: int = 1, nframes: int = 0, comptype=None,
+    sr: int,
+    width_bytes: int,
+    *,
+    n_channels: int = 1,
+    nframes: int = 0,
+    comptype=None,
 ) -> bytes:
     r"""Make a WAV header from given parameters.
 
@@ -354,7 +364,7 @@ def encode_wav_header_bytes(
         if comptype:
             obj.setcomptype(comptype)
 
-        obj.writeframesraw(b'')
+        obj.writeframesraw(b"")
         # print(f"{obj.getnframes()=}")
         bio.seek(0)
 
@@ -378,7 +388,7 @@ def decode_wav_header_bytes(wav_header_bytes: bytes) -> dict:
     """
     wav_read_obj = Wave_read(BytesIO(wav_header_bytes))
     params = wav_read_obj.getparams()
-    if params.comptype == 'NONE':  # it's the only one supported
+    if params.comptype == "NONE":  # it's the only one supported
         comptype = None  # but we're making it compatible with encoding anyway
     return dict(
         sr=params.framerate,
@@ -408,12 +418,12 @@ def extract_wav_header_from_file(filepath):
         bytes: The bytes of the WAV file header.
     """
     # Initially read the first 44 bytes
-    with open(filepath, 'rb') as file:
+    with open(filepath, "rb") as file:
         header = file.read(44)
 
         # Unpack the ChunkSize (bytes 4-8) and Subchunk2Size (bytes 40-44)
-        chunk_size = int.from_bytes(header[4:8], byteorder='little')
-        subchunk2_size = int.from_bytes(header[40:44], byteorder='little')
+        chunk_size = int.from_bytes(header[4:8], byteorder="little")
+        subchunk2_size = int.from_bytes(header[40:44], byteorder="little")
 
         # Calculate the total header size
         header_size = chunk_size + 8 - subchunk2_size
@@ -428,78 +438,78 @@ def extract_wav_header_from_file(filepath):
 # TODO: Can optimize (index) the data below to make search functions faster
 num_type_synonyms = [
     {
-        'dtype': 'int16',
-        'soundfile': 'PCM_16',
-        'pyaudio': 'paInt16',
-        'n_bits': 16,
-        'n_bytes': 2,
-        'struct': 'h',
+        "dtype": "int16",
+        "soundfile": "PCM_16",
+        "pyaudio": "paInt16",
+        "n_bits": 16,
+        "n_bytes": 2,
+        "struct": "h",
     },
     {
-        'dtype': 'int8',
-        'soundfile': 'PCM_S8',
-        'pyaudio': 'paInt8',
-        'n_bits': 8,
-        'n_bytes': 1,
-        'struct': 'b',
+        "dtype": "int8",
+        "soundfile": "PCM_S8",
+        "pyaudio": "paInt8",
+        "n_bits": 8,
+        "n_bytes": 1,
+        "struct": "b",
     },
     {
-        'dtype': 'int24',
-        'soundfile': 'PCM_24',
-        'pyaudio': 'paInt24',
-        'n_bits': 24,
-        'n_bytes': 3,
-        'struct': None,
+        "dtype": "int24",
+        "soundfile": "PCM_24",
+        "pyaudio": "paInt24",
+        "n_bits": 24,
+        "n_bytes": 3,
+        "struct": None,
     },
     {
-        'dtype': 'int32',
-        'soundfile': 'PCM_32',
-        'pyaudio': 'paInt32',
-        'n_bits': 32,
-        'n_bytes': 4,
-        'struct': 'i',
+        "dtype": "int32",
+        "soundfile": "PCM_32",
+        "pyaudio": "paInt32",
+        "n_bits": 32,
+        "n_bytes": 4,
+        "struct": "i",
     },
     {
-        'dtype': 'uint8',
-        'soundfile': 'PCM_U8',
-        'pyaudio': 'paUInt8',
-        'n_bits': 8,
-        'n_bytes': 1,
-        'struct': 'B',
+        "dtype": "uint8",
+        "soundfile": "PCM_U8",
+        "pyaudio": "paUInt8",
+        "n_bits": 8,
+        "n_bytes": 1,
+        "struct": "B",
     },
     {
-        'dtype': 'float32',
-        'soundfile': 'FLOAT',
-        'pyaudio': 'paFloat32',
-        'n_bits': 32,
-        'n_bytes': 4,
-        'struct': 'f',
+        "dtype": "float32",
+        "soundfile": "FLOAT",
+        "pyaudio": "paFloat32",
+        "n_bits": 32,
+        "n_bytes": 4,
+        "struct": "f",
     },
     {
-        'dtype': 'float64',
-        'soundfile': 'DOUBLE',
-        'pyaudio': None,
-        'n_bits': 64,
-        'n_bytes': 8,
-        'struct': 'd',
+        "dtype": "float64",
+        "soundfile": "DOUBLE",
+        "pyaudio": None,
+        "n_bits": 64,
+        "n_bytes": 8,
+        "struct": "d",
     },
 ]
 
 
 def num_find_num_type_for(
     num,
-    target_num_sys='struct',
-    num_sys_search_order=('n_bits', 'n_bytes', 'dtype', 'pyaudio', 'soundfile'),
+    target_num_sys="struct",
+    num_sys_search_order=("n_bits", "n_bytes", "dtype", "pyaudio", "soundfile"),
 ):
     """Find the target_num_sys equivalent of input num checking multiple unit options"""
     for num_sys in num_sys_search_order:
         try:
             return num_type_for(num, num_sys, target_num_sys)
         except ValueError:
-            'Just try the next num_sys...'
+            "Just try the next num_sys..."
 
 
-def num_type_for(num, num_sys='n_bits', target_num_sys='struct'):
+def num_type_for(num, num_sys="n_bits", target_num_sys="struct"):
     """Translate from one (sample width) number type to another.
 
     :param num:
@@ -527,6 +537,6 @@ def num_type_for(num, num_sys='n_bits', target_num_sys='struct'):
                 return d[target_num_sys]
             else:
                 raise ValueError(
-                    f'Did not find any {target_num_sys} entry for {num_sys}={num}'
+                    f"Did not find any {target_num_sys} entry for {num_sys}={num}"
                 )
-    raise ValueError(f'Did not find any entry for {num_sys}={num}')
+    raise ValueError(f"Did not find any entry for {num_sys}={num}")

@@ -1,6 +1,5 @@
 """Base recode objects"""
 
-
 from dataclasses import dataclass
 from typing import Iterable, Callable, Sequence, Union, Any
 from struct import pack, unpack, iter_unpack
@@ -27,9 +26,9 @@ FrameToChunk = Callable[[Frame], Chunk]
 MetaToFrame = Callable[[Meta], Frame]
 FrameToMeta = Callable[[Frame], Meta]
 
-DFLT_CHK_FORMAT = 'd'
+DFLT_CHK_FORMAT = "d"
 
-codec_tuple = namedtuple('codec_tuple', field_names='encode decode')
+codec_tuple = namedtuple("codec_tuple", field_names="encode decode")
 
 
 def mk_codec(
@@ -146,10 +145,10 @@ class ChunkedEncoder(Encoder):
     chk_size_bytes: int = None
 
     def __call__(self, frames: Frames):
-        return b''.join(map(self.frame_to_chk, frames))
+        return b"".join(map(self.frame_to_chk, frames))
 
     def __eq__(self, other):
-        return self.chk_format == getattr(other, 'chk_format', None)
+        return self.chk_format == getattr(other, "chk_format", None)
 
 
 @dataclass
@@ -166,7 +165,7 @@ class MetaEncoder(Encoder):
         vals = list(map(list, (d.values() for d in frames)))
         if len(vals[0]) == 1:
             vals = [item[0] for item in vals]
-        return meta + b''.join(map(self.frame_to_chk, vals))
+        return meta + b"".join(map(self.frame_to_chk, vals))
 
 
 first_element = itemgetter(0)  # "equivalent" to lambda x: x[0]
@@ -191,7 +190,7 @@ class ChunkedDecoder(Decoder):
         return frame
 
     def __eq__(self, other):
-        return self.chk_format == getattr(other, 'chk_format', None)
+        return self.chk_format == getattr(other, "chk_format", None)
 
 
 @dataclass
@@ -230,9 +229,9 @@ def _split_chk_format(chk_format: str = DFLT_CHK_FORMAT):
     >>> assert _split_chk_format('hq') == ('', 'hq')
     >>> assert _split_chk_format('@hq') == ('@', 'hq')
     """
-    if chk_format[0] in '@=<>!':
+    if chk_format[0] in "@=<>!":
         return chk_format[0], chk_format[1:]
-    return '', chk_format
+    return "", chk_format
 
 
 def _format_chars_part_of_chk_format(chk_format: str = DFLT_CHK_FORMAT):
@@ -272,8 +271,8 @@ def frame_to_meta(frame):
     >>> assert frame_to_meta(rows) == b'\x08\x00customer'
     """
     cols = list(frame[0].keys())
-    s = '.'.join(cols)
-    return b'' + pack('h', len(s)) + s.encode()
+    s = ".".join(cols)
+    return b"" + pack("h", len(s)) + s.encode()
 
 
 def meta_to_frame(meta):
@@ -283,8 +282,8 @@ def meta_to_frame(meta):
     ... x03\x00\x02\x00\x05\x00\x01\x00\x03\x00\x04\x00\t\x00'
     >>> assert meta_to_frame(meta)[0] == ['customer', 'apple', 'banana', 'tomato']
     """
-    length = unpack('h', meta[:2])[0] + 2
-    cols = (meta[2:length]).decode().split('.')
+    length = unpack("h", meta[:2])[0] + 2
+    cols = (meta[2:length]).decode().split(".")
     return cols, length
 
 
@@ -309,11 +308,11 @@ class StructCodecSpecs:
     later on downstream, and are therefore hard to debug.
 
     To utilise recode, first define your codec specs. If your frame is only one channel,
-    then your format string will include two characters maximum: an optional special character to 
-    control the byte order, size and alignment (@, =, <, >, !), and a format character to specify 
-    the type of data being packed/unpacked. The format character should match the data type of the 
-    samples in the frame so they are properly encoded/decoded. 
-    
+    then your format string will include two characters maximum: an optional special character to
+    control the byte order, size and alignment (@, =, <, >, !), and a format character to specify
+    the type of data being packed/unpacked. The format character should match the data type of the
+    samples in the frame so they are properly encoded/decoded.
+
     This can be seen in the following example.
 
     >>> specs = StructCodecSpecs(chk_format='h')
@@ -356,7 +355,7 @@ class StructCodecSpecs:
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    You can also use the IterativeDecoder which will return an iterator of frames instead of the 
+    You can also use the IterativeDecoder which will return an iterator of frames instead of the
     full list of frames, similar to what struct.iter_unpack does.
     IterativeDecoder can be instantiated and called in the same way as ChunkedDecoder.
     An example of IterativeDecorator can be seen below.
@@ -389,6 +388,7 @@ class StructCodecSpecs:
     >>> b = encoder(data)
     >>> assert decoder(b) == data
     """
+
     chk_format: str = DFLT_CHK_FORMAT
     n_channels: int = None
     chk_size_bytes: int = None
@@ -400,7 +400,7 @@ class StructCodecSpecs:
         else:
             assert self.n_channels == inferred_n_channels, (
                 f"You said there'd be {self.n_channels} channels, "
-                f'but I inferred {inferred_n_channels}'
+                f"but I inferred {inferred_n_channels}"
             )
 
         chk_size_bytes = struct.calcsize(self.chk_format)
@@ -408,8 +408,8 @@ class StructCodecSpecs:
             self.chk_size_bytes = chk_size_bytes
         else:
             assert self.chk_size_bytes == chk_size_bytes, (
-                f'The given chk_size_bytes {self.chk_size_bytes} did not match the '
-                f'inferred (from chk_format) {chk_size_bytes}'
+                f"The given chk_size_bytes {self.chk_size_bytes} did not match the "
+                f"inferred (from chk_format) {chk_size_bytes}"
             )
 
     def frame_to_chk(self, frame):
@@ -421,13 +421,13 @@ class StructCodecSpecs:
         return iter_unpack(self.chk_format, chk)
 
     def __eq__(self, other):
-        return self.chk_format == getattr(other, 'chk_format', None)
+        return self.chk_format == getattr(other, "chk_format", None)
 
 
 def specs_from_frames(frames: Frames):
     r"""
     Implicitly defines the codec specs based on the frames to encode/decode.
-    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If 
+    specs_from_frames returns a tuple of an iterator of frames and the defined StructCodecSpecs. If
     frames is an iterable, then the iterator can be ignored like the following example.
     >>> frames = [1,2,3]
     >>> _, specs = specs_from_frames(frames)
@@ -440,7 +440,7 @@ def specs_from_frames(frames: Frames):
     >>> decoded_frames = list(decoder(b))
     >>> assert decoded_frames == frames
 
-    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames 
+    If frames is an iterator, then we can still use specs_from_frames as long as we redefine frames
     from the output like in the following example.
 
     >>> frames = iter([[1.1,2.2],[3.3,4.4]])
@@ -459,10 +459,10 @@ def specs_from_frames(frames: Frames):
     if isinstance(head, (int, float)):
         format_char = get_struct(type(head))
     elif isinstance(head, (list, tuple)):
-        format_char = ''.join(get_struct(type(elmt)) for elmt in head)
+        format_char = "".join(get_struct(type(elmt)) for elmt in head)
     elif isinstance(head, dict):
-        format_char = ''.join(get_struct(type(value)) for value in head.values())
+        format_char = "".join(get_struct(type(value)) for value in head.values())
     else:
-        raise AttributeError('Unknown data format')
+        raise AttributeError("Unknown data format")
 
     return frames, StructCodecSpecs(format_char)

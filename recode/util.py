@@ -25,7 +25,7 @@ def spy(iterable, n=1):
     return head.copy(), chain(head, it)
 
 
-type_to_struct = {"<class 'int'>": 'h', "<class 'float'>": 'd'}
+type_to_struct = {"<class 'int'>": "h", "<class 'float'>": "d"}
 
 
 def get_struct(str_type):
