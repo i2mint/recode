@@ -222,10 +222,10 @@ def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: in
     # Convert iterable to list to ensure we can get the length
     wf = list(wf)
     nframes = len(wf)
-    
+
     # Create a BytesIO buffer for the complete WAV file
     bio = BytesIO()
-    
+
     # Create a Wave_write object and set all parameters
     with Wave_write(bio) as obj:
         obj.setnchannels(n_channels)
@@ -233,26 +233,21 @@ def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: in
         obj.setframerate(sr)
         # Explicitly set the number of frames
         obj.setnframes(nframes)
-        
+
         # Encode the waveform data
         encode, _ = mk_pcm_audio_codec(width_bytes, n_channels)
         pcm_data = encode(wf)
-        
+
         # Write the frames data
         obj.writeframesraw(pcm_data)
-        
+
     # Get the complete WAV file bytes
     bio.seek(0)
     return bio.read()
 
 
 def encode_wav_header_bytes(
-    sr: int,
-    width_bytes: int,
-    *,
-    n_channels: int = 1,
-    nframes: int = 0,
-    comptype=None,
+    sr: int, width_bytes: int, *, n_channels: int = 1, nframes: int = 0, comptype=None,
 ) -> bytes:
     r"""Make a WAV header from given parameters.
 
@@ -303,22 +298,17 @@ def encode_wav_header_bytes(
         obj.setnframes(nframes)
         if comptype:
             obj.setcomptype(comptype)
-            
+
         # This writes the header with the specified nframes count
         obj.writeframesraw(b'')
-        
+
     bio.seek(0)
     return bio.read()
     return bio.read()
 
 
 def encode_wav_header_bytes(
-    sr: int,
-    width_bytes: int,
-    *,
-    n_channels: int = 1,
-    nframes: int = 0,
-    comptype=None,
+    sr: int, width_bytes: int, *, n_channels: int = 1, nframes: int = 0, comptype=None,
 ) -> bytes:
     r"""Make a WAV header from given parameters.
 

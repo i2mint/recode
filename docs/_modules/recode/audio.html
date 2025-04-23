@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.31 documentation</title>
+  <title>recode.audio &mdash; recode 0.1.32 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -81,6 +81,18 @@
 
 <span class="sd">This module illustrates how one can use recode to make audio codecs.</span>
 
+<span class="sd">&gt;&gt;&gt; wav_bytes = encode_wav_bytes([1, 2, 3], 42)</span>
+<span class="sd">&gt;&gt;&gt; wav_bytes</span>
+<span class="sd">b&#39;RIFF*\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\x06\x00\x00\x00\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">&gt;&gt;&gt; wf, sr = decode_wav_bytes(wav_bytes)</span>
+<span class="sd">&gt;&gt;&gt; sr</span>
+<span class="sd">42</span>
+<span class="sd">&gt;&gt;&gt; wf</span>
+<span class="sd">[1, 2, 3]</span>
+
+<span class="sd">The wav codecs are based on pcm codecs along with wav header codecs </span>
+<span class="sd">(i.e. parsing and generation -- using the builtin `wave` package).</span>
+
 <span class="sd">Make pcm encoders and decoders:</span>
 
 <span class="sd">&gt;&gt;&gt; encode, decode = mk_pcm_audio_codec(&#39;int16&#39;)</span>
@@ -95,26 +107,25 @@
 <span class="sd">&gt;&gt;&gt; encode_pcm_bytes([1, 2, 3])</span>
 <span class="sd">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
 
-
 <span class="sd">Or decode directly:</span>
 
 <span class="sd">&gt;&gt;&gt; encode_pcm_bytes([1, 2, 3])</span>
 <span class="sd">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
 
-<span class="sd">TODO: Use builtin wave module to handle wav format as well.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
-<span class="kn">from</span> <span class="nn">recode.base</span> <span class="kn">import</span> <span class="n">mk_codec</span>
-<span class="kn">from</span> <span class="nn">wave</span> <span class="kn">import</span> <span class="n">Wave_write</span><span class="p">,</span> <span class="n">Wave_read</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">recode.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">mk_codec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">wave</span><span class="w"> </span><span class="kn">import</span> <span class="n">Wave_write</span><span class="p">,</span> <span class="n">Wave_read</span>
 
 <span class="n">Width</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
 <span class="n">Waveform</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="mk_pcm_audio_codec"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.mk_pcm_audio_codec">[docs]</a><span class="k">def</span> <span class="nf">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="mk_pcm_audio_codec"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.mk_pcm_audio_codec">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a (encoder, decoder) pair for PCM data with given width and n_channels.</span>
 
 <span class="sd">    PCM data is what&#39;s used in the uncompressed raw WAVE formats (such as used in CDs).</span>
@@ -147,7 +158,7 @@
     <span class="k">return</span> <span class="n">mk_codec</span><span class="p">(</span><span class="n">struct_char</span> <span class="o">*</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">n_channels</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="encode_pcm_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_pcm_bytes">[docs]</a><span class="k">def</span> <span class="nf">encode_pcm_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="encode_pcm_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_pcm_bytes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">encode_pcm_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes.</span>
 
 <span class="sd">    :param wf: Waveform to encode</span>
@@ -164,7 +175,7 @@
     <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="decode_pcm_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_pcm_bytes">[docs]</a><span class="k">def</span> <span class="nf">decode_pcm_bytes</span><span class="p">(</span><span class="n">pcm_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_pcm_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_pcm_bytes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">decode_pcm_bytes</span><span class="p">(</span><span class="n">pcm_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
@@ -182,7 +193,7 @@
 <span class="n">MIN_WAV_N_BYTES</span> <span class="o">=</span> <span class="mi">44</span>
 
 
-<div class="viewcode-block" id="decode_wav_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_bytes">[docs]</a><span class="k">def</span> <span class="nf">decode_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_wav_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_bytes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">decode_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
@@ -211,7 +222,7 @@
     <span class="k">return</span> <span class="n">wf</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;sr&#39;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="header_size_of_wav_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.header_size_of_wav_bytes">[docs]</a><span class="k">def</span> <span class="nf">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="header_size_of_wav_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.header_size_of_wav_bytes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the header size&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">meta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
@@ -226,19 +237,24 @@
     <span class="k">return</span> <span class="n">header_size</span></div>
 
 
-<span class="c1"># TODO: Repair. See https://github.com/otosense/recode/issues/3</span>
+<span class="c1"># # TODO: Repair. See https://github.com/otosense/recode/issues/3</span>
 <span class="c1"># def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):</span>
 <span class="c1">#     r&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes.</span>
-<span class="c1">#</span>
+
 <span class="c1">#     :param wf: Waveform to encode</span>
 <span class="c1">#     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
 <span class="c1">#         (will try to figure it out by itself)</span>
 <span class="c1">#     :param n_channels: Number of channels</span>
 <span class="c1">#     :return: The pcm-bytes-encoded waveform</span>
-<span class="c1">#</span>
-<span class="c1">#     &gt;&gt;&gt; wav_bytes = encode_wav([1, 2, 3])</span>
-<span class="c1">#     b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
-<span class="c1">#</span>
+
+
+<span class="c1">#     wav_bytes = encode_wav_bytes([0, 1, -1, 2, -2], sr=42)</span>
+<span class="c1">#     header_bytes, data_bytes = wav_bytes[:44], wav_bytes[44:]</span>
+<span class="c1">#     assert data_bytes == b&#39;\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff&#39;</span>
+<span class="c1">#     decoded_wf, decoded_sr = decode_wav_bytes(wav_bytes)</span>
+<span class="c1">#     assert decoded_wf == [0, 1, -1, 2, -2]</span>
+<span class="c1">#     assert decoded_sr == 42</span>
+
 <span class="c1">#     &quot;&quot;&quot;</span>
 <span class="c1">#     wf = list(wf)</span>
 <span class="c1">#     nframes = len(wf)</span>
@@ -249,7 +265,128 @@
 <span class="c1">#     return wav_header_bytes + encode(wf)</span>
 
 
-<div class="viewcode-block" id="encode_wav_header_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_header_bytes">[docs]</a><span class="k">def</span> <span class="nf">encode_wav_header_bytes</span><span class="p">(</span>
+<div class="viewcode-block" id="encode_wav_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_bytes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        wf: Waveform to encode (iterable of numbers)</span>
+<span class="sd">        sr: Sample rate in Hz</span>
+<span class="sd">        width_bytes: The width of a sample in bytes</span>
+<span class="sd">        n_channels: Number of channels</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        bytes: The complete WAV file bytes (header + data)</span>
+<span class="sd">        </span>
+<span class="sd">    Examples:</span>
+
+<span class="sd">    &gt;&gt;&gt; wav_bytes = encode_wav_bytes([0, 1, -1, 2, -2], sr=42)</span>
+<span class="sd">    &gt;&gt;&gt; header_bytes, data_bytes = wav_bytes[:44], wav_bytes[44:]</span>
+<span class="sd">    &gt;&gt;&gt; data_bytes</span>
+<span class="sd">    b&#39;\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff&#39;</span>
+
+<span class="sd">    See that the header bytes can be decoded to get the right information about our waveform:</span>
+
+<span class="sd">    &gt;&gt;&gt; decode_wav_header_bytes(header_bytes)  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {&#39;sr&#39;: 42, &#39;width_bytes&#39;: 2, &#39;n_channels&#39;: 1, &#39;nframes&#39;: 5, &#39;comptype&#39;: None}</span>
+
+<span class="sd">    See that our wave_bytes can be decoded to get the original waveform and sample rate:</span>
+
+<span class="sd">    &gt;&gt;&gt; decoded_wf, decoded_sr = decode_wav_bytes(wav_bytes)</span>
+<span class="sd">    &gt;&gt;&gt; decoded_wf</span>
+<span class="sd">    [0, 1, -1, 2, -2]</span>
+<span class="sd">    &gt;&gt;&gt; decoded_sr</span>
+<span class="sd">    42</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert iterable to list to ensure we can get the length</span>
+    <span class="n">wf</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+    <span class="n">nframes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+
+    <span class="c1"># Create a BytesIO buffer for the complete WAV file</span>
+    <span class="n">bio</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+
+    <span class="c1"># Create a Wave_write object and set all parameters</span>
+    <span class="k">with</span> <span class="n">Wave_write</span><span class="p">(</span><span class="n">bio</span><span class="p">)</span> <span class="k">as</span> <span class="n">obj</span><span class="p">:</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setnchannels</span><span class="p">(</span><span class="n">n_channels</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setsampwidth</span><span class="p">(</span><span class="n">width_bytes</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setframerate</span><span class="p">(</span><span class="n">sr</span><span class="p">)</span>
+        <span class="c1"># Explicitly set the number of frames</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setnframes</span><span class="p">(</span><span class="n">nframes</span><span class="p">)</span>
+
+        <span class="c1"># Encode the waveform data</span>
+        <span class="n">encode</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width_bytes</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">)</span>
+        <span class="n">pcm_data</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+
+        <span class="c1"># Write the frames data</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="n">pcm_data</span><span class="p">)</span>
+
+    <span class="c1"># Get the complete WAV file bytes</span>
+    <span class="n">bio</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bio</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_header_bytes</span><span class="p">(</span>
+    <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a WAV header from given parameters.</span>
+
+<span class="sd">    NOTE: This function creates a header template. The `nframes` field in the</span>
+<span class="sd">    resulting bytes might not be accurate if actual audio data is written</span>
+<span class="sd">    separately. Use `encode_wav_bytes` for writing complete WAV files.</span>
+
+<span class="sd">    :param sr: The sample rate (i.e. &quot;frame rate&quot; i.e. &quot;chk_rate&quot;)</span>
+<span class="sd">    :param width_bytes: The &quot;sample width&quot; in bytes</span>
+<span class="sd">    :param n_channels: Number of channels (default is 1)</span>
+<span class="sd">    :param nframes: Optional number of frames (default is 0).</span>
+<span class="sd">        NOTE: If a wav file is to be read correctly, the num of frames (i.e.</span>
+<span class="sd">        samples/chks) should be exactly the number you&#39;ll actually be writing in the</span>
+<span class="sd">        wave file. This function creates a header *template* and might not reflect</span>
+<span class="sd">        the final nframes if data is appended later.</span>
+<span class="sd">    :param comptype: No supported by python&#39;s wave module (yet).</span>
+
+<span class="sd">    &gt;&gt;&gt; header_bytes = encode_wav_header_bytes(44100, 2, n_channels=3)</span>
+<span class="sd">    &gt;&gt;&gt; len(header_bytes)</span>
+<span class="sd">    44</span>
+<span class="sd">    &gt;&gt;&gt; header_bytes[:31]</span>
+<span class="sd">    b&#39;RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x03\x00D\xac\x00\x00\x98\t\x04&#39;</span>
+
+<span class="sd">    You can decode those params (including those you didn&#39;t specify, but were</span>
+<span class="sd">    defaulted) with the `decode_wav_header_bytes` inverse function.</span>
+
+<span class="sd">    &gt;&gt;&gt; # Assuming this is saved as a module where decode_wav_header_bytes is accessible</span>
+<span class="sd">    &gt;&gt;&gt; header_bytes_with_nframes = encode_wav_header_bytes(44100, 2, n_channels=3, nframes=100)</span>
+<span class="sd">    &gt;&gt;&gt; params = decode_wav_header_bytes(header_bytes_with_nframes)</span>
+<span class="sd">    &gt;&gt;&gt; params  # doctest: +NORMALIZE_WHITESPACE</span>
+<span class="sd">    {&#39;sr&#39;: 44100,</span>
+<span class="sd">     &#39;width_bytes&#39;: 2,</span>
+<span class="sd">     &#39;n_channels&#39;: 3,</span>
+<span class="sd">     &#39;nframes&#39;: 100,</span>
+<span class="sd">     &#39;comptype&#39;: None}</span>
+<span class="sd">    </span>
+<span class="sd">    Note: encoding the decoded params might not produce the identical header</span>
+<span class="sd">    bytes if the wave module&#39;s internal header generation varies slightly,</span>
+<span class="sd">    or if the original header contained extra chunks not handled here.</span>
+<span class="sd">    The important part is that the *parameters* are decoded correctly.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bio</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">Wave_write</span><span class="p">(</span><span class="n">bio</span><span class="p">)</span> <span class="k">as</span> <span class="n">obj</span><span class="p">:</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setnchannels</span><span class="p">(</span><span class="n">n_channels</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setsampwidth</span><span class="p">(</span><span class="n">width_bytes</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setframerate</span><span class="p">(</span><span class="n">sr</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">setnframes</span><span class="p">(</span><span class="n">nframes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">comptype</span><span class="p">:</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">setcomptype</span><span class="p">(</span><span class="n">comptype</span><span class="p">)</span>
+
+        <span class="c1"># This writes the header with the specified nframes count</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">bio</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bio</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">bio</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="encode_wav_header_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_header_bytes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_header_bytes</span><span class="p">(</span>
     <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a WAV header from given parameters.</span>
@@ -303,7 +440,7 @@
     <span class="k">return</span> <span class="n">bio</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="decode_wav_header_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_header_bytes">[docs]</a><span class="k">def</span> <span class="nf">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="decode_wav_header_bytes"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_header_bytes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a dict of params decoded from a wav header</span>
 
 <span class="sd">    For examples, see the `encode_wav_header_bytes` function, it&#39;s inverse.</span>
@@ -336,7 +473,7 @@
 <span class="c1">#  -&gt; Tip: Change input name to file and wrap such that context manager just returns</span>
 <span class="c1">#   the file pointer as is, if file is not a string.</span>
 <span class="c1"># TODO: How could we get this efficient &quot;only read header&quot; with wavs in zip files?</span>
-<div class="viewcode-block" id="extract_wav_header_from_file"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.extract_wav_header_from_file">[docs]</a><span class="k">def</span> <span class="nf">extract_wav_header_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<div class="viewcode-block" id="extract_wav_header_from_file"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.extract_wav_header_from_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">extract_wav_header_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the header of a WAV file, given it&#39;s filepath.</span>
 
 <span class="sd">    This function is useful for reading the header of a WAV file without having to read</span>
@@ -428,7 +565,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="num_find_num_type_for"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_find_num_type_for">[docs]</a><span class="k">def</span> <span class="nf">num_find_num_type_for</span><span class="p">(</span>
+<div class="viewcode-block" id="num_find_num_type_for"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_find_num_type_for">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">num_find_num_type_for</span><span class="p">(</span>
     <span class="n">num</span><span class="p">,</span>
     <span class="n">target_num_sys</span><span class="o">=</span><span class="s1">&#39;struct&#39;</span><span class="p">,</span>
     <span class="n">num_sys_search_order</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;n_bits&#39;</span><span class="p">,</span> <span class="s1">&#39;n_bytes&#39;</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">,</span> <span class="s1">&#39;pyaudio&#39;</span><span class="p">,</span> <span class="s1">&#39;soundfile&#39;</span><span class="p">),</span>
@@ -441,7 +578,7 @@
             <span class="s1">&#39;Just try the next num_sys...&#39;</span></div>
 
 
-<div class="viewcode-block" id="num_type_for"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_type_for">[docs]</a><span class="k">def</span> <span class="nf">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s1">&#39;n_bits&#39;</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s1">&#39;struct&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="num_type_for"><a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_type_for">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s1">&#39;n_bits&#39;</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s1">&#39;struct&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate from one (sample width) number type to another.</span>
 
 <span class="sd">    :param num:</span>
