@@ -1,24 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.util &mdash; recode 0.1.30 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script src="../../_static/toggleprompt.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
+  <title>recode.util &mdash; recode 0.1.31 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+
+  
+      <script src="../../_static/jquery.js"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+      <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/toggleprompt.js"></script>
+      <script src="../../_static/clipboard.min.js"></script>
+      <script src="../../_static/copybutton.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -44,12 +46,18 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../recode.html">recode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="audio.html">recode.audio</a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html">recode.base</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">recode.util</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">recode.util</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#recode.util.get_struct"><code class="docutils literal notranslate"><span class="pre">get_struct()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.util.list_of_dicts"><code class="docutils literal notranslate"><span class="pre">list_of_dicts()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.util.spy"><code class="docutils literal notranslate"><span class="pre">spy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recode.util.take"><code class="docutils literal notranslate"><span class="pre">take()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -77,11 +85,11 @@
            <div itemprop="articleBody">
              
   <section id="module-recode.util">
-<span id="recode-util"></span><h1>recode.util<a class="headerlink" href="#module-recode.util" title="Permalink to this headline">¶</a></h1>
+<span id="recode-util"></span><h1>recode.util<a class="headerlink" href="#module-recode.util" title="Permalink to this heading"></a></h1>
 <p>Utils for use throughout the package</p>
 <dl class="py function">
-<dt id="recode.util.get_struct">
-<code class="sig-prename descclassname">recode.util.</code><code class="sig-name descname">get_struct</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">str_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#get_struct"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.util.get_struct" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.util.get_struct">
+<span class="sig-prename descclassname"><span class="pre">recode.util.</span></span><span class="sig-name descname"><span class="pre">get_struct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#get_struct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.util.get_struct" title="Permalink to this definition"></a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="s1">&#39;h&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">get_struct</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="mf">1.001</span><span class="p">))</span> <span class="o">==</span> <span class="s1">&#39;d&#39;</span>
 </pre></div>
@@ -89,8 +97,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.util.list_of_dicts">
-<code class="sig-prename descclassname">recode.util.</code><code class="sig-name descname">list_of_dicts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cols</span></em>, <em class="sig-param"><span class="n">vals</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#list_of_dicts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.util.list_of_dicts" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.util.list_of_dicts">
+<span class="sig-prename descclassname"><span class="pre">recode.util.</span></span><span class="sig-name descname"><span class="pre">list_of_dicts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#list_of_dicts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.util.list_of_dicts" title="Permalink to this definition"></a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vals</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">list_of_dicts</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span>
@@ -100,8 +108,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.util.spy">
-<code class="sig-prename descclassname">recode.util.</code><code class="sig-name descname">spy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#spy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.util.spy" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.util.spy">
+<span class="sig-prename descclassname"><span class="pre">recode.util.</span></span><span class="sig-name descname"><span class="pre">spy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#spy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.util.spy" title="Permalink to this definition"></a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">peek</span><span class="p">,</span> <span class="n">it</span> <span class="o">=</span> <span class="n">spy</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">peek</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
@@ -111,8 +119,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="recode.util.take">
-<code class="sig-prename descclassname">recode.util.</code><code class="sig-name descname">take</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">iterable</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#take"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#recode.util.take" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="recode.util.take">
+<span class="sig-prename descclassname"><span class="pre">recode.util.</span></span><span class="sig-name descname"><span class="pre">take</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/recode/util.html#take"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.util.take" title="Permalink to this definition"></a></dt>
 <dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
