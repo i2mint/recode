@@ -1,7 +1,8 @@
 """Base recode objects"""
 
 from dataclasses import dataclass
-from typing import Iterable, Callable, Sequence, Union, Any
+from typing import Union, Any
+from collections.abc import Iterable, Callable, Sequence
 from struct import pack, unpack, iter_unpack
 import struct
 from operator import itemgetter

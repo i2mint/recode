@@ -11,7 +11,7 @@ from recode import (
     decode_wav_bytes,
 )
 import pytest
-from typing import Iterator
+from collections.abc import Iterator
 
 
 @pytest.mark.parametrize(
@@ -248,7 +248,7 @@ def wf_to_wav_bytes_with_soundfile(wf, sr=44100, dtype="int16", subtype="PCM_16"
 # little_wf_wav_bytes = wf_to_wav_bytes_with_soundfile(little_wf)
 from itertools import chain
 
-big_wf = [0] + list(chain.from_iterable(([x, -x] for x in range(32768))))
+big_wf = [0] + list(chain.from_iterable([x, -x] for x in range(32768)))
 big_wf_bytes_file = "test_wf.wav"
 
 

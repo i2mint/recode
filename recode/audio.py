@@ -37,7 +37,8 @@ b'\x01\x00\x02\x00\x03\x00'
 """
 
 from io import BytesIO
-from typing import Union, Iterable
+from typing import Union
+from collections.abc import Iterable
 from numbers import Number
 from recode.base import mk_codec
 from wave import Wave_write, Wave_read
