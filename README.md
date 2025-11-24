@@ -382,9 +382,8 @@ plt.plot(wf_mix[:300]);
 ```
 
 
-    
-![png](notebooks/recode_demo_files/recode_demo_35_0.png)
-    
+![png](https://raw.githubusercontent.com/i2mint/recode/master/notebooks/recode_demo_files/recode_demo_35_0.png)
+
 
 
 
@@ -428,7 +427,8 @@ plt.plot(decoded_wf_mix[:300]);
 
 
     
-![png](notebooks/recode_demo_files/recode_demo_40_0.png)
+![png](https://raw.githubusercontent.com/i2mint/recode/master/notebooks/recode_demo_files/recode_demo_40_0.png)
+
     
 
 
