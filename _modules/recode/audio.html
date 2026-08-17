@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.36 documentation</title>
+  <title>recode.audio &mdash; recode 0.1.37 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=1c946a6c"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=b8ecee75"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -77,13 +77,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for recode.audio</h1><div class="highlight"><pre>
-<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Encoding audio</span>
+<span></span><span class="sa">r</span><span class="sd">"""Encoding audio</span>
 
 <span class="sd">This module illustrates how one can use recode to make audio codecs.</span>
 
 <span class="sd">&gt;&gt;&gt; wav_bytes = encode_wav_bytes([1, 2, 3], 42)</span>
 <span class="sd">&gt;&gt;&gt; wav_bytes</span>
-<span class="sd">b&#39;RIFF*\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\x06\x00\x00\x00\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">b'RIFF*\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\x06\x00\x00\x00\x01\x00\x02\x00\x03\x00'</span>
 <span class="sd">&gt;&gt;&gt; wf, sr = decode_wav_bytes(wav_bytes)</span>
 <span class="sd">&gt;&gt;&gt; sr</span>
 <span class="sd">42</span>
@@ -95,26 +95,28 @@
 
 <span class="sd">Make pcm encoders and decoders:</span>
 
-<span class="sd">&gt;&gt;&gt; encode, decode = mk_pcm_audio_codec(&#39;int16&#39;)</span>
+<span class="sd">&gt;&gt;&gt; encode, decode = mk_pcm_audio_codec('int16')</span>
 <span class="sd">&gt;&gt;&gt; encoded = encode([1, 2, 3])</span>
 <span class="sd">&gt;&gt;&gt; encoded</span>
-<span class="sd">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">b'\x01\x00\x02\x00\x03\x00'</span>
 <span class="sd">&gt;&gt;&gt; decode(encoded)</span>
 <span class="sd">[1, 2, 3]</span>
 
 <span class="sd">Or just encode directly:</span>
 
 <span class="sd">&gt;&gt;&gt; encode_pcm_bytes([1, 2, 3])</span>
-<span class="sd">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">b'\x01\x00\x02\x00\x03\x00'</span>
 
 <span class="sd">Or decode directly:</span>
 
 <span class="sd">&gt;&gt;&gt; encode_pcm_bytes([1, 2, 3])</span>
-<span class="sd">b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">b'\x01\x00\x02\x00\x03\x00'</span>
 
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
@@ -129,9 +131,9 @@
 <div class="viewcode-block" id="mk_pcm_audio_codec">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.mk_pcm_audio_codec">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a (encoder, decoder) pair for PCM data with given width and n_channels.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Make a (encoder, decoder) pair for PCM data with given width and n_channels.</span>
 
-<span class="sd">    PCM data is what&#39;s used in the uncompressed raw WAVE formats (such as used in CDs).</span>
+<span class="sd">    PCM data is what's used in the uncompressed raw WAVE formats (such as used in CDs).</span>
 <span class="sd">    See https://en.wikipedia.org/wiki/Pulse-code_modulation.</span>
 
 <span class="sd">    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
@@ -139,24 +141,24 @@
 <span class="sd">    :param n_channels: Number of channels</span>
 <span class="sd">    :return: A (encoder, decoder) pair of functions that are inverse of each other</span>
 
-<span class="sd">    &gt;&gt;&gt; encode, decode = mk_pcm_audio_codec(&#39;int16&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; encode, decode = mk_pcm_audio_codec('int16')</span>
 <span class="sd">    &gt;&gt;&gt; encoded = encode([1, 2, 3])</span>
 <span class="sd">    &gt;&gt;&gt; encoded</span>
-<span class="sd">    b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">    b'\x01\x00\x02\x00\x03\x00'</span>
 <span class="sd">    &gt;&gt;&gt; decode(encoded)</span>
 <span class="sd">    [1, 2, 3]</span>
 
-<span class="sd">    Let&#39;s check over more combinations of width and n_channels that we can decode</span>
+<span class="sd">    Let's check over more combinations of width and n_channels that we can decode</span>
 <span class="sd">    what we encode to get back the same thing:</span>
 
 <span class="sd">    &gt;&gt;&gt; wf = [-3, -2, -1, 0, 1, 2, 3]</span>
-<span class="sd">    &gt;&gt;&gt; for width in [16, 2, &#39;int16&#39;, &#39;paInt16&#39;, &#39;PCM_16&#39;, 32, 4, &#39;int32&#39;]:</span>
+<span class="sd">    &gt;&gt;&gt; for width in [16, 2, 'int16', 'paInt16', 'PCM_16', 32, 4, 'int32']:</span>
 <span class="sd">    ...     for channel in wf:</span>
-<span class="sd">    ...         encode, decode = mk_pcm_audio_codec(&#39;int16&#39;)</span>
+<span class="sd">    ...         encode, decode = mk_pcm_audio_codec('int16')</span>
 <span class="sd">    ...         encoded = encode(wf)</span>
 <span class="sd">    ...         assert isinstance(encoded, bytes)</span>
 <span class="sd">    ...         assert decode(encoded) == wf</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">struct_char</span> <span class="o">=</span> <span class="n">num_find_num_type_for</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mk_codec</span><span class="p">(</span><span class="n">struct_char</span> <span class="o">*</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">n_channels</span><span class="p">)</span></div>
 
@@ -165,7 +167,7 @@
 <div class="viewcode-block" id="encode_pcm_bytes">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_pcm_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_pcm_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Encode waveform (e.g. list of numbers) into PCM bytes.</span>
 
 <span class="sd">    :param wf: Waveform to encode</span>
 <span class="sd">    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
@@ -174,9 +176,9 @@
 <span class="sd">    :return: The pcm-bytes-encoded waveform</span>
 
 <span class="sd">    &gt;&gt;&gt; encode_pcm_bytes([1, 2, 3])</span>
-<span class="sd">    b&#39;\x01\x00\x02\x00\x03\x00&#39;</span>
+<span class="sd">    b'\x01\x00\x02\x00\x03\x00'</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">encode</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span></div>
 
@@ -185,77 +187,259 @@
 <div class="viewcode-block" id="decode_pcm_bytes">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_pcm_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">decode_pcm_bytes</span><span class="p">(</span><span class="n">pcm_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 
 <span class="sd">    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
 <span class="sd">        (Will try to figure it out)</span>
 <span class="sd">    :param n_channels: Number of channels</span>
 <span class="sd">    :return: The decoded waveform</span>
 
-<span class="sd">    &gt;&gt;&gt; decode_pcm_bytes(b&#39;\x01\x00\x02\x00\x03\x00&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; decode_pcm_bytes(b'\x01\x00\x02\x00\x03\x00')</span>
 <span class="sd">    [1, 2, 3]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">decode</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">decode</span><span class="p">(</span><span class="n">pcm_bytes</span><span class="p">)</span></div>
 
 
 
-<span class="n">MIN_WAV_N_BYTES</span> <span class="o">=</span> <span class="mi">44</span>
+<span class="n">_RIFF_HEADER_SIZE</span> <span class="o">=</span> <span class="mi">12</span>  <span class="c1"># 'RIFF' + form size + 'WAVE'</span>
+<span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># chunk id + chunk size</span>
+<span class="n">_CHUNK_ID_SIZE</span> <span class="o">=</span> <span class="mi">4</span>
+
+
+<div class="viewcode-block" id="ShortWavData">
+<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.ShortWavData">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ShortWavData</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The `data` chunk carries fewer bytes than its own header declares.</span>
+
+<span class="sd">    Raised as a warning rather than an error because the audio that *is* present is</span>
+<span class="sd">    still worth decoding -- a partially downloaded file, or one written to a stream</span>
+<span class="sd">    whose length was never patched back into the header. What must not happen is for</span>
+<span class="sd">    the shortfall to pass unmentioned, since the caller cannot otherwise tell a</span>
+<span class="sd">    truncated file from a complete one.</span>
+<span class="sd">    """</span></div>
+
 
 
 <div class="viewcode-block" id="decode_wav_bytes">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">decode_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Decode WAV bytes into a ``(waveform, sample_rate)`` pair.</span>
 
-<span class="sd">    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
-<span class="sd">        (Will try to figure it out)</span>
-<span class="sd">    :param n_channels: Number of channels</span>
-<span class="sd">    :return: The decoded waveform</span>
+<span class="sd">    :param wav_bytes: The bytes of a RIFF/WAVE container holding uncompressed PCM</span>
+<span class="sd">    :return: ``(wf, sr)`` -- the decoded waveform and its sample rate</span>
+
+<span class="sd">    :raises ValueError: if `wav_bytes` is not a RIFF/WAVE container with a `data`</span>
+<span class="sd">        chunk. (Before recode#4 the same inputs raised `AssertionError`, `wave.Error`</span>
+<span class="sd">        or `EOFError` depending on how they were malformed; they are unified here.)</span>
+<span class="sd">    :raises ShortWavData: *warning*, not an exception -- see below.</span>
 
 <span class="sd">    &gt;&gt;&gt; wav_bytes = (</span>
-<span class="sd">    ...     b&#39;RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00&#39;  # header</span>
-<span class="sd">    ...     b&#39;*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00&#39;  # header</span>
-<span class="sd">    ...     b&#39;\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff&#39;  # data</span>
+<span class="sd">    ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'  # header</span>
+<span class="sd">    ...     b'*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00'  # header</span>
+<span class="sd">    ...     b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'  # data</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; wf, sr = decode_wav_bytes(wav_bytes)</span>
 <span class="sd">    &gt;&gt;&gt; wf</span>
 <span class="sd">    [0, 1, -1, 2, -2]</span>
 <span class="sd">    &gt;&gt;&gt; sr</span>
 <span class="sd">    42</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
-    <span class="n">header_size</span> <span class="o">=</span> <span class="n">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span>
-    <span class="n">wf</span> <span class="o">=</span> <span class="n">decode_pcm_bytes</span><span class="p">(</span>
-        <span class="n">wav_bytes</span><span class="p">[</span><span class="n">header_size</span><span class="p">:],</span>
-        <span class="n">width</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;width_bytes&quot;</span><span class="p">],</span>
-        <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;n_channels&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">wf</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;sr&quot;</span><span class="p">]</span></div>
 
+<span class="sd">    The `data` chunk is located by walking the RIFF structure, so chunks that sit</span>
+<span class="sd">    *after* the audio -- `LIST`/`INFO` metadata, which ffmpeg, Audacity and iTunes</span>
+<span class="sd">    all append -- do not shift the waveform:</span>
+
+<span class="sd">    &gt;&gt;&gt; import struct</span>
+<span class="sd">    &gt;&gt;&gt; info = b'INFOISFT' + struct.pack('&lt;I', 6) + b'Lavf58'</span>
+<span class="sd">    &gt;&gt;&gt; with_trailing_metadata = wav_bytes + b'LIST' + struct.pack('&lt;I', len(info)) + info</span>
+<span class="sd">    &gt;&gt;&gt; decode_wav_bytes(with_trailing_metadata)[0]</span>
+<span class="sd">    [0, 1, -1, 2, -2]</span>
+
+<span class="sd">    A file carrying less audio than its header declares decodes to the whole frames</span>
+<span class="sd">    that are actually there, and says so:</span>
+
+<span class="sd">    &gt;&gt;&gt; truncated = wav_bytes[:-4]</span>
+<span class="sd">    &gt;&gt;&gt; import warnings</span>
+<span class="sd">    &gt;&gt;&gt; with warnings.catch_warnings(record=True) as caught:</span>
+<span class="sd">    ...     _ = warnings.simplefilter('always')</span>
+<span class="sd">    ...     wf, sr = decode_wav_bytes(truncated)</span>
+<span class="sd">    &gt;&gt;&gt; wf</span>
+<span class="sd">    [0, 1, -1]</span>
+<span class="sd">    &gt;&gt;&gt; caught[0].category.__name__</span>
+<span class="sd">    'ShortWavData'</span>
+<span class="sd">    """</span>
+    <span class="n">offset</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">_wav_data_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="c1"># Decoding is defined on whole frames, and a frame is every channel's sample: a</span>
+    <span class="c1"># file cut mid-frame drops the remainder rather than raising a struct-size error.</span>
+    <span class="n">frame_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"n_channels"</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"width_bytes"</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">frame_size</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">-=</span> <span class="n">size</span> <span class="o">%</span> <span class="n">frame_size</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="o">//</span> <span class="n">frame_size</span> <span class="o">&lt;</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"nframes"</span><span class="p">]:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"WAV `data` chunk is short: the header declares </span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">'nframes'</span><span class="p">]</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"frames, </span><span class="si">{</span><span class="n">size</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">frame_size</span><span class="si">}</span><span class="s2"> are present. Decoding what is there."</span><span class="p">,</span>
+                <span class="n">ShortWavData</span><span class="p">,</span>
+                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># No whole frame survived. Answering with an empty waveform is the consistent</span>
+        <span class="c1"># reading of "decode the frames that are present"; letting it through would</span>
+        <span class="c1"># surface as an IndexError from inside the chunked decoder instead.</span>
+        <span class="k">return</span> <span class="p">[],</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"sr"</span><span class="p">]</span>
+    <span class="n">wf</span> <span class="o">=</span> <span class="n">decode_pcm_bytes</span><span class="p">(</span>
+        <span class="n">wav_bytes</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">size</span><span class="p">],</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"width_bytes"</span><span class="p">],</span>
+        <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"n_channels"</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">wf</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"sr"</span><span class="p">]</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_wav_data_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Locate the audio payload: ``(offset, size)`` of the `data` chunk's contents.</span>
+
+<span class="sd">    Walks the RIFF chunk list rather than inferring the position arithmetically, which</span>
+<span class="sd">    is what makes it robust to the shapes real-world WAV files take that a</span>
+<span class="sd">    size-subtraction cannot survive (recode#4):</span>
+
+<span class="sd">    - **chunks after `data`.** `LIST`/`INFO` tags are routinely appended by encoders.</span>
+<span class="sd">      Deriving the header size as ``len(wav_bytes) - n_channels * width * nframes``</span>
+<span class="sd">      silently counts those trailing bytes as header, so the waveform is read from too</span>
+<span class="sd">      far in -- returning audio of the right *length* and the wrong *content*, with no</span>
+<span class="sd">      error raised.</span>
+<span class="sd">    - **an over-declared `data` size.** Files written to a stream (length unknown at</span>
+<span class="sd">      write time, patched afterwards -- or never) declare more samples than they carry,</span>
+<span class="sd">      commonly with the sentinel ``0xFFFFFFFF``. The size is clamped to what is really</span>
+<span class="sd">      there instead of asserting.</span>
+
+<span class="sd">    Those two interact, and naively clamping an over-declared size to end-of-file</span>
+<span class="sd">    would re-create the very bug this function exists to kill -- a trailing `LIST`</span>
+<span class="sd">    would be handed back as audio. So when the declared size overruns, the payload is</span>
+<span class="sd">    bounded by the next chunk that the remainder of the file parses cleanly from,</span>
+<span class="sd">    rather than by EOF. Only when no such boundary exists does it fall back to EOF.</span>
+
+<span class="sd">    Sizes are read as unsigned little-endian, per the RIFF spec.</span>
+
+<span class="sd">    &gt;&gt;&gt; import struct, wave, io</span>
+<span class="sd">    &gt;&gt;&gt; b = io.BytesIO()</span>
+<span class="sd">    &gt;&gt;&gt; with wave.open(b, 'wb') as w:</span>
+<span class="sd">    ...     _ = w.setnchannels(1), w.setsampwidth(2), w.setframerate(8000)</span>
+<span class="sd">    ...     w.writeframes(struct.pack('&lt;3h', 1, 2, 3))</span>
+<span class="sd">    &gt;&gt;&gt; raw = b.getvalue()</span>
+<span class="sd">    &gt;&gt;&gt; offset, size = _wav_data_chunk(raw)</span>
+<span class="sd">    &gt;&gt;&gt; size</span>
+<span class="sd">    6</span>
+<span class="sd">    &gt;&gt;&gt; raw[offset:offset + size] == struct.pack('&lt;3h', 1, 2, 3)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    An over-declared size does not swallow what follows the audio:</span>
+
+<span class="sd">    &gt;&gt;&gt; broken = bytearray(raw)</span>
+<span class="sd">    &gt;&gt;&gt; at = broken.find(b'data')</span>
+<span class="sd">    &gt;&gt;&gt; broken[at + 4:at + 8] = struct.pack('&lt;I', 0xFFFFFFFF)  # stream sentinel</span>
+<span class="sd">    &gt;&gt;&gt; trailing = b'LIST' + struct.pack('&lt;I', 4) + b'INFO'</span>
+<span class="sd">    &gt;&gt;&gt; _wav_data_chunk(bytes(broken) + trailing)</span>
+<span class="sd">    (44, 6)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">_RIFF_HEADER_SIZE</span>
+        <span class="ow">or</span> <span class="n">wav_bytes</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">"RIFF"</span>
+        <span class="ow">or</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">]</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">"WAVE"</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"Not WAV bytes: expected a RIFF/WAVE container, got "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span><span class="si">!r}</span><span class="s2">...</span><span class="si">{</span><span class="nb">bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">])</span><span class="si">!r}</span><span class="s2">"</span>
+        <span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">_RIFF_HEADER_SIZE</span>
+    <span class="k">while</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">):</span>
+        <span class="n">chunk_id</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span><span class="p">])</span>
+        <span class="p">(</span><span class="n">declared</span><span class="p">,)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span>
+            <span class="s2">"&lt;I"</span><span class="p">,</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span>
+        <span class="k">if</span> <span class="n">chunk_id</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">:</span>
+            <span class="n">available</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">contents</span>
+            <span class="k">if</span> <span class="n">declared</span> <span class="o">&lt;=</span> <span class="n">available</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">declared</span>
+            <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">_payload_end_of_overrunning_data</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+        <span class="c1"># RIFF chunks are word-aligned: an odd-sized chunk carries a pad byte.</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">contents</span> <span class="o">+</span> <span class="n">declared</span> <span class="o">+</span> <span class="p">(</span><span class="n">declared</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">declared</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">contents</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Not WAV bytes: chunk walk desynced at offset </span><span class="si">{</span><span class="n">pos</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">declared</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">chunk_id</span><span class="si">!r}</span><span class="s2"> declares </span><span class="si">{</span><span class="n">declared</span><span class="si">}</span><span class="s2"> bytes but only "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">contents</span><span class="si">}</span><span class="s2"> remain); no `data` chunk reachable"</span>
+            <span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Not WAV bytes: no `data` chunk found"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_payload_end_of_overrunning_data</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""How many bytes of audio a `data` chunk whose declared size overruns really has.</span>
+
+<span class="sd">    The declared size is unusable, so the extent has to come from the file itself: the</span>
+<span class="sd">    audio runs until the next thing that is demonstrably a chunk, meaning a position</span>
+<span class="sd">    (word-aligned, as RIFF requires) from which the rest of the buffer parses as a</span>
+<span class="sd">    well-formed chunk list ending exactly at EOF. Requiring the parse to reach EOF is</span>
+<span class="sd">    what keeps this from firing on audio that merely happens to contain four</span>
+<span class="sd">    plausible-looking bytes.</span>
+
+<span class="sd">    Falls back to end-of-file when no such position exists -- a genuinely truncated</span>
+<span class="sd">    file, where reading to the end is right.</span>
+<span class="sd">    """</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">contents</span> <span class="o">+</span> <span class="p">(</span><span class="n">contents</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_parses_as_chunk_list_to_eof</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">candidate</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">candidate</span> <span class="o">-</span> <span class="n">contents</span>
+    <span class="k">return</span> <span class="n">end</span> <span class="o">-</span> <span class="n">contents</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parses_as_chunk_list_to_eof</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Does the buffer from `pos` read as a chunk list that lands exactly on EOF?"""</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">&gt;</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">chunk_id</span> <span class="o">=</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span><span class="p">]</span>
+        <span class="c1"># A chunk id is four printable ASCII characters; anything else is audio.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="mh">0x20</span> <span class="o">&lt;=</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mh">0x7F</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">chunk_id</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="p">(</span><span class="n">declared</span><span class="p">,)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span>
+            <span class="s2">"&lt;I"</span><span class="p">,</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">pos</span> <span class="o">+=</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">+</span> <span class="n">declared</span> <span class="o">+</span> <span class="p">(</span><span class="n">declared</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pos</span> <span class="o">==</span> <span class="n">end</span>
 
 
 <div class="viewcode-block" id="header_size_of_wav_bytes">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.header_size_of_wav_bytes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the header size&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">meta</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
-    <span class="c1"># the header tells us how many samples (frames) of data there are, how many</span>
-    <span class="c1"># channels, and how many bytes each sample (frame) takes, so the header size is</span>
-    <span class="c1"># the total size (number of bytes), minus the product of those three quantities</span>
-    <span class="n">data_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;n_channels&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;width_bytes&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">meta</span><span class="p">[</span><span class="s2">&quot;nframes&quot;</span><span class="p">])</span>
-    <span class="n">header_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">data_size</span>
-    <span class="k">assert</span> <span class="p">(</span>
-        <span class="n">header_size</span> <span class="o">&gt;=</span> <span class="n">MIN_WAV_N_BYTES</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Header size of wav bytes should be at least 44 bytes&quot;</span>
-    <span class="k">return</span> <span class="n">header_size</span></div>
+<span class="k">def</span><span class="w"> </span><span class="nf">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Size, in bytes, of everything preceding the audio payload.</span>
+
+<span class="sd">    That is the offset of the `data` chunk's contents, found by walking the RIFF</span>
+<span class="sd">    structure (see :func:`_wav_data_chunk`). For a well-formed file with nothing after</span>
+<span class="sd">    the audio this is the same number the old size-subtraction produced; unlike it, it</span>
+<span class="sd">    stays correct when the file carries trailing metadata or an over-declared `data`</span>
+<span class="sd">    size.</span>
+
+<span class="sd">    `meta` is accepted for backwards compatibility and no longer used.</span>
+
+<span class="sd">    &gt;&gt;&gt; header_size_of_wav_bytes(</span>
+<span class="sd">    ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'</span>
+<span class="sd">    ...     b'*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00'</span>
+<span class="sd">    ...     b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'</span>
+<span class="sd">    ... )</span>
+<span class="sd">    44</span>
+<span class="sd">    """</span>
+    <span class="n">offset</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_wav_data_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">offset</span></div>
 
 
 
 <span class="c1"># # TODO: Repair. See https://github.com/otosense/recode/issues/3</span>
 <span class="c1"># def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):</span>
-<span class="c1">#     r&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes.</span>
+<span class="c1">#     r"""Encode waveform (e.g. list of numbers) into PCM bytes.</span>
 
 <span class="c1">#     :param wf: Waveform to encode</span>
 <span class="c1">#     :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)</span>
@@ -266,12 +450,12 @@
 
 <span class="c1">#     wav_bytes = encode_wav_bytes([0, 1, -1, 2, -2], sr=42)</span>
 <span class="c1">#     header_bytes, data_bytes = wav_bytes[:44], wav_bytes[44:]</span>
-<span class="c1">#     assert data_bytes == b&#39;\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff&#39;</span>
+<span class="c1">#     assert data_bytes == b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'</span>
 <span class="c1">#     decoded_wf, decoded_sr = decode_wav_bytes(wav_bytes)</span>
 <span class="c1">#     assert decoded_wf == [0, 1, -1, 2, -2]</span>
 <span class="c1">#     assert decoded_sr == 42</span>
 
-<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     """</span>
 <span class="c1">#     wf = list(wf)</span>
 <span class="c1">#     nframes = len(wf)</span>
 <span class="c1">#     wav_header_bytes = encode_wav_header_bytes(</span>
@@ -284,7 +468,7 @@
 <div class="viewcode-block" id="encode_wav_bytes">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        wf: Waveform to encode (iterable of numbers)</span>
@@ -300,12 +484,12 @@
 <span class="sd">    &gt;&gt;&gt; wav_bytes = encode_wav_bytes([0, 1, -1, 2, -2], sr=42)</span>
 <span class="sd">    &gt;&gt;&gt; header_bytes, data_bytes = wav_bytes[:44], wav_bytes[44:]</span>
 <span class="sd">    &gt;&gt;&gt; data_bytes</span>
-<span class="sd">    b&#39;\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff&#39;</span>
+<span class="sd">    b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'</span>
 
 <span class="sd">    See that the header bytes can be decoded to get the right information about our waveform:</span>
 
 <span class="sd">    &gt;&gt;&gt; decode_wav_header_bytes(header_bytes)  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    {&#39;sr&#39;: 42, &#39;width_bytes&#39;: 2, &#39;n_channels&#39;: 1, &#39;nframes&#39;: 5, &#39;comptype&#39;: None}</span>
+<span class="sd">    {'sr': 42, 'width_bytes': 2, 'n_channels': 1, 'nframes': 5, 'comptype': None}</span>
 
 <span class="sd">    See that our wave_bytes can be decoded to get the original waveform and sample rate:</span>
 
@@ -315,7 +499,7 @@
 <span class="sd">    &gt;&gt;&gt; decoded_sr</span>
 <span class="sd">    42</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Convert iterable to list to ensure we can get the length</span>
     <span class="n">wf</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
     <span class="n">nframes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
@@ -352,47 +536,47 @@
     <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a WAV header from given parameters.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Make a WAV header from given parameters.</span>
 
 <span class="sd">    NOTE: This function creates a header template. The `nframes` field in the</span>
 <span class="sd">    resulting bytes might not be accurate if actual audio data is written</span>
 <span class="sd">    separately. Use `encode_wav_bytes` for writing complete WAV files.</span>
 
-<span class="sd">    :param sr: The sample rate (i.e. &quot;frame rate&quot; i.e. &quot;chk_rate&quot;)</span>
-<span class="sd">    :param width_bytes: The &quot;sample width&quot; in bytes</span>
+<span class="sd">    :param sr: The sample rate (i.e. "frame rate" i.e. "chk_rate")</span>
+<span class="sd">    :param width_bytes: The "sample width" in bytes</span>
 <span class="sd">    :param n_channels: Number of channels (default is 1)</span>
 <span class="sd">    :param nframes: Optional number of frames (default is 0).</span>
 <span class="sd">        NOTE: If a wav file is to be read correctly, the num of frames (i.e.</span>
-<span class="sd">        samples/chks) should be exactly the number you&#39;ll actually be writing in the</span>
+<span class="sd">        samples/chks) should be exactly the number you'll actually be writing in the</span>
 <span class="sd">        wave file. This function creates a header *template* and might not reflect</span>
 <span class="sd">        the final nframes if data is appended later.</span>
-<span class="sd">    :param comptype: No supported by python&#39;s wave module (yet).</span>
+<span class="sd">    :param comptype: No supported by python's wave module (yet).</span>
 
 <span class="sd">    &gt;&gt;&gt; header_bytes = encode_wav_header_bytes(44100, 2, n_channels=3)</span>
 <span class="sd">    &gt;&gt;&gt; len(header_bytes)</span>
 <span class="sd">    44</span>
 <span class="sd">    &gt;&gt;&gt; header_bytes[:31]</span>
-<span class="sd">    b&#39;RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x03\x00D\xac\x00\x00\x98\t\x04&#39;</span>
+<span class="sd">    b'RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x03\x00D\xac\x00\x00\x98\t\x04'</span>
 
-<span class="sd">    You can decode those params (including those you didn&#39;t specify, but were</span>
+<span class="sd">    You can decode those params (including those you didn't specify, but were</span>
 <span class="sd">    defaulted) with the `decode_wav_header_bytes` inverse function.</span>
 
 <span class="sd">    &gt;&gt;&gt; # Assuming this is saved as a module where decode_wav_header_bytes is accessible</span>
 <span class="sd">    &gt;&gt;&gt; header_bytes_with_nframes = encode_wav_header_bytes(44100, 2, n_channels=3, nframes=100)</span>
 <span class="sd">    &gt;&gt;&gt; params = decode_wav_header_bytes(header_bytes_with_nframes)</span>
 <span class="sd">    &gt;&gt;&gt; params  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    {&#39;sr&#39;: 44100,</span>
-<span class="sd">     &#39;width_bytes&#39;: 2,</span>
-<span class="sd">     &#39;n_channels&#39;: 3,</span>
-<span class="sd">     &#39;nframes&#39;: 100,</span>
-<span class="sd">     &#39;comptype&#39;: None}</span>
+<span class="sd">    {'sr': 44100,</span>
+<span class="sd">     'width_bytes': 2,</span>
+<span class="sd">     'n_channels': 3,</span>
+<span class="sd">     'nframes': 100,</span>
+<span class="sd">     'comptype': None}</span>
 
 <span class="sd">    Note: encoding the decoded params might not produce the identical header</span>
-<span class="sd">    bytes if the wave module&#39;s internal header generation varies slightly,</span>
+<span class="sd">    bytes if the wave module's internal header generation varies slightly,</span>
 <span class="sd">    or if the original header contained extra chunks not handled here.</span>
 <span class="sd">    The important part is that the *parameters* are decoded correctly.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">bio</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
     <span class="k">with</span> <span class="n">Wave_write</span><span class="p">(</span><span class="n">bio</span><span class="p">)</span> <span class="k">as</span> <span class="n">obj</span><span class="p">:</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">setnchannels</span><span class="p">(</span><span class="n">n_channels</span><span class="p">)</span>
@@ -403,7 +587,7 @@
             <span class="n">obj</span><span class="o">.</span><span class="n">setcomptype</span><span class="p">(</span><span class="n">comptype</span><span class="p">)</span>
 
         <span class="c1"># This writes the header with the specified nframes count</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="p">)</span>
 
     <span class="n">bio</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">bio</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -420,52 +604,52 @@
     <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Make a WAV header from given parameters.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Make a WAV header from given parameters.</span>
 
-<span class="sd">    :param sr: The sample rate (i.e. &quot;frame rate&quot; i.e. &quot;chk_rate&quot;)</span>
-<span class="sd">    :param width_bytes: The &quot;sample width&quot; in bytes</span>
+<span class="sd">    :param sr: The sample rate (i.e. "frame rate" i.e. "chk_rate")</span>
+<span class="sd">    :param width_bytes: The "sample width" in bytes</span>
 <span class="sd">    :param n_channels: Number of channels (default is 1)</span>
 <span class="sd">    :param nframes: Optional number of frames (default is 0).</span>
 <span class="sd">        NOTE: If a wav file is to be read correctly, the num of frames (i.e.</span>
-<span class="sd">        samples/chks) should be exactly the number you&#39;ll actually be writing in the</span>
+<span class="sd">        samples/chks) should be exactly the number you'll actually be writing in the</span>
 <span class="sd">        wave file.</span>
-<span class="sd">    :param comptype: No supported by python&#39;s wave module (yet).</span>
+<span class="sd">    :param comptype: No supported by python's wave module (yet).</span>
 
 <span class="sd">    &gt;&gt;&gt; header_bytes = encode_wav_header_bytes(44100, 2, n_channels=3)</span>
 <span class="sd">    &gt;&gt;&gt; len(header_bytes)</span>
 <span class="sd">    44</span>
 <span class="sd">    &gt;&gt;&gt; header_bytes[:31]</span>
-<span class="sd">    b&#39;RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x03\x00D\xac\x00\x00\x98\t\x04&#39;</span>
+<span class="sd">    b'RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x03\x00D\xac\x00\x00\x98\t\x04'</span>
 
-<span class="sd">    You can decode those params (including those you didn&#39;t specify, but were</span>
+<span class="sd">    You can decode those params (including those you didn't specify, but were</span>
 <span class="sd">    defaulted) with the `decode_wav_header_bytes` inverse function.</span>
 
 <span class="sd">    &gt;&gt;&gt; from recode.audio import decode_wav_header_bytes</span>
 <span class="sd">    &gt;&gt;&gt; params = decode_wav_header_bytes(header_bytes)</span>
 <span class="sd">    &gt;&gt;&gt; params  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    {&#39;sr&#39;: 44100,</span>
-<span class="sd">     &#39;width_bytes&#39;: 2,</span>
-<span class="sd">     &#39;n_channels&#39;: 3,</span>
-<span class="sd">     &#39;nframes&#39;: 0,</span>
-<span class="sd">     &#39;comptype&#39;: None}</span>
+<span class="sd">    {'sr': 44100,</span>
+<span class="sd">     'width_bytes': 2,</span>
+<span class="sd">     'n_channels': 3,</span>
+<span class="sd">     'nframes': 0,</span>
+<span class="sd">     'comptype': None}</span>
 <span class="sd">    &gt;&gt;&gt; assert encode_wav_header_bytes(**params) == header_bytes</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">bio</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
     <span class="k">with</span> <span class="n">Wave_write</span><span class="p">(</span><span class="n">bio</span><span class="p">)</span> <span class="k">as</span> <span class="n">obj</span><span class="p">:</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">setnchannels</span><span class="p">(</span><span class="n">n_channels</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">setsampwidth</span><span class="p">(</span><span class="n">width_bytes</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">setframerate</span><span class="p">(</span><span class="n">sr</span><span class="p">)</span>
         <span class="c1"># print(nframes)</span>
-        <span class="c1"># print(f&quot;{obj.getnframes()=}&quot;)</span>
+        <span class="c1"># print(f"{obj.getnframes()=}")</span>
         <span class="k">if</span> <span class="n">nframes</span><span class="p">:</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">setnframes</span><span class="p">(</span><span class="n">nframes</span><span class="p">)</span>
-            <span class="c1"># print(f&quot;{obj.getnframes()=}&quot;)</span>
+            <span class="c1"># print(f"{obj.getnframes()=}")</span>
         <span class="k">if</span> <span class="n">comptype</span><span class="p">:</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">setcomptype</span><span class="p">(</span><span class="n">comptype</span><span class="p">)</span>
 
-        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="c1"># print(f&quot;{obj.getnframes()=}&quot;)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="p">)</span>
+        <span class="c1"># print(f"{obj.getnframes()=}")</span>
         <span class="n">bio</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">bio</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
@@ -475,24 +659,28 @@
 <div class="viewcode-block" id="decode_wav_header_bytes">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_header_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a dict of params decoded from a wav header</span>
+<span class="w">    </span><span class="sd">"""Get a dict of params decoded from a wav header</span>
 
-<span class="sd">    For examples, see the `encode_wav_header_bytes` function, it&#39;s inverse.</span>
+<span class="sd">    For examples, see the `encode_wav_header_bytes` function, it's inverse.</span>
 
 <span class="sd">    &gt;&gt;&gt; from recode.audio import encode_wav_header_bytes</span>
 <span class="sd">    &gt;&gt;&gt; header_bytes = encode_wav_header_bytes(44100, 2, n_channels=3)</span>
 <span class="sd">    &gt;&gt;&gt; decode_wav_header_bytes(header_bytes)  # doctest: +NORMALIZE_WHITESPACE</span>
-<span class="sd">    {&#39;sr&#39;: 44100,</span>
-<span class="sd">     &#39;width_bytes&#39;: 2,</span>
-<span class="sd">     &#39;n_channels&#39;: 3,</span>
-<span class="sd">     &#39;nframes&#39;: 0,</span>
-<span class="sd">     &#39;comptype&#39;: None}</span>
+<span class="sd">    {'sr': 44100,</span>
+<span class="sd">     'width_bytes': 2,</span>
+<span class="sd">     'n_channels': 3,</span>
+<span class="sd">     'nframes': 0,</span>
+<span class="sd">     'comptype': None}</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">wav_read_obj</span> <span class="o">=</span> <span class="n">Wave_read</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">))</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">wav_read_obj</span><span class="o">.</span><span class="n">getparams</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">comptype</span> <span class="o">==</span> <span class="s2">&quot;NONE&quot;</span><span class="p">:</span>  <span class="c1"># it&#39;s the only one supported</span>
-        <span class="n">comptype</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># but we&#39;re making it compatible with encoding anyway</span>
+    <span class="c1"># Normalized to None so the value round-trips with `encode_wav_header_bytes`.</span>
+    <span class="c1"># Unconditional on purpose: `Wave_read` rejects any non-PCM fmt tag with</span>
+    <span class="c1"># `wave.Error` before `getparams()` returns, so comptype is always 'NONE' here.</span>
+    <span class="c1"># It used to be assigned inside `if params.comptype == "NONE"`, an unreachable</span>
+    <span class="c1"># guard that would have left the name unbound if that ever changed.</span>
+    <span class="n">comptype</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">sr</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">framerate</span><span class="p">,</span>
         <span class="n">width_bytes</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">sampwidth</span><span class="p">,</span>
@@ -507,11 +695,11 @@
 <span class="c1"># TODO: Could generalize to accept open file pointer directly too.</span>
 <span class="c1">#  -&gt; Tip: Change input name to file and wrap such that context manager just returns</span>
 <span class="c1">#   the file pointer as is, if file is not a string.</span>
-<span class="c1"># TODO: How could we get this efficient &quot;only read header&quot; with wavs in zip files?</span>
+<span class="c1"># TODO: How could we get this efficient "only read header" with wavs in zip files?</span>
 <div class="viewcode-block" id="extract_wav_header_from_file">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.extract_wav_header_from_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">extract_wav_header_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the header of a WAV file, given it&#39;s filepath.</span>
+<span class="w">    </span><span class="sd">"""Extracts the header of a WAV file, given it's filepath.</span>
 
 <span class="sd">    This function is useful for reading the header of a WAV file without having to read</span>
 <span class="sd">    the entire file into memory.</span>
@@ -522,14 +710,14 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bytes: The bytes of the WAV file header.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Initially read the first 44 bytes</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
 
         <span class="c1"># Unpack the ChunkSize (bytes 4-8) and Subchunk2Size (bytes 40-44)</span>
-        <span class="n">chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;little&quot;</span><span class="p">)</span>
-        <span class="n">subchunk2_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">40</span><span class="p">:</span><span class="mi">44</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;little&quot;</span><span class="p">)</span>
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"little"</span><span class="p">)</span>
+        <span class="n">subchunk2_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">40</span><span class="p">:</span><span class="mi">44</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"little"</span><span class="p">)</span>
 
         <span class="c1"># Calculate the total header size</span>
         <span class="n">header_size</span> <span class="o">=</span> <span class="n">chunk_size</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">subchunk2_size</span>
@@ -545,60 +733,60 @@
 <span class="c1"># TODO: Can optimize (index) the data below to make search functions faster</span>
 <span class="n">num_type_synonyms</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int16&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_16&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt16&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="s2">"int16"</span><span class="p">,</span>
+        <span class="s2">"soundfile"</span><span class="p">:</span> <span class="s2">"PCM_16"</span><span class="p">,</span>
+        <span class="s2">"pyaudio"</span><span class="p">:</span> <span class="s2">"paInt16"</span><span class="p">,</span>
+        <span class="s2">"n_bits"</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">"n_bytes"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"struct"</span><span class="p">:</span> <span class="s2">"h"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_S8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="s2">"int8"</span><span class="p">,</span>
+        <span class="s2">"soundfile"</span><span class="p">:</span> <span class="s2">"PCM_S8"</span><span class="p">,</span>
+        <span class="s2">"pyaudio"</span><span class="p">:</span> <span class="s2">"paInt8"</span><span class="p">,</span>
+        <span class="s2">"n_bits"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">"n_bytes"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"struct"</span><span class="p">:</span> <span class="s2">"b"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int24&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_24&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt24&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="s2">"int24"</span><span class="p">,</span>
+        <span class="s2">"soundfile"</span><span class="p">:</span> <span class="s2">"PCM_24"</span><span class="p">,</span>
+        <span class="s2">"pyaudio"</span><span class="p">:</span> <span class="s2">"paInt24"</span><span class="p">,</span>
+        <span class="s2">"n_bits"</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="s2">"n_bytes"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">"struct"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;int32&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_32&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paInt32&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="s2">"int32"</span><span class="p">,</span>
+        <span class="s2">"soundfile"</span><span class="p">:</span> <span class="s2">"PCM_32"</span><span class="p">,</span>
+        <span class="s2">"pyaudio"</span><span class="p">:</span> <span class="s2">"paInt32"</span><span class="p">,</span>
+        <span class="s2">"n_bits"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">"n_bytes"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"struct"</span><span class="p">:</span> <span class="s2">"i"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;PCM_U8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paUInt8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="s2">"uint8"</span><span class="p">,</span>
+        <span class="s2">"soundfile"</span><span class="p">:</span> <span class="s2">"PCM_U8"</span><span class="p">,</span>
+        <span class="s2">"pyaudio"</span><span class="p">:</span> <span class="s2">"paUInt8"</span><span class="p">,</span>
+        <span class="s2">"n_bits"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">"n_bytes"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"struct"</span><span class="p">:</span> <span class="s2">"B"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;FLOAT&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="s2">&quot;paFloat32&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;f&quot;</span><span class="p">,</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="s2">"float32"</span><span class="p">,</span>
+        <span class="s2">"soundfile"</span><span class="p">:</span> <span class="s2">"FLOAT"</span><span class="p">,</span>
+        <span class="s2">"pyaudio"</span><span class="p">:</span> <span class="s2">"paFloat32"</span><span class="p">,</span>
+        <span class="s2">"n_bits"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">"n_bytes"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"struct"</span><span class="p">:</span> <span class="s2">"f"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;soundfile&quot;</span><span class="p">:</span> <span class="s2">&quot;DOUBLE&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;pyaudio&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">&quot;n_bits&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-        <span class="s2">&quot;n_bytes&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-        <span class="s2">&quot;struct&quot;</span><span class="p">:</span> <span class="s2">&quot;d&quot;</span><span class="p">,</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="s2">"float64"</span><span class="p">,</span>
+        <span class="s2">"soundfile"</span><span class="p">:</span> <span class="s2">"DOUBLE"</span><span class="p">,</span>
+        <span class="s2">"pyaudio"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"n_bits"</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="s2">"n_bytes"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="s2">"struct"</span><span class="p">:</span> <span class="s2">"d"</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">]</span>
 
@@ -607,51 +795,51 @@
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_find_num_type_for">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">num_find_num_type_for</span><span class="p">(</span>
     <span class="n">num</span><span class="p">,</span>
-    <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">&quot;struct&quot;</span><span class="p">,</span>
-    <span class="n">num_sys_search_order</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;n_bits&quot;</span><span class="p">,</span> <span class="s2">&quot;n_bytes&quot;</span><span class="p">,</span> <span class="s2">&quot;dtype&quot;</span><span class="p">,</span> <span class="s2">&quot;pyaudio&quot;</span><span class="p">,</span> <span class="s2">&quot;soundfile&quot;</span><span class="p">),</span>
+    <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">"struct"</span><span class="p">,</span>
+    <span class="n">num_sys_search_order</span><span class="o">=</span><span class="p">(</span><span class="s2">"n_bits"</span><span class="p">,</span> <span class="s2">"n_bytes"</span><span class="p">,</span> <span class="s2">"dtype"</span><span class="p">,</span> <span class="s2">"pyaudio"</span><span class="p">,</span> <span class="s2">"soundfile"</span><span class="p">),</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the target_num_sys equivalent of input num checking multiple unit options&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Find the target_num_sys equivalent of input num checking multiple unit options"""</span>
     <span class="k">for</span> <span class="n">num_sys</span> <span class="ow">in</span> <span class="n">num_sys_search_order</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="s2">&quot;Just try the next num_sys...&quot;</span></div>
+            <span class="s2">"Just try the next num_sys..."</span></div>
 
 
 
 <div class="viewcode-block" id="num_type_for">
 <a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_type_for">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s2">&quot;n_bits&quot;</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">&quot;struct&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Translate from one (sample width) number type to another.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s2">"n_bits"</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">"struct"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Translate from one (sample width) number type to another.</span>
 
 <span class="sd">    :param num:</span>
 <span class="sd">    :param num_sys:</span>
 <span class="sd">    :param target_num_sys:</span>
 <span class="sd">    :return:</span>
 
-<span class="sd">    &gt;&gt;&gt; num_type_for(16, &quot;n_bits&quot;, &quot;soundfile&quot;)</span>
-<span class="sd">    &#39;PCM_16&#39;</span>
-<span class="sd">    &gt;&gt;&gt; num_type_for(3, &quot;n_bytes&quot;, &quot;soundfile&quot;)</span>
-<span class="sd">    &#39;PCM_24&#39;</span>
+<span class="sd">    &gt;&gt;&gt; num_type_for(16, "n_bits", "soundfile")</span>
+<span class="sd">    'PCM_16'</span>
+<span class="sd">    &gt;&gt;&gt; num_type_for(3, "n_bytes", "soundfile")</span>
+<span class="sd">    'PCM_24'</span>
 
 <span class="sd">    Tip: Use with `functools.partial` when you have some fix translation endpoints.</span>
 
 <span class="sd">    &gt;&gt;&gt; from functools import partial</span>
 <span class="sd">    &gt;&gt;&gt; get_dtype_from_n_bytes = partial(</span>
-<span class="sd">    ...     num_type_for, num_sys=&quot;n_bytes&quot;, target_num_sys=&quot;dtype&quot;</span>
+<span class="sd">    ...     num_type_for, num_sys="n_bytes", target_num_sys="dtype"</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; get_dtype_from_n_bytes(8)</span>
-<span class="sd">    &#39;float64&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    'float64'</span>
+<span class="sd">    """</span>
     <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">num_type_synonyms</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="n">d</span><span class="p">[</span><span class="n">num_sys</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">target_num_sys</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">d</span><span class="p">[</span><span class="n">target_num_sys</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Did not find any </span><span class="si">{</span><span class="n">target_num_sys</span><span class="si">}</span><span class="s2"> entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Did not find any </span><span class="si">{</span><span class="n">target_num_sys</span><span class="si">}</span><span class="s2"> entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Did not find any entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Did not find any entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 </pre></div>
 
@@ -662,7 +850,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
+    <p></p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
