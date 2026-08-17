@@ -36,6 +36,8 @@ b'\x01\x00\x02\x00\x03\x00'
 
 """
 
+import struct
+import warnings
 from io import BytesIO
 from typing import Union
 from collections.abc import Iterable
@@ -112,16 +114,32 @@ def decode_pcm_bytes(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
     return decode(pcm_bytes)
 
 
-MIN_WAV_N_BYTES = 44
+_RIFF_HEADER_SIZE = 12  # 'RIFF' + form size + 'WAVE'
+_CHUNK_HEADER_SIZE = 8  # chunk id + chunk size
+_CHUNK_ID_SIZE = 4
+
+
+class ShortWavData(UserWarning):
+    """The `data` chunk carries fewer bytes than its own header declares.
+
+    Raised as a warning rather than an error because the audio that *is* present is
+    still worth decoding -- a partially downloaded file, or one written to a stream
+    whose length was never patched back into the header. What must not happen is for
+    the shortfall to pass unmentioned, since the caller cannot otherwise tell a
+    truncated file from a complete one.
+    """
 
 
 def decode_wav_bytes(wav_bytes: bytes):
-    r"""
+    r"""Decode WAV bytes into a ``(waveform, sample_rate)`` pair.
 
-    :param width: The width of a sample (in bits, bytes, numpy dtype, pyaudio ...)
-        (Will try to figure it out)
-    :param n_channels: Number of channels
-    :return: The decoded waveform
+    :param wav_bytes: The bytes of a RIFF/WAVE container holding uncompressed PCM
+    :return: ``(wf, sr)`` -- the decoded waveform and its sample rate
+
+    :raises ValueError: if `wav_bytes` is not a RIFF/WAVE container with a `data`
+        chunk. (Before recode#4 the same inputs raised `AssertionError`, `wave.Error`
+        or `EOFError` depending on how they were malformed; they are unified here.)
+    :raises ShortWavData: *warning*, not an exception -- see below.
 
     >>> wav_bytes = (
     ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'  # header
@@ -133,30 +151,193 @@ def decode_wav_bytes(wav_bytes: bytes):
     [0, 1, -1, 2, -2]
     >>> sr
     42
+
+    The `data` chunk is located by walking the RIFF structure, so chunks that sit
+    *after* the audio -- `LIST`/`INFO` metadata, which ffmpeg, Audacity and iTunes
+    all append -- do not shift the waveform:
+
+    >>> import struct
+    >>> info = b'INFOISFT' + struct.pack('<I', 6) + b'Lavf58'
+    >>> with_trailing_metadata = wav_bytes + b'LIST' + struct.pack('<I', len(info)) + info
+    >>> decode_wav_bytes(with_trailing_metadata)[0]
+    [0, 1, -1, 2, -2]
+
+    A file carrying less audio than its header declares decodes to the whole frames
+    that are actually there, and says so:
+
+    >>> truncated = wav_bytes[:-4]
+    >>> import warnings
+    >>> with warnings.catch_warnings(record=True) as caught:
+    ...     _ = warnings.simplefilter('always')
+    ...     wf, sr = decode_wav_bytes(truncated)
+    >>> wf
+    [0, 1, -1]
+    >>> caught[0].category.__name__
+    'ShortWavData'
     """
+    offset, size = _wav_data_chunk(wav_bytes)
     meta = decode_wav_header_bytes(wav_bytes)
-    header_size = header_size_of_wav_bytes(wav_bytes, meta)
+    # Decoding is defined on whole frames, and a frame is every channel's sample: a
+    # file cut mid-frame drops the remainder rather than raising a struct-size error.
+    frame_size = int(meta["n_channels"] * meta["width_bytes"])
+    if frame_size:
+        size -= size % frame_size
+        if size // frame_size < meta["nframes"]:
+            warnings.warn(
+                f"WAV `data` chunk is short: the header declares {meta['nframes']} "
+                f"frames, {size // frame_size} are present. Decoding what is there.",
+                ShortWavData,
+                stacklevel=2,
+            )
+    if size == 0:
+        # No whole frame survived. Answering with an empty waveform is the consistent
+        # reading of "decode the frames that are present"; letting it through would
+        # surface as an IndexError from inside the chunked decoder instead.
+        return [], meta["sr"]
     wf = decode_pcm_bytes(
-        wav_bytes[header_size:],
+        wav_bytes[offset : offset + size],
         width=meta["width_bytes"],
         n_channels=meta["n_channels"],
     )
     return wf, meta["sr"]
 
 
-def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None):
-    """Compute the header size"""
-    if meta is None:
-        meta = decode_wav_header_bytes(wav_bytes)
-    # the header tells us how many samples (frames) of data there are, how many
-    # channels, and how many bytes each sample (frame) takes, so the header size is
-    # the total size (number of bytes), minus the product of those three quantities
-    data_size = int(meta["n_channels"] * meta["width_bytes"] * meta["nframes"])
-    header_size = len(wav_bytes) - data_size
-    assert (
-        header_size >= MIN_WAV_N_BYTES
-    ), f"Header size of wav bytes should be at least 44 bytes"
-    return header_size
+def _wav_data_chunk(wav_bytes: bytes) -> tuple:
+    r"""Locate the audio payload: ``(offset, size)`` of the `data` chunk's contents.
+
+    Walks the RIFF chunk list rather than inferring the position arithmetically, which
+    is what makes it robust to the shapes real-world WAV files take that a
+    size-subtraction cannot survive (recode#4):
+
+    - **chunks after `data`.** `LIST`/`INFO` tags are routinely appended by encoders.
+      Deriving the header size as ``len(wav_bytes) - n_channels * width * nframes``
+      silently counts those trailing bytes as header, so the waveform is read from too
+      far in -- returning audio of the right *length* and the wrong *content*, with no
+      error raised.
+    - **an over-declared `data` size.** Files written to a stream (length unknown at
+      write time, patched afterwards -- or never) declare more samples than they carry,
+      commonly with the sentinel ``0xFFFFFFFF``. The size is clamped to what is really
+      there instead of asserting.
+
+    Those two interact, and naively clamping an over-declared size to end-of-file
+    would re-create the very bug this function exists to kill -- a trailing `LIST`
+    would be handed back as audio. So when the declared size overruns, the payload is
+    bounded by the next chunk that the remainder of the file parses cleanly from,
+    rather than by EOF. Only when no such boundary exists does it fall back to EOF.
+
+    Sizes are read as unsigned little-endian, per the RIFF spec.
+
+    >>> import struct, wave, io
+    >>> b = io.BytesIO()
+    >>> with wave.open(b, 'wb') as w:
+    ...     _ = w.setnchannels(1), w.setsampwidth(2), w.setframerate(8000)
+    ...     w.writeframes(struct.pack('<3h', 1, 2, 3))
+    >>> raw = b.getvalue()
+    >>> offset, size = _wav_data_chunk(raw)
+    >>> size
+    6
+    >>> raw[offset:offset + size] == struct.pack('<3h', 1, 2, 3)
+    True
+
+    An over-declared size does not swallow what follows the audio:
+
+    >>> broken = bytearray(raw)
+    >>> at = broken.find(b'data')
+    >>> broken[at + 4:at + 8] = struct.pack('<I', 0xFFFFFFFF)  # stream sentinel
+    >>> trailing = b'LIST' + struct.pack('<I', 4) + b'INFO'
+    >>> _wav_data_chunk(bytes(broken) + trailing)
+    (44, 6)
+    """
+    if (
+        len(wav_bytes) < _RIFF_HEADER_SIZE
+        or wav_bytes[:4] != b"RIFF"
+        or wav_bytes[8:12] != b"WAVE"
+    ):
+        raise ValueError(
+            "Not WAV bytes: expected a RIFF/WAVE container, got "
+            f"{bytes(wav_bytes[:4])!r}...{bytes(wav_bytes[8:12])!r}"
+        )
+    pos = _RIFF_HEADER_SIZE
+    while pos + _CHUNK_HEADER_SIZE <= len(wav_bytes):
+        chunk_id = bytes(wav_bytes[pos : pos + _CHUNK_ID_SIZE])
+        (declared,) = struct.unpack(
+            "<I", wav_bytes[pos + _CHUNK_ID_SIZE : pos + _CHUNK_HEADER_SIZE]
+        )
+        contents = pos + _CHUNK_HEADER_SIZE
+        if chunk_id == b"data":
+            available = len(wav_bytes) - contents
+            if declared <= available:
+                return contents, declared
+            return contents, _payload_end_of_overrunning_data(wav_bytes, contents)
+        # RIFF chunks are word-aligned: an odd-sized chunk carries a pad byte.
+        pos = contents + declared + (declared % 2)
+        if declared > len(wav_bytes) - contents:
+            raise ValueError(
+                f"Not WAV bytes: chunk walk desynced at offset {pos - declared - 8} "
+                f"({chunk_id!r} declares {declared} bytes but only "
+                f"{len(wav_bytes) - contents} remain); no `data` chunk reachable"
+            )
+    raise ValueError("Not WAV bytes: no `data` chunk found")
+
+
+def _payload_end_of_overrunning_data(wav_bytes: bytes, contents: int) -> int:
+    """How many bytes of audio a `data` chunk whose declared size overruns really has.
+
+    The declared size is unusable, so the extent has to come from the file itself: the
+    audio runs until the next thing that is demonstrably a chunk, meaning a position
+    (word-aligned, as RIFF requires) from which the rest of the buffer parses as a
+    well-formed chunk list ending exactly at EOF. Requiring the parse to reach EOF is
+    what keeps this from firing on audio that merely happens to contain four
+    plausible-looking bytes.
+
+    Falls back to end-of-file when no such position exists -- a genuinely truncated
+    file, where reading to the end is right.
+    """
+    end = len(wav_bytes)
+    start = contents + (contents % 2)
+    for candidate in range(start, end - _CHUNK_HEADER_SIZE + 1, 2):
+        if _parses_as_chunk_list_to_eof(wav_bytes, candidate):
+            return candidate - contents
+    return end - contents
+
+
+def _parses_as_chunk_list_to_eof(wav_bytes: bytes, pos: int) -> bool:
+    """Does the buffer from `pos` read as a chunk list that lands exactly on EOF?"""
+    end = len(wav_bytes)
+    while pos < end:
+        if pos + _CHUNK_HEADER_SIZE > end:
+            return False
+        chunk_id = wav_bytes[pos : pos + _CHUNK_ID_SIZE]
+        # A chunk id is four printable ASCII characters; anything else is audio.
+        if not all(0x20 <= b < 0x7F for b in chunk_id):
+            return False
+        (declared,) = struct.unpack(
+            "<I", wav_bytes[pos + _CHUNK_ID_SIZE : pos + _CHUNK_HEADER_SIZE]
+        )
+        pos += _CHUNK_HEADER_SIZE + declared + (declared % 2)
+    return pos == end
+
+
+def header_size_of_wav_bytes(wav_bytes: bytes) -> int:
+    r"""Size, in bytes, of everything preceding the audio payload.
+
+    That is the offset of the `data` chunk's contents, found by walking the RIFF
+    structure (see :func:`_wav_data_chunk`). For a well-formed file with nothing after
+    the audio this is the same number the old size-subtraction produced; unlike it, it
+    stays correct when the file carries trailing metadata or an over-declared `data`
+    size.
+
+    `meta` is accepted for backwards compatibility and no longer used.
+
+    >>> header_size_of_wav_bytes(
+    ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'
+    ...     b'*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00'
+    ...     b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'
+    ... )
+    44
+    """
+    offset, _ = _wav_data_chunk(wav_bytes)
+    return offset
 
 
 # # TODO: Repair. See https://github.com/otosense/recode/issues/3
@@ -389,8 +570,12 @@ def decode_wav_header_bytes(wav_header_bytes: bytes) -> dict:
     """
     wav_read_obj = Wave_read(BytesIO(wav_header_bytes))
     params = wav_read_obj.getparams()
-    if params.comptype == "NONE":  # it's the only one supported
-        comptype = None  # but we're making it compatible with encoding anyway
+    # Normalized to None so the value round-trips with `encode_wav_header_bytes`.
+    # Unconditional on purpose: `Wave_read` rejects any non-PCM fmt tag with
+    # `wave.Error` before `getparams()` returns, so comptype is always 'NONE' here.
+    # It used to be assigned inside `if params.comptype == "NONE"`, an unreachable
+    # guard that would have left the name unbound if that ever changed.
+    comptype = None
     return dict(
         sr=params.framerate,
         width_bytes=params.sampwidth,

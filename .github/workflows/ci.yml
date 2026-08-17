@@ -39,8 +39,12 @@ jobs:
       - name: Pytest Validation
         uses: i2mint/isee/actions/pytest-validation@master
         with:
-          root-dir: ${{ env.PROJECT_NAME }}
-          paths-to-ignore: examples,scrap
+          # Repo root, not the package dir: `test_recode.py` lives at the top level, so
+          # with root-dir=recode the action's `find` never reached it and the test suite
+          # had never once run in CI (25 doctests collected, 0 tests). Widening it here
+          # is what makes the wav-parsing regression guards actually gate a merge.
+          root-dir: .
+          paths-to-ignore: notebooks,setup.py
 
   publish:
     name: Publish
