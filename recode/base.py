@@ -9,7 +9,6 @@ from operator import itemgetter
 from collections import namedtuple
 from recode.util import spy, get_struct, list_of_dicts
 
-
 Meta = Sequence[bytes]
 Chunk = Sequence[bytes]
 Chunks = Iterable[Chunk]
