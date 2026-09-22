@@ -770,3 +770,22 @@ def test_a_non_pcm_extensible_subformat_still_raises():
     assert non_pcm != raw  # guard: the fixture really did carry the PCM GUID
     with pytest.raises(_wave.Error):
         decode_wav_bytes(non_pcm)
+
+
+def test_8_bit_encode_accepts_a_numpy_int8_waveform():
+    """int8 is the natural dtype of 8-bit audio; biasing it by 128 must not overflow.
+
+    Before the unsigned-8-bit fix, an int8 array went straight to the struct codec and
+    encoded fine; the bias then added a Python 128 to each np.int8 sample, which numpy 2
+    refuses (OverflowError) and numpy 1 silently wraps.
+    """
+    np = pytest.importorskip("numpy")
+    from recode.audio import encode_wav_bytes
+
+    mono = np.array([-128, 0, 127], dtype=np.int8)
+    raw = encode_wav_bytes(mono, _SR, width_bytes=1)
+    assert decode_wav_bytes(raw) == ([-128, 0, 127], _SR)
+
+    stereo = np.array([[-128, 1], [0, 127]], dtype=np.int8)
+    raw = encode_wav_bytes(stereo, _SR, width_bytes=1, n_channels=2)
+    assert decode_wav_bytes(raw) == ([(-128, 1), (0, 127)], _SR)

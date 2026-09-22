@@ -36,6 +36,7 @@ b'\x01\x00\x02\x00\x03\x00'
 
 """
 
+import operator
 import struct
 import warnings
 import wave
@@ -164,13 +165,25 @@ def _shift_samples(frames, by: int):
     [-128, 0, 127]
     >>> _shift_samples([(0, 255), (128, 64)], -128)
     [(-128, 127), (0, -64)]
+
+    Samples are widened to Python `int` before the shift, so a numpy `int8` waveform --
+    the natural dtype for 8-bit audio -- does not overflow on its way to 0..255, and a
+    non-integer sample still fails loudly (as the struct codec always made it) instead
+    of being truncated:
+
+    >>> _shift_samples([-128, 0, 127], 128)
+    [0, 128, 255]
+    >>> _shift_samples([0.5], 128)
+    Traceback (most recent call last):
+      ...
+    TypeError: 'float' object cannot be interpreted as an integer
     """
+
+    def shift(sample):
+        return operator.index(sample) + by
+
     return [
-        (
-            tuple(sample + by for sample in frame)
-            if isinstance(frame, Iterable)
-            else frame + by
-        )
+        tuple(map(shift, frame)) if isinstance(frame, Iterable) else shift(frame)
         for frame in frames
     ]
 
