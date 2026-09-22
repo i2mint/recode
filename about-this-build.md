@@ -2,7 +2,7 @@
 
 # About this build
 
-This documentation was built on **2026-09-22 13:00 UTC** from commit <a href="https://github.com/i2mint/recode/commit/bc4e9ba18664e33ae15288177e281f0cebadc9e4"><code>bc4e9ba</code></a> on branch <code>master</code>, for **recode 0.1.39** (from <code>setup.cfg</code>).
+This documentation was built on **2026-09-22 14:10 UTC** from commit <a href="https://github.com/i2mint/recode/commit/85e0943c3489f32ef7efc59e10d5880ee7e312f3"><code>85e0943</code></a> on branch <code>master</code>, for **recode 0.1.40** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -11,9 +11,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/recode/commit/bc4e9ba18664e33ae15288177e281f0cebadc9e4"><code>bc4e9ba18664e33ae15288177e281f0cebadc9e4</code></a> |
+| Commit              | <a href="https://github.com/i2mint/recode/commit/85e0943c3489f32ef7efc59e10d5880ee7e312f3"><code>85e0943c3489f32ef7efc59e10d5880ee7e312f3</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.39</code>                                                                                                                                  |
+| Tags at this commit | <code>0.1.40</code>                                                                                                                                  |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/recode</code>                                                                                                        |
 
@@ -22,9 +22,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/recode</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/recode/actions/runs/35730580533">35730580533</a>        |
+| Run          | <a href="https://github.com/i2mint/recode/actions/runs/35738301691">35738301691</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>dcefcea407eb621c2e1806ceb57b4c038422ef31</code> (in the history of the built commit) |
+| Event commit | <code>3b92016bb6dcf47b543cb464a8b6b4420be08e08</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -49,13 +49,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/recode/0.1.39/">0.1.39</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/recode/0.1.40/">0.1.40</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/recode && cd recode
-git checkout bc4e9ba18664e33ae15288177e281f0cebadc9e4
+git checkout 85e0943c3489f32ef7efc59e10d5880ee7e312f3
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

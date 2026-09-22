@@ -11,7 +11,7 @@
 - [recode.audio](_autosummary/recode.audio.html.md): Encoding audio
 - [recode.base](_autosummary/recode.base.html.md): Base recode objects
 - [recode.util](_autosummary/recode.util.html.md): Utils for use throughout the package
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 13:00 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 14:10 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
 
 ## Optional
 

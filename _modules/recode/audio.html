@@ -279,6 +279,7 @@
 
 <span class="sd">"""</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">wave</span>
@@ -419,13 +420,25 @@
 <span class="sd">    [-128, 0, 127]</span>
 <span class="sd">    &gt;&gt;&gt; _shift_samples([(0, 255), (128, 64)], -128)</span>
 <span class="sd">    [(-128, 127), (0, -64)]</span>
+
+<span class="sd">    Samples are widened to Python `int` before the shift, so a numpy `int8` waveform --</span>
+<span class="sd">    the natural dtype for 8-bit audio -- does not overflow on its way to 0..255, and a</span>
+<span class="sd">    non-integer sample still fails loudly (as the struct codec always made it) instead</span>
+<span class="sd">    of being truncated:</span>
+
+<span class="sd">    &gt;&gt;&gt; _shift_samples([-128, 0, 127], 128)</span>
+<span class="sd">    [0, 128, 255]</span>
+<span class="sd">    &gt;&gt;&gt; _shift_samples([0.5], 128)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">      ...</span>
+<span class="sd">    TypeError: 'float' object cannot be interpreted as an integer</span>
 <span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">shift</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">operator</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">+</span> <span class="n">by</span>
+
     <span class="k">return</span> <span class="p">[</span>
-        <span class="p">(</span>
-            <span class="nb">tuple</span><span class="p">(</span><span class="n">sample</span> <span class="o">+</span> <span class="n">by</span> <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">frame</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
-            <span class="k">else</span> <span class="n">frame</span> <span class="o">+</span> <span class="n">by</span>
-        <span class="p">)</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">shift</span><span class="p">,</span> <span class="n">frame</span><span class="p">))</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="k">else</span> <span class="n">shift</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span>
     <span class="p">]</span>
 
@@ -1212,7 +1225,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=4af9b32f"></script>
+</div><script src="../../_static/documentation_options.js?v=6264e773"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

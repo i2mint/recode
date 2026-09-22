@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-09-22T13:00:53Z",
+  "built_at": "2026-09-22T14:10:33Z",
   "package": {
     "name": "recode",
-    "version": "0.1.39",
+    "version": "0.1.40",
     "display_name": "recode",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "bc4e9ba18664e33ae15288177e281f0cebadc9e4",
-    "short_commit": "bc4e9ba",
+    "commit": "85e0943c3489f32ef7efc59e10d5880ee7e312f3",
+    "short_commit": "85e0943",
     "branch": "master",
     "tags": [
-      "0.1.39"
+      "0.1.40"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/recode",
-    "commit_url": "https://github.com/i2mint/recode/commit/bc4e9ba18664e33ae15288177e281f0cebadc9e4",
+    "commit_url": "https://github.com/i2mint/recode/commit/85e0943c3489f32ef7efc59e10d5880ee7e312f3",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/recode",
-    "sha": "dcefcea407eb621c2e1806ceb57b4c038422ef31",
+    "sha": "3b92016bb6dcf47b543cb464a8b6b4420be08e08",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "35730580533",
-    "run_url": "https://github.com/i2mint/recode/actions/runs/35730580533",
+    "run_id": "35738301691",
+    "run_url": "https://github.com/i2mint/recode/actions/runs/35738301691",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -62,11 +62,11 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.39",
+    "latest": "0.1.40",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/recode && cd recode\ngit checkout bc4e9ba18664e33ae15288177e281f0cebadc9e4\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/recode && cd recode\ngit checkout 85e0943c3489f32ef7efc59e10d5880ee7e312f3\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,
