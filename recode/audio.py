@@ -38,6 +38,7 @@ b'\x01\x00\x02\x00\x03\x00'
 
 import struct
 import warnings
+import wave
 from io import BytesIO
 from typing import Union
 from collections.abc import Iterable
@@ -117,6 +118,27 @@ def decode_pcm_bytes(pcm_bytes: bytes, width: Width = 2, n_channels: int = 1):
 _RIFF_HEADER_SIZE = 12  # 'RIFF' + form size + 'WAVE'
 _CHUNK_HEADER_SIZE = 8  # chunk id + chunk size
 _CHUNK_ID_SIZE = 4
+_PCM_FMT_CHUNK_SIZE = 16  # the plain (non-extensible) `fmt ` chunk contents
+
+# The smallest a WAV file can be: the RIFF/WAVE preamble, a plain PCM `fmt ` chunk, and
+# an empty `data` chunk -- 44 bytes. A long-standing public name of this module.
+MIN_WAV_N_BYTES = (
+    _RIFF_HEADER_SIZE + _CHUNK_HEADER_SIZE + _PCM_FMT_CHUNK_SIZE + _CHUNK_HEADER_SIZE
+)
+
+# How much of a file `extract_wav_header_from_file` reads at a time while looking for
+# the audio. Comfortably more than any header in practice, so it is normally one read.
+DFLT_HEADER_READ_SIZE = 64 * 1024
+
+# WAV stores 8-bit PCM *unsigned* (0..255, silence at 128) and every wider width signed.
+_UINT8_BIAS = 128
+_UINT8_WIDTH_NAME = "uint8"
+
+_WAVE_FORMAT_EXTENSIBLE = 0xFFFE
+_EXTENSIBLE_FMT_CHUNK_SIZE = 40
+_SUBFORMAT_GUID_OFFSET = 24  # within the `fmt ` chunk contents
+# The SubFormat GUID that says an EXTENSIBLE chunk really does carry plain PCM.
+_PCM_SUBFORMAT_GUID = bytes.fromhex("0100000000001000800000aa00389b71")
 
 
 class ShortWavData(UserWarning):
@@ -130,10 +152,38 @@ class ShortWavData(UserWarning):
     """
 
 
-def decode_wav_bytes(wav_bytes: bytes):
+def _shift_samples(frames, by: int):
+    """Add `by` to every sample, keeping the mono (flat) or multichannel (grouped) shape.
+
+    8-bit is the one WAV width where the bytes on disk (unsigned, 0..255, silence at
+    128) and the samples a caller works with (signed) differ by a constant, so the shift
+    is applied around the PCM codec rather than inside it -- leaving `mk_pcm_audio_codec`
+    and the generic `encode_pcm_bytes`/`decode_pcm_bytes` pair untouched.
+
+    >>> _shift_samples([0, 128, 255], -128)
+    [-128, 0, 127]
+    >>> _shift_samples([(0, 255), (128, 64)], -128)
+    [(-128, 127), (0, -64)]
+    """
+    return [
+        (
+            tuple(sample + by for sample in frame)
+            if isinstance(frame, Iterable)
+            else frame + by
+        )
+        for frame in frames
+    ]
+
+
+def decode_wav_bytes(wav_bytes: bytes, *, eight_bit_unsigned: bool = True):
     r"""Decode WAV bytes into a ``(waveform, sample_rate)`` pair.
 
     :param wav_bytes: The bytes of a RIFF/WAVE container holding uncompressed PCM
+    :param eight_bit_unsigned: Read 8-bit audio as the unsigned PCM the WAV spec
+        mandates (0..255 on disk, biased to -128..127 here). Pass `False` for the
+        pre-recode#12 behaviour, which read those bytes as signed -- silence came back
+        as -128 -- and so round-tripped with `encode_wav_bytes` but with nothing else.
+        Widths of 9 bits and up are signed in the spec and are unaffected either way.
     :return: ``(wf, sr)`` -- the decoded waveform and its sample rate
 
     :raises ValueError: if `wav_bytes` is not a RIFF/WAVE container with a `data`
@@ -174,6 +224,17 @@ def decode_wav_bytes(wav_bytes: bytes):
     [0, 1, -1]
     >>> caught[0].category.__name__
     'ShortWavData'
+
+    8-bit WAV audio is stored *unsigned*, so a byte of 128 is silence rather than full
+    negative (recode#12). Pass `eight_bit_unsigned=False` to get the old signed reading:
+
+    >>> eight_bit = encode_wav_bytes([-128, 0, 127], sr=42, width_bytes=1)
+    >>> eight_bit[44:]
+    b'\x00\x80\xff'
+    >>> decode_wav_bytes(eight_bit)[0]
+    [-128, 0, 127]
+    >>> decode_wav_bytes(eight_bit, eight_bit_unsigned=False)[0]
+    [0, -128, -1]
     """
     offset, size = _wav_data_chunk(wav_bytes)
     meta = decode_wav_header_bytes(wav_bytes)
@@ -194,11 +255,18 @@ def decode_wav_bytes(wav_bytes: bytes):
         # reading of "decode the frames that are present"; letting it through would
         # surface as an IndexError from inside the chunked decoder instead.
         return [], meta["sr"]
-    wf = decode_pcm_bytes(
-        wav_bytes[offset : offset + size],
-        width=meta["width_bytes"],
-        n_channels=meta["n_channels"],
-    )
+    payload = wav_bytes[offset : offset + size]
+    if eight_bit_unsigned and meta["width_bytes"] == 1:
+        wf = _shift_samples(
+            decode_pcm_bytes(
+                payload, width=_UINT8_WIDTH_NAME, n_channels=meta["n_channels"]
+            ),
+            -_UINT8_BIAS,
+        )
+    else:
+        wf = decode_pcm_bytes(
+            payload, width=meta["width_bytes"], n_channels=meta["n_channels"]
+        )
     return wf, meta["sr"]
 
 
@@ -225,7 +293,8 @@ def _wav_data_chunk(wav_bytes: bytes) -> tuple:
     bounded by the next chunk that the remainder of the file parses cleanly from,
     rather than by EOF. Only when no such boundary exists does it fall back to EOF.
 
-    Sizes are read as unsigned little-endian, per the RIFF spec.
+    The walk itself is :func:`_wav_chunk`; what this adds is the reconciliation of the
+    declared size with the bytes actually there.
 
     >>> import struct, wave, io
     >>> b = io.BytesIO()
@@ -248,6 +317,14 @@ def _wav_data_chunk(wav_bytes: bytes) -> tuple:
     >>> _wav_data_chunk(bytes(broken) + trailing)
     (44, 6)
     """
+    contents, declared = _wav_chunk(wav_bytes, b"data")
+    if declared <= len(wav_bytes) - contents:
+        return contents, declared
+    return contents, _payload_end_of_overrunning_data(wav_bytes, contents)
+
+
+def _check_riff_wave(wav_bytes: bytes) -> None:
+    """Raise `ValueError` unless the buffer opens with a RIFF/WAVE preamble."""
     if (
         len(wav_bytes) < _RIFF_HEADER_SIZE
         or wav_bytes[:4] != b"RIFF"
@@ -257,6 +334,30 @@ def _wav_data_chunk(wav_bytes: bytes) -> tuple:
             "Not WAV bytes: expected a RIFF/WAVE container, got "
             f"{bytes(wav_bytes[:4])!r}...{bytes(wav_bytes[8:12])!r}"
         )
+
+
+def _wav_chunk(wav_bytes: bytes, wanted: bytes = b"data") -> tuple:
+    r"""Walk the RIFF chunk list to `wanted`: ``(contents_offset, declared_size)``.
+
+    The size is the one the chunk's own header declares, unexamined -- `data` chunks lie
+    about it often enough that :func:`_wav_data_chunk` exists to reconcile the claim
+    with the buffer, and :func:`_extensible_wav_header_params` wants the declared number
+    precisely because that is what stdlib `wave` counts frames from.
+
+    Sizes are read as unsigned little-endian, per the RIFF spec.
+
+    >>> raw = (
+    ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'
+    ...     b'*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00'
+    ...     b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'
+    ... )
+    >>> _wav_chunk(raw, b'fmt ')
+    (20, 16)
+    >>> _wav_chunk(raw, b'data')
+    (44, 10)
+    """
+    _check_riff_wave(wav_bytes)
+    label = wanted.decode("ascii", "replace")
     pos = _RIFF_HEADER_SIZE
     while pos + _CHUNK_HEADER_SIZE <= len(wav_bytes):
         chunk_id = bytes(wav_bytes[pos : pos + _CHUNK_ID_SIZE])
@@ -264,20 +365,17 @@ def _wav_data_chunk(wav_bytes: bytes) -> tuple:
             "<I", wav_bytes[pos + _CHUNK_ID_SIZE : pos + _CHUNK_HEADER_SIZE]
         )
         contents = pos + _CHUNK_HEADER_SIZE
-        if chunk_id == b"data":
-            available = len(wav_bytes) - contents
-            if declared <= available:
-                return contents, declared
-            return contents, _payload_end_of_overrunning_data(wav_bytes, contents)
+        if chunk_id == wanted:
+            return contents, declared
         # RIFF chunks are word-aligned: an odd-sized chunk carries a pad byte.
         pos = contents + declared + (declared % 2)
         if declared > len(wav_bytes) - contents:
             raise ValueError(
                 f"Not WAV bytes: chunk walk desynced at offset {pos - declared - 8} "
                 f"({chunk_id!r} declares {declared} bytes but only "
-                f"{len(wav_bytes) - contents} remain); no `data` chunk reachable"
+                f"{len(wav_bytes) - contents} remain); no `{label}` chunk reachable"
             )
-    raise ValueError("Not WAV bytes: no `data` chunk found")
+    raise ValueError(f"Not WAV bytes: no `{label}` chunk found")
 
 
 def _payload_end_of_overrunning_data(wav_bytes: bytes, contents: int) -> int:
@@ -318,7 +416,7 @@ def _parses_as_chunk_list_to_eof(wav_bytes: bytes, pos: int) -> bool:
     return pos == end
 
 
-def header_size_of_wav_bytes(wav_bytes: bytes) -> int:
+def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None) -> int:
     r"""Size, in bytes, of everything preceding the audio payload.
 
     That is the offset of the `data` chunk's contents, found by walking the RIFF
@@ -327,7 +425,8 @@ def header_size_of_wav_bytes(wav_bytes: bytes) -> int:
     stays correct when the file carries trailing metadata or an over-declared `data`
     size.
 
-    `meta` is accepted for backwards compatibility and no longer used.
+    `meta` -- an already-decoded header, once passed to save re-parsing it -- is
+    accepted for backwards compatibility and no longer used.
 
     >>> header_size_of_wav_bytes(
     ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'
@@ -368,7 +467,14 @@ def header_size_of_wav_bytes(wav_bytes: bytes) -> int:
 #     return wav_header_bytes + encode(wf)
 
 
-def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: int = 1):
+def encode_wav_bytes(
+    wf: Waveform,
+    sr: int,
+    width_bytes: int = 2,
+    n_channels: int = 1,
+    *,
+    eight_bit_unsigned: bool = True,
+):
     r"""Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.
 
     Args:
@@ -376,6 +482,11 @@ def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: in
         sr: Sample rate in Hz
         width_bytes: The width of a sample in bytes
         n_channels: Number of channels
+        eight_bit_unsigned: Write 8-bit audio as the unsigned PCM the WAV spec
+            mandates (samples biased by 128 into 0..255 on disk). Pass `False` for the
+            pre-recode#12 behaviour, which wrote them signed -- files that recode read
+            back correctly and every other tool did not. Widths of 9 bits and up are
+            signed in the spec and are unaffected either way.
 
     Returns:
         bytes: The complete WAV file bytes (header + data)
@@ -416,9 +527,13 @@ def encode_wav_bytes(wf: Waveform, sr: int, width_bytes: int = 2, n_channels: in
         # Explicitly set the number of frames
         obj.setnframes(nframes)
 
-        # Encode the waveform data
-        encode, _ = mk_pcm_audio_codec(width_bytes, n_channels)
-        pcm_data = encode(wf)
+        # Encode the waveform data, biasing 8-bit samples into the unsigned range the
+        # WAV spec reserves for that one width (see `_shift_samples`).
+        unsigned8 = eight_bit_unsigned and width_bytes == 1
+        encode, _ = mk_pcm_audio_codec(
+            _UINT8_WIDTH_NAME if unsigned8 else width_bytes, n_channels
+        )
+        pcm_data = encode(_shift_samples(wf, _UINT8_BIAS) if unsigned8 else wf)
 
         # Write the frames data
         obj.writeframesraw(pcm_data)
@@ -553,6 +668,56 @@ def encode_wav_header_bytes(
     return bio.read()
 
 
+def _extensible_wav_header_params(wav_bytes: bytes):
+    """Params of a `WAVE_FORMAT_EXTENSIBLE` header, or `None` if it is not one.
+
+    Stdlib `wave` only learned to read the 0xFFFE (`WAVE_FORMAT_EXTENSIBLE`) format tag
+    in Python 3.12, so on 3.10 and 3.11 -- 3.10 being the version CI runs -- an ordinary
+    ffmpeg file raises `wave.Error: unknown format: 65534` (recode#13). Anything above
+    two channels or sixteen bits tends to carry the tag. The chunk is the plain PCM
+    `fmt ` layout with `cbSize`, `wValidBitsPerSample`, `dwChannelMask` and a SubFormat
+    GUID appended, so every field `getparams()` would have reported is right there, and
+    the frame count comes from the `data` chunk's *declared* size, exactly as `Wave_read`
+    computes it.
+
+    Returns `None` -- rather than raising -- for anything it does not recognise, so the
+    caller can re-raise what `wave` itself said. That matters: `wave.Error` also covers
+    "not a WAVE file" and "fmt chunk missing", and those must keep failing as before.
+
+    Only the PCM SubFormat GUID is accepted -- which is exactly what 3.12's own
+    `wave._read_fmt_chunk` does (`KSDATAFORMAT_SUBTYPE_PCM`, or `Error('unknown extended
+    format: ...')`). So a compressed EXTENSIBLE payload keeps being refused on every
+    version, and the versions agree on what they accept as well as on what they read.
+    """
+    try:
+        fmt_at, fmt_size = _wav_chunk(wav_bytes, b"fmt ")
+        _, data_size = _wav_chunk(wav_bytes, b"data")
+    except ValueError:
+        return None
+    fmt = wav_bytes[fmt_at : fmt_at + _EXTENSIBLE_FMT_CHUNK_SIZE]
+    if fmt_size < _EXTENSIBLE_FMT_CHUNK_SIZE or len(fmt) < _EXTENSIBLE_FMT_CHUNK_SIZE:
+        return None
+    fmt_tag, n_channels, sr, _byte_rate, _block_align, n_bits = struct.unpack(
+        "<HHIIHH", fmt[:_PCM_FMT_CHUNK_SIZE]
+    )
+    if (
+        fmt_tag != _WAVE_FORMAT_EXTENSIBLE
+        or fmt[_SUBFORMAT_GUID_OFFSET:] != _PCM_SUBFORMAT_GUID
+    ):
+        return None
+    width_bytes = (n_bits + 7) // 8  # how `wave` itself rounds a bit depth to bytes
+    frame_size = n_channels * width_bytes
+    if not frame_size:
+        return None
+    return dict(
+        sr=sr,
+        width_bytes=width_bytes,
+        n_channels=n_channels,
+        nframes=data_size // frame_size,
+        comptype=None,
+    )
+
+
 def decode_wav_header_bytes(wav_header_bytes: bytes) -> dict:
     """Get a dict of params decoded from a wav header
 
@@ -567,9 +732,17 @@ def decode_wav_header_bytes(wav_header_bytes: bytes) -> dict:
      'nframes': 0,
      'comptype': None}
 
+    Stdlib `wave` is the primary reader. A `WAVE_FORMAT_EXTENSIBLE` header, which it
+    refuses before Python 3.12, is parsed directly instead so the same file decodes on
+    every supported version -- see :func:`_extensible_wav_header_params`.
     """
-    wav_read_obj = Wave_read(BytesIO(wav_header_bytes))
-    params = wav_read_obj.getparams()
+    try:
+        params = Wave_read(BytesIO(wav_header_bytes)).getparams()
+    except wave.Error:
+        extensible = _extensible_wav_header_params(wav_header_bytes)
+        if extensible is None:
+            raise  # not the one case we can read; `wave`'s own complaint stands
+        return extensible
     # Normalized to None so the value round-trips with `encode_wav_header_bytes`.
     # Unconditional on purpose: `Wave_read` rejects any non-PCM fmt tag with
     # `wave.Error` before `getparams()` returns, so comptype is always 'NONE' here.
@@ -585,40 +758,46 @@ def decode_wav_header_bytes(wav_header_bytes: bytes) -> dict:
     )
 
 
-# TODO: Untested. Test.
 # TODO: Could generalize to accept open file pointer directly too.
 #  -> Tip: Change input name to file and wrap such that context manager just returns
 #   the file pointer as is, if file is not a string.
 # TODO: How could we get this efficient "only read header" with wavs in zip files?
-def extract_wav_header_from_file(filepath):
-    """Extracts the header of a WAV file, given it's filepath.
+def extract_wav_header_from_file(filepath, *, read_size: int = DFLT_HEADER_READ_SIZE):
+    """Extract the header of a WAV file -- everything before the audio -- from its path.
 
-    This function is useful for reading the header of a WAV file without having to read
-    the entire file into memory.
-    This is useful when WAV files are large and/or numerous.
+    Useful for reading the header of a WAV file without having to read the entire file
+    into memory, which is what you want when WAV files are large and/or numerous: only
+    as much of the file as the header occupies is read.
 
-    Args:
-        filename (str): The path to the WAV file.
+    The answer is the same one :func:`header_size_of_wav_bytes` gives for the same
+    bytes, because both locate the `data` chunk by walking the RIFF structure rather
+    than inferring where it must be. This used to compute
+    ``chunk_size + 8 - subchunk2_size``, reading bytes 40-44 as the size of the audio --
+    true only of a bare 44-byte header. With a `LIST`/`INFO` chunk after the audio (what
+    ffmpeg, Audacity and iTunes write) it returned audio bytes as header; with one
+    before, a truncated prefix that parses as nothing at all (recode#4).
 
-    Returns:
-        bytes: The bytes of the WAV file header.
+    :param filepath: The path to the WAV file
+    :param read_size: How many bytes to read at a time while looking for the audio
+    :return: The bytes of the WAV file header, i.e. everything preceding the `data`
+        chunk's contents
+    :raises ValueError: if the file is not a RIFF/WAVE container with a reachable `data`
+        chunk. (It used to answer such files with arbitrary bytes and no complaint.)
     """
-    # Initially read the first 44 bytes
     with open(filepath, "rb") as file:
-        header = file.read(44)
-
-        # Unpack the ChunkSize (bytes 4-8) and Subchunk2Size (bytes 40-44)
-        chunk_size = int.from_bytes(header[4:8], byteorder="little")
-        subchunk2_size = int.from_bytes(header[40:44], byteorder="little")
-
-        # Calculate the total header size
-        header_size = chunk_size + 8 - subchunk2_size
-
-        # If the header is larger than 44 bytes, read the remaining bytes
-        if header_size > 44:
-            header += file.read(header_size - 44)
-
-    return header
+        # At least the preamble, so a non-WAV is refused without reading it to its end.
+        prefix = file.read(max(read_size, _RIFF_HEADER_SIZE))
+        _check_riff_wave(prefix)
+        while True:
+            try:
+                offset, _ = _wav_chunk(prefix, b"data")
+            except ValueError:
+                more = file.read(read_size)
+                if not more:
+                    raise  # the whole file is in hand; the complaint is the final one
+                prefix += more
+            else:
+                return prefix[:offset]
 
 
 # TODO: Can optimize (index) the data below to make search functions faster
