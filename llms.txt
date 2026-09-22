@@ -1,0 +1,22 @@
+# recode
+
+> Tools to make codecs for time-series serialization and deserialization.
+
+
+## Pages
+
+- [recode](index.html.md): Make codecs for fixed size structured chunks serialization and deserialization of
+- [API reference](api.html.md): | &#96;recode&#96;   | Make codecs for fixed size structured chunks serialization and deserialization of seq...
+- [recode](_autosummary/recode.html.md): Make codecs for fixed size structured chunks serialization and deserialization of
+- [recode.audio](_autosummary/recode.audio.html.md): Encoding audio
+- [recode.base](_autosummary/recode.base.html.md): Base recode objects
+- [recode.util](_autosummary/recode.util.html.md): Utils for use throughout the package
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 13:00 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
+
+## Optional
+
+- [recode.md](recode.md): Complete documentation in a single file.
+
+## Build
+
+- [build_info.json](build_info.json): build provenance (commit, version, tool versions, whether the docs match the package)

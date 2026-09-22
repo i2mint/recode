@@ -1,82 +1,246 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+<link rel="alternate" type="text/markdown" href="audio.html.md">
+<link rel="describedby" href="../../llms.txt" type="text/markdown"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>recode.audio - recode</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
 
 
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>recode.audio &mdash; recode 0.1.37 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  --color-brand-primary: #58489b;
+  --color-brand-content: #58489b;
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b8ecee75"></script>
-      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #b5a9ff;
+  --color-brand-content: #b5a9ff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #b5a9ff;
+  --color-brand-content: #b5a9ff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
 
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            recode
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/recode.html">recode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/recode/audio.html">recode.audio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/recode/base.html">recode.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/recode/util.html">recode.util</a></li>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">recode</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">recode</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">API reference</a><input aria-label="Toggle navigation of API reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../_autosummary/recode.html">recode</a><input aria-label="Toggle navigation of recode" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/recode.audio.html">recode.audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/recode.base.html">recode.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/recode.util.html">recode.util</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">recode</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">recode.audio</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <h1>Source code for recode.audio</h1><div class="highlight"><pre>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for recode.audio</h1><div class="highlight"><pre>
 <span></span><span class="sa">r</span><span class="sd">"""Encoding audio</span>
 
 <span class="sd">This module illustrates how one can use recode to make audio codecs.</span>
@@ -117,6 +281,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wave</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
@@ -129,7 +294,7 @@
 
 
 <div class="viewcode-block" id="mk_pcm_audio_codec">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.mk_pcm_audio_codec">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.mk_pcm_audio_codec">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Make a (encoder, decoder) pair for PCM data with given width and n_channels.</span>
 
@@ -165,7 +330,7 @@
 
 
 <div class="viewcode-block" id="encode_pcm_bytes">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_pcm_bytes">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.encode_pcm_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_pcm_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Encode waveform (e.g. list of numbers) into PCM bytes.</span>
 
@@ -185,7 +350,7 @@
 
 
 <div class="viewcode-block" id="decode_pcm_bytes">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_pcm_bytes">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.decode_pcm_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">decode_pcm_bytes</span><span class="p">(</span><span class="n">pcm_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 
@@ -205,10 +370,31 @@
 <span class="n">_RIFF_HEADER_SIZE</span> <span class="o">=</span> <span class="mi">12</span>  <span class="c1"># 'RIFF' + form size + 'WAVE'</span>
 <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># chunk id + chunk size</span>
 <span class="n">_CHUNK_ID_SIZE</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">_PCM_FMT_CHUNK_SIZE</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># the plain (non-extensible) `fmt ` chunk contents</span>
+
+<span class="c1"># The smallest a WAV file can be: the RIFF/WAVE preamble, a plain PCM `fmt ` chunk, and</span>
+<span class="c1"># an empty `data` chunk -- 44 bytes. A long-standing public name of this module.</span>
+<span class="n">MIN_WAV_N_BYTES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">_RIFF_HEADER_SIZE</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">+</span> <span class="n">_PCM_FMT_CHUNK_SIZE</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span>
+<span class="p">)</span>
+
+<span class="c1"># How much of a file `extract_wav_header_from_file` reads at a time while looking for</span>
+<span class="c1"># the audio. Comfortably more than any header in practice, so it is normally one read.</span>
+<span class="n">DFLT_HEADER_READ_SIZE</span> <span class="o">=</span> <span class="mi">64</span> <span class="o">*</span> <span class="mi">1024</span>
+
+<span class="c1"># WAV stores 8-bit PCM *unsigned* (0..255, silence at 128) and every wider width signed.</span>
+<span class="n">_UINT8_BIAS</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">_UINT8_WIDTH_NAME</span> <span class="o">=</span> <span class="s2">"uint8"</span>
+
+<span class="n">_WAVE_FORMAT_EXTENSIBLE</span> <span class="o">=</span> <span class="mh">0xFFFE</span>
+<span class="n">_EXTENSIBLE_FMT_CHUNK_SIZE</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">_SUBFORMAT_GUID_OFFSET</span> <span class="o">=</span> <span class="mi">24</span>  <span class="c1"># within the `fmt ` chunk contents</span>
+<span class="c1"># The SubFormat GUID that says an EXTENSIBLE chunk really does carry plain PCM.</span>
+<span class="n">_PCM_SUBFORMAT_GUID</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s2">"0100000000001000800000aa00389b71"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ShortWavData">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.ShortWavData">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.ShortWavData">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ShortWavData</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""The `data` chunk carries fewer bytes than its own header declares.</span>
 
@@ -221,12 +407,40 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_shift_samples</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Add `by` to every sample, keeping the mono (flat) or multichannel (grouped) shape.</span>
+
+<span class="sd">    8-bit is the one WAV width where the bytes on disk (unsigned, 0..255, silence at</span>
+<span class="sd">    128) and the samples a caller works with (signed) differ by a constant, so the shift</span>
+<span class="sd">    is applied around the PCM codec rather than inside it -- leaving `mk_pcm_audio_codec`</span>
+<span class="sd">    and the generic `encode_pcm_bytes`/`decode_pcm_bytes` pair untouched.</span>
+
+<span class="sd">    &gt;&gt;&gt; _shift_samples([0, 128, 255], -128)</span>
+<span class="sd">    [-128, 0, 127]</span>
+<span class="sd">    &gt;&gt;&gt; _shift_samples([(0, 255), (128, 64)], -128)</span>
+<span class="sd">    [(-128, 127), (0, -64)]</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="nb">tuple</span><span class="p">(</span><span class="n">sample</span> <span class="o">+</span> <span class="n">by</span> <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">frame</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">frame</span> <span class="o">+</span> <span class="n">by</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span>
+    <span class="p">]</span>
+
+
 <div class="viewcode-block" id="decode_wav_bytes">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_bytes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">decode_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.decode_wav_bytes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">decode_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">eight_bit_unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Decode WAV bytes into a ``(waveform, sample_rate)`` pair.</span>
 
 <span class="sd">    :param wav_bytes: The bytes of a RIFF/WAVE container holding uncompressed PCM</span>
+<span class="sd">    :param eight_bit_unsigned: Read 8-bit audio as the unsigned PCM the WAV spec</span>
+<span class="sd">        mandates (0..255 on disk, biased to -128..127 here). Pass `False` for the</span>
+<span class="sd">        pre-recode#12 behaviour, which read those bytes as signed -- silence came back</span>
+<span class="sd">        as -128 -- and so round-tripped with `encode_wav_bytes` but with nothing else.</span>
+<span class="sd">        Widths of 9 bits and up are signed in the spec and are unaffected either way.</span>
 <span class="sd">    :return: ``(wf, sr)`` -- the decoded waveform and its sample rate</span>
 
 <span class="sd">    :raises ValueError: if `wav_bytes` is not a RIFF/WAVE container with a `data`</span>
@@ -267,6 +481,17 @@
 <span class="sd">    [0, 1, -1]</span>
 <span class="sd">    &gt;&gt;&gt; caught[0].category.__name__</span>
 <span class="sd">    'ShortWavData'</span>
+
+<span class="sd">    8-bit WAV audio is stored *unsigned*, so a byte of 128 is silence rather than full</span>
+<span class="sd">    negative (recode#12). Pass `eight_bit_unsigned=False` to get the old signed reading:</span>
+
+<span class="sd">    &gt;&gt;&gt; eight_bit = encode_wav_bytes([-128, 0, 127], sr=42, width_bytes=1)</span>
+<span class="sd">    &gt;&gt;&gt; eight_bit[44:]</span>
+<span class="sd">    b'\x00\x80\xff'</span>
+<span class="sd">    &gt;&gt;&gt; decode_wav_bytes(eight_bit)[0]</span>
+<span class="sd">    [-128, 0, 127]</span>
+<span class="sd">    &gt;&gt;&gt; decode_wav_bytes(eight_bit, eight_bit_unsigned=False)[0]</span>
+<span class="sd">    [0, -128, -1]</span>
 <span class="sd">    """</span>
     <span class="n">offset</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">_wav_data_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
     <span class="n">meta</span> <span class="o">=</span> <span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
@@ -287,11 +512,18 @@
         <span class="c1"># reading of "decode the frames that are present"; letting it through would</span>
         <span class="c1"># surface as an IndexError from inside the chunked decoder instead.</span>
         <span class="k">return</span> <span class="p">[],</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"sr"</span><span class="p">]</span>
-    <span class="n">wf</span> <span class="o">=</span> <span class="n">decode_pcm_bytes</span><span class="p">(</span>
-        <span class="n">wav_bytes</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">size</span><span class="p">],</span>
-        <span class="n">width</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"width_bytes"</span><span class="p">],</span>
-        <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"n_channels"</span><span class="p">],</span>
-    <span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">size</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">eight_bit_unsigned</span> <span class="ow">and</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"width_bytes"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">wf</span> <span class="o">=</span> <span class="n">_shift_samples</span><span class="p">(</span>
+            <span class="n">decode_pcm_bytes</span><span class="p">(</span>
+                <span class="n">payload</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">_UINT8_WIDTH_NAME</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"n_channels"</span><span class="p">]</span>
+            <span class="p">),</span>
+            <span class="o">-</span><span class="n">_UINT8_BIAS</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">wf</span> <span class="o">=</span> <span class="n">decode_pcm_bytes</span><span class="p">(</span>
+            <span class="n">payload</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"width_bytes"</span><span class="p">],</span> <span class="n">n_channels</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"n_channels"</span><span class="p">]</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="n">wf</span><span class="p">,</span> <span class="n">meta</span><span class="p">[</span><span class="s2">"sr"</span><span class="p">]</span></div>
 
 
@@ -319,7 +551,8 @@
 <span class="sd">    bounded by the next chunk that the remainder of the file parses cleanly from,</span>
 <span class="sd">    rather than by EOF. Only when no such boundary exists does it fall back to EOF.</span>
 
-<span class="sd">    Sizes are read as unsigned little-endian, per the RIFF spec.</span>
+<span class="sd">    The walk itself is :func:`_wav_chunk`; what this adds is the reconciliation of the</span>
+<span class="sd">    declared size with the bytes actually there.</span>
 
 <span class="sd">    &gt;&gt;&gt; import struct, wave, io</span>
 <span class="sd">    &gt;&gt;&gt; b = io.BytesIO()</span>
@@ -342,6 +575,14 @@
 <span class="sd">    &gt;&gt;&gt; _wav_data_chunk(bytes(broken) + trailing)</span>
 <span class="sd">    (44, 6)</span>
 <span class="sd">    """</span>
+    <span class="n">contents</span><span class="p">,</span> <span class="n">declared</span> <span class="o">=</span> <span class="n">_wav_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">declared</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">contents</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">declared</span>
+    <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">_payload_end_of_overrunning_data</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_riff_wave</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Raise `ValueError` unless the buffer opens with a RIFF/WAVE preamble."""</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">_RIFF_HEADER_SIZE</span>
         <span class="ow">or</span> <span class="n">wav_bytes</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">!=</span> <span class="sa">b</span><span class="s2">"RIFF"</span>
@@ -351,6 +592,30 @@
             <span class="s2">"Not WAV bytes: expected a RIFF/WAVE container, got "</span>
             <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span><span class="si">!r}</span><span class="s2">...</span><span class="si">{</span><span class="nb">bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">])</span><span class="si">!r}</span><span class="s2">"</span>
         <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_wav_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">wanted</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Walk the RIFF chunk list to `wanted`: ``(contents_offset, declared_size)``.</span>
+
+<span class="sd">    The size is the one the chunk's own header declares, unexamined -- `data` chunks lie</span>
+<span class="sd">    about it often enough that :func:`_wav_data_chunk` exists to reconcile the claim</span>
+<span class="sd">    with the buffer, and :func:`_extensible_wav_header_params` wants the declared number</span>
+<span class="sd">    precisely because that is what stdlib `wave` counts frames from.</span>
+
+<span class="sd">    Sizes are read as unsigned little-endian, per the RIFF spec.</span>
+
+<span class="sd">    &gt;&gt;&gt; raw = (</span>
+<span class="sd">    ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'</span>
+<span class="sd">    ...     b'*\x00\x00\x00T\x00\x00\x00\x02\x00\x10\x00data\n\x00\x00\x00'</span>
+<span class="sd">    ...     b'\x00\x00\x01\x00\xff\xff\x02\x00\xfe\xff'</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; _wav_chunk(raw, b'fmt ')</span>
+<span class="sd">    (20, 16)</span>
+<span class="sd">    &gt;&gt;&gt; _wav_chunk(raw, b'data')</span>
+<span class="sd">    (44, 10)</span>
+<span class="sd">    """</span>
+    <span class="n">_check_riff_wave</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">wanted</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ascii"</span><span class="p">,</span> <span class="s2">"replace"</span><span class="p">)</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="n">_RIFF_HEADER_SIZE</span>
     <span class="k">while</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">):</span>
         <span class="n">chunk_id</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span><span class="p">])</span>
@@ -358,20 +623,17 @@
             <span class="s2">"&lt;I"</span><span class="p">,</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="n">contents</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span>
-        <span class="k">if</span> <span class="n">chunk_id</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">:</span>
-            <span class="n">available</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">contents</span>
-            <span class="k">if</span> <span class="n">declared</span> <span class="o">&lt;=</span> <span class="n">available</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">declared</span>
-            <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">_payload_end_of_overrunning_data</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">chunk_id</span> <span class="o">==</span> <span class="n">wanted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">declared</span>
         <span class="c1"># RIFF chunks are word-aligned: an odd-sized chunk carries a pad byte.</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">contents</span> <span class="o">+</span> <span class="n">declared</span> <span class="o">+</span> <span class="p">(</span><span class="n">declared</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">declared</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">contents</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Not WAV bytes: chunk walk desynced at offset </span><span class="si">{</span><span class="n">pos</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">declared</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="si">}</span><span class="s2"> "</span>
                 <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">chunk_id</span><span class="si">!r}</span><span class="s2"> declares </span><span class="si">{</span><span class="n">declared</span><span class="si">}</span><span class="s2"> bytes but only "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">contents</span><span class="si">}</span><span class="s2"> remain); no `data` chunk reachable"</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">contents</span><span class="si">}</span><span class="s2"> remain); no `</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">` chunk reachable"</span>
             <span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Not WAV bytes: no `data` chunk found"</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Not WAV bytes: no `</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">` chunk found"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_payload_end_of_overrunning_data</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -413,8 +675,8 @@
 
 
 <div class="viewcode-block" id="header_size_of_wav_bytes">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.header_size_of_wav_bytes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.header_size_of_wav_bytes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">header_size_of_wav_bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">meta</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Size, in bytes, of everything preceding the audio payload.</span>
 
 <span class="sd">    That is the offset of the `data` chunk's contents, found by walking the RIFF</span>
@@ -423,7 +685,8 @@
 <span class="sd">    stays correct when the file carries trailing metadata or an over-declared `data`</span>
 <span class="sd">    size.</span>
 
-<span class="sd">    `meta` is accepted for backwards compatibility and no longer used.</span>
+<span class="sd">    `meta` -- an already-decoded header, once passed to save re-parsing it -- is</span>
+<span class="sd">    accepted for backwards compatibility and no longer used.</span>
 
 <span class="sd">    &gt;&gt;&gt; header_size_of_wav_bytes(</span>
 <span class="sd">    ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'</span>
@@ -466,8 +729,15 @@
 
 
 <div class="viewcode-block" id="encode_wav_bytes">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_bytes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_bytes</span><span class="p">(</span><span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span> <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.encode_wav_bytes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_bytes</span><span class="p">(</span>
+    <span class="n">wf</span><span class="p">:</span> <span class="n">Waveform</span><span class="p">,</span>
+    <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">n_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">eight_bit_unsigned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">"""Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.</span>
 
 <span class="sd">    Args:</span>
@@ -475,6 +745,11 @@
 <span class="sd">        sr: Sample rate in Hz</span>
 <span class="sd">        width_bytes: The width of a sample in bytes</span>
 <span class="sd">        n_channels: Number of channels</span>
+<span class="sd">        eight_bit_unsigned: Write 8-bit audio as the unsigned PCM the WAV spec</span>
+<span class="sd">            mandates (samples biased by 128 into 0..255 on disk). Pass `False` for the</span>
+<span class="sd">            pre-recode#12 behaviour, which wrote them signed -- files that recode read</span>
+<span class="sd">            back correctly and every other tool did not. Widths of 9 bits and up are</span>
+<span class="sd">            signed in the spec and are unaffected either way.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        bytes: The complete WAV file bytes (header + data)</span>
@@ -515,9 +790,13 @@
         <span class="c1"># Explicitly set the number of frames</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">setnframes</span><span class="p">(</span><span class="n">nframes</span><span class="p">)</span>
 
-        <span class="c1"># Encode the waveform data</span>
-        <span class="n">encode</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span><span class="n">width_bytes</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">)</span>
-        <span class="n">pcm_data</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+        <span class="c1"># Encode the waveform data, biasing 8-bit samples into the unsigned range the</span>
+        <span class="c1"># WAV spec reserves for that one width (see `_shift_samples`).</span>
+        <span class="n">unsigned8</span> <span class="o">=</span> <span class="n">eight_bit_unsigned</span> <span class="ow">and</span> <span class="n">width_bytes</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">encode</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mk_pcm_audio_codec</span><span class="p">(</span>
+            <span class="n">_UINT8_WIDTH_NAME</span> <span class="k">if</span> <span class="n">unsigned8</span> <span class="k">else</span> <span class="n">width_bytes</span><span class="p">,</span> <span class="n">n_channels</span>
+        <span class="p">)</span>
+        <span class="n">pcm_data</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">_shift_samples</span><span class="p">(</span><span class="n">wf</span><span class="p">,</span> <span class="n">_UINT8_BIAS</span><span class="p">)</span> <span class="k">if</span> <span class="n">unsigned8</span> <span class="k">else</span> <span class="n">wf</span><span class="p">)</span>
 
         <span class="c1"># Write the frames data</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">writeframesraw</span><span class="p">(</span><span class="n">pcm_data</span><span class="p">)</span>
@@ -595,7 +874,7 @@
 
 
 <div class="viewcode-block" id="encode_wav_header_bytes">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.encode_wav_header_bytes">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.encode_wav_header_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_wav_header_bytes</span><span class="p">(</span>
     <span class="n">sr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">width_bytes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -656,8 +935,58 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_extensible_wav_header_params</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Params of a `WAVE_FORMAT_EXTENSIBLE` header, or `None` if it is not one.</span>
+
+<span class="sd">    Stdlib `wave` only learned to read the 0xFFFE (`WAVE_FORMAT_EXTENSIBLE`) format tag</span>
+<span class="sd">    in Python 3.12, so on 3.10 and 3.11 -- 3.10 being the version CI runs -- an ordinary</span>
+<span class="sd">    ffmpeg file raises `wave.Error: unknown format: 65534` (recode#13). Anything above</span>
+<span class="sd">    two channels or sixteen bits tends to carry the tag. The chunk is the plain PCM</span>
+<span class="sd">    `fmt ` layout with `cbSize`, `wValidBitsPerSample`, `dwChannelMask` and a SubFormat</span>
+<span class="sd">    GUID appended, so every field `getparams()` would have reported is right there, and</span>
+<span class="sd">    the frame count comes from the `data` chunk's *declared* size, exactly as `Wave_read`</span>
+<span class="sd">    computes it.</span>
+
+<span class="sd">    Returns `None` -- rather than raising -- for anything it does not recognise, so the</span>
+<span class="sd">    caller can re-raise what `wave` itself said. That matters: `wave.Error` also covers</span>
+<span class="sd">    "not a WAVE file" and "fmt chunk missing", and those must keep failing as before.</span>
+
+<span class="sd">    Only the PCM SubFormat GUID is accepted -- which is exactly what 3.12's own</span>
+<span class="sd">    `wave._read_fmt_chunk` does (`KSDATAFORMAT_SUBTYPE_PCM`, or `Error('unknown extended</span>
+<span class="sd">    format: ...')`). So a compressed EXTENSIBLE payload keeps being refused on every</span>
+<span class="sd">    version, and the versions agree on what they accept as well as on what they read.</span>
+<span class="sd">    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fmt_at</span><span class="p">,</span> <span class="n">fmt_size</span> <span class="o">=</span> <span class="n">_wav_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"fmt "</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">data_size</span> <span class="o">=</span> <span class="n">_wav_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">fmt_at</span> <span class="p">:</span> <span class="n">fmt_at</span> <span class="o">+</span> <span class="n">_EXTENSIBLE_FMT_CHUNK_SIZE</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">fmt_size</span> <span class="o">&lt;</span> <span class="n">_EXTENSIBLE_FMT_CHUNK_SIZE</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">_EXTENSIBLE_FMT_CHUNK_SIZE</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">fmt_tag</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="n">_byte_rate</span><span class="p">,</span> <span class="n">_block_align</span><span class="p">,</span> <span class="n">n_bits</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span>
+        <span class="s2">"&lt;HHIIHH"</span><span class="p">,</span> <span class="n">fmt</span><span class="p">[:</span><span class="n">_PCM_FMT_CHUNK_SIZE</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">fmt_tag</span> <span class="o">!=</span> <span class="n">_WAVE_FORMAT_EXTENSIBLE</span>
+        <span class="ow">or</span> <span class="n">fmt</span><span class="p">[</span><span class="n">_SUBFORMAT_GUID_OFFSET</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">_PCM_SUBFORMAT_GUID</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">width_bytes</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_bits</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">//</span> <span class="mi">8</span>  <span class="c1"># how `wave` itself rounds a bit depth to bytes</span>
+    <span class="n">frame_size</span> <span class="o">=</span> <span class="n">n_channels</span> <span class="o">*</span> <span class="n">width_bytes</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">frame_size</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span>
+        <span class="n">width_bytes</span><span class="o">=</span><span class="n">width_bytes</span><span class="p">,</span>
+        <span class="n">n_channels</span><span class="o">=</span><span class="n">n_channels</span><span class="p">,</span>
+        <span class="n">nframes</span><span class="o">=</span><span class="n">data_size</span> <span class="o">//</span> <span class="n">frame_size</span><span class="p">,</span>
+        <span class="n">comptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
 <div class="viewcode-block" id="decode_wav_header_bytes">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.decode_wav_header_bytes">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.decode_wav_header_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">decode_wav_header_bytes</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Get a dict of params decoded from a wav header</span>
 
@@ -672,9 +1001,17 @@
 <span class="sd">     'nframes': 0,</span>
 <span class="sd">     'comptype': None}</span>
 
+<span class="sd">    Stdlib `wave` is the primary reader. A `WAVE_FORMAT_EXTENSIBLE` header, which it</span>
+<span class="sd">    refuses before Python 3.12, is parsed directly instead so the same file decodes on</span>
+<span class="sd">    every supported version -- see :func:`_extensible_wav_header_params`.</span>
 <span class="sd">    """</span>
-    <span class="n">wav_read_obj</span> <span class="o">=</span> <span class="n">Wave_read</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">))</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">wav_read_obj</span><span class="o">.</span><span class="n">getparams</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">Wave_read</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">))</span><span class="o">.</span><span class="n">getparams</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">wave</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="n">extensible</span> <span class="o">=</span> <span class="n">_extensible_wav_header_params</span><span class="p">(</span><span class="n">wav_header_bytes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extensible</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span>  <span class="c1"># not the one case we can read; `wave`'s own complaint stands</span>
+        <span class="k">return</span> <span class="n">extensible</span>
     <span class="c1"># Normalized to None so the value round-trips with `encode_wav_header_bytes`.</span>
     <span class="c1"># Unconditional on purpose: `Wave_read` rejects any non-PCM fmt tag with</span>
     <span class="c1"># `wave.Error` before `getparams()` returns, so comptype is always 'NONE' here.</span>
@@ -691,42 +1028,48 @@
 
 
 
-<span class="c1"># TODO: Untested. Test.</span>
 <span class="c1"># TODO: Could generalize to accept open file pointer directly too.</span>
 <span class="c1">#  -&gt; Tip: Change input name to file and wrap such that context manager just returns</span>
 <span class="c1">#   the file pointer as is, if file is not a string.</span>
 <span class="c1"># TODO: How could we get this efficient "only read header" with wavs in zip files?</span>
 <div class="viewcode-block" id="extract_wav_header_from_file">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.extract_wav_header_from_file">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">extract_wav_header_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Extracts the header of a WAV file, given it's filepath.</span>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.extract_wav_header_from_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_wav_header_from_file</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">read_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DFLT_HEADER_READ_SIZE</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Extract the header of a WAV file -- everything before the audio -- from its path.</span>
 
-<span class="sd">    This function is useful for reading the header of a WAV file without having to read</span>
-<span class="sd">    the entire file into memory.</span>
-<span class="sd">    This is useful when WAV files are large and/or numerous.</span>
+<span class="sd">    Useful for reading the header of a WAV file without having to read the entire file</span>
+<span class="sd">    into memory, which is what you want when WAV files are large and/or numerous: only</span>
+<span class="sd">    as much of the file as the header occupies is read.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        filename (str): The path to the WAV file.</span>
+<span class="sd">    The answer is the same one :func:`header_size_of_wav_bytes` gives for the same</span>
+<span class="sd">    bytes, because both locate the `data` chunk by walking the RIFF structure rather</span>
+<span class="sd">    than inferring where it must be. This used to compute</span>
+<span class="sd">    ``chunk_size + 8 - subchunk2_size``, reading bytes 40-44 as the size of the audio --</span>
+<span class="sd">    true only of a bare 44-byte header. With a `LIST`/`INFO` chunk after the audio (what</span>
+<span class="sd">    ffmpeg, Audacity and iTunes write) it returned audio bytes as header; with one</span>
+<span class="sd">    before, a truncated prefix that parses as nothing at all (recode#4).</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        bytes: The bytes of the WAV file header.</span>
+<span class="sd">    :param filepath: The path to the WAV file</span>
+<span class="sd">    :param read_size: How many bytes to read at a time while looking for the audio</span>
+<span class="sd">    :return: The bytes of the WAV file header, i.e. everything preceding the `data`</span>
+<span class="sd">        chunk's contents</span>
+<span class="sd">    :raises ValueError: if the file is not a RIFF/WAVE container with a reachable `data`</span>
+<span class="sd">        chunk. (It used to answer such files with arbitrary bytes and no complaint.)</span>
 <span class="sd">    """</span>
-    <span class="c1"># Initially read the first 44 bytes</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-        <span class="n">header</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span>
-
-        <span class="c1"># Unpack the ChunkSize (bytes 4-8) and Subchunk2Size (bytes 40-44)</span>
-        <span class="n">chunk_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"little"</span><span class="p">)</span>
-        <span class="n">subchunk2_size</span> <span class="o">=</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">40</span><span class="p">:</span><span class="mi">44</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"little"</span><span class="p">)</span>
-
-        <span class="c1"># Calculate the total header size</span>
-        <span class="n">header_size</span> <span class="o">=</span> <span class="n">chunk_size</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">-</span> <span class="n">subchunk2_size</span>
-
-        <span class="c1"># If the header is larger than 44 bytes, read the remaining bytes</span>
-        <span class="k">if</span> <span class="n">header_size</span> <span class="o">&gt;</span> <span class="mi">44</span><span class="p">:</span>
-            <span class="n">header</span> <span class="o">+=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">header_size</span> <span class="o">-</span> <span class="mi">44</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">header</span></div>
+        <span class="c1"># At least the preamble, so a non-WAV is refused without reading it to its end.</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">read_size</span><span class="p">,</span> <span class="n">_RIFF_HEADER_SIZE</span><span class="p">))</span>
+        <span class="n">_check_riff_wave</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">offset</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_wav_chunk</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">more</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">read_size</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">more</span><span class="p">:</span>
+                    <span class="k">raise</span>  <span class="c1"># the whole file is in hand; the complaint is the final one</span>
+                <span class="n">prefix</span> <span class="o">+=</span> <span class="n">more</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">prefix</span><span class="p">[:</span><span class="n">offset</span><span class="p">]</span></div>
 
 
 
@@ -792,7 +1135,7 @@
 
 
 <div class="viewcode-block" id="num_find_num_type_for">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_find_num_type_for">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.num_find_num_type_for">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">num_find_num_type_for</span><span class="p">(</span>
     <span class="n">num</span><span class="p">,</span>
     <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">"struct"</span><span class="p">,</span>
@@ -808,7 +1151,7 @@
 
 
 <div class="viewcode-block" id="num_type_for">
-<a class="viewcode-back" href="../../module_docs/recode/audio.html#recode.audio.num_type_for">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.num_type_for">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">num_type_for</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">num_sys</span><span class="o">=</span><span class="s2">"n_bits"</span><span class="p">,</span> <span class="n">target_num_sys</span><span class="o">=</span><span class="s2">"struct"</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Translate from one (sample width) number type to another.</span>
 
@@ -842,32 +1185,396 @@
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Did not find any entry for </span><span class="si">{</span><span class="n">num_sys</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 </pre></div>
-
-           </div>
-          </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+        </article>
       </div>
-    </section>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+</div><script src="../../_static/documentation_options.js?v=4af9b32f"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
 
-</body>
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    </body>
 </html>

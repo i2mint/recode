@@ -1,0 +1,15 @@
+# recode
+
+> Tools to make codecs for time-series serialization and deserialization.
+
+
+## Pages in this subsection
+
+- [recode](recode.html.md): Make codecs for fixed size structured chunks serialization and deserialization of
+- [recode.audio](recode.audio.html.md): Encoding audio
+- [recode.base](recode.base.html.md): Base recode objects
+- [recode.util](recode.util.html.md): Utils for use throughout the package
+
+## Optional
+
+- [Top-level llms.txt](../llms.txt): Complete documentation index.

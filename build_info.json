@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-09-22T13:00:53Z",
+  "package": {
+    "name": "recode",
+    "version": "0.1.39",
+    "display_name": "recode",
+    "source": "setup.cfg"
+  },
+  "git": {
+    "available": true,
+    "commit": "bc4e9ba18664e33ae15288177e281f0cebadc9e4",
+    "short_commit": "bc4e9ba",
+    "branch": "master",
+    "tags": [
+      "0.1.39"
+    ],
+    "dirty": false,
+    "remote_url": "https://github.com/i2mint/recode",
+    "commit_url": "https://github.com/i2mint/recode/commit/bc4e9ba18664e33ae15288177e281f0cebadc9e4",
+    "error": null
+  },
+  "ci": {
+    "provider": "github",
+    "repository": "i2mint/recode",
+    "sha": "dcefcea407eb621c2e1806ceb57b4c038422ef31",
+    "sha_in_history": true,
+    "ref": "refs/heads/master",
+    "ref_name": "master",
+    "run_id": "35730580533",
+    "run_url": "https://github.com/i2mint/recode/actions/runs/35730580533",
+    "server_url": "https://github.com"
+  },
+  "tools": {
+    "epythet": "0.2.12",
+    "sphinx": "9.1.0",
+    "docutils": "0.22.4",
+    "python": "3.12.14"
+  },
+  "config": {
+    "theme": "auto",
+    "html_theme": "furo",
+    "accent": "#58489b",
+    "mode": "auto",
+    "api_generator": "autosummary",
+    "ignore": [
+      "tests/",
+      "scrap/",
+      "examples/"
+    ],
+    "agent_outputs": true,
+    "aggregates": [
+      "md"
+    ],
+    "ai_artifacts": true,
+    "provenance": true,
+    "docs_dir": "docsrc"
+  },
+  "site": {
+    "modules_documented": 4,
+    "objects_documented": 30
+  },
+  "pypi": {
+    "checked": true,
+    "latest": "0.1.39",
+    "relation": "same",
+    "error": null
+  },
+  "reproduce": "git clone https://github.com/i2mint/recode && cd recode\ngit checkout bc4e9ba18664e33ae15288177e281f0cebadc9e4\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "warnings": [],
+  "alignment": {
+    "aligned": true,
+    "notes": []
+  }
+}

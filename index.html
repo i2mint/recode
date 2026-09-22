@@ -1,168 +1,918 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="index.html.md">
+<link rel="describedby" href="llms.txt" type="text/markdown">
+<link rel="alternate" type="text/markdown" href="index.html.md">
+<link rel="describedby" href="llms.txt"><link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="API reference" href="api.html">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>recode</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
 
 
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to recode’s documentation! &mdash; recode 0.1.37 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
-
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  --color-brand-primary: #58489b;
+  --color-brand-content: #58489b;
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b8ecee75"></script>
-      <script src="_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="recode" href="module_docs/recode.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #b5a9ff;
+  --color-brand-content: #b5a9ff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #b5a9ff;
+  --color-brand-content: #b5a9ff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
 
-          
-          
-          <a href="#" class="icon icon-home">
-            recode
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode.html">recode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/audio.html">recode.audio</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/base.html">recode.base</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/util.html">recode.util</a></li>
-</ul>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">recode</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to recode’s documentation!</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="welcome-to-recode-s-documentation">
-<h1>Welcome to recode’s documentation!<a class="headerlink" href="#welcome-to-recode-s-documentation" title="Link to this heading"></a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode.html">recode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/audio.html">recode.audio</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.ShortWavData"><code class="docutils literal notranslate"><span class="pre">ShortWavData</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.decode_pcm_bytes"><code class="docutils literal notranslate"><span class="pre">decode_pcm_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.decode_wav_bytes"><code class="docutils literal notranslate"><span class="pre">decode_wav_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.decode_wav_header_bytes"><code class="docutils literal notranslate"><span class="pre">decode_wav_header_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.encode_pcm_bytes"><code class="docutils literal notranslate"><span class="pre">encode_pcm_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.encode_wav_bytes"><code class="docutils literal notranslate"><span class="pre">encode_wav_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.encode_wav_header_bytes"><code class="docutils literal notranslate"><span class="pre">encode_wav_header_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.extract_wav_header_from_file"><code class="docutils literal notranslate"><span class="pre">extract_wav_header_from_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.header_size_of_wav_bytes"><code class="docutils literal notranslate"><span class="pre">header_size_of_wav_bytes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.mk_pcm_audio_codec"><code class="docutils literal notranslate"><span class="pre">mk_pcm_audio_codec()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.num_find_num_type_for"><code class="docutils literal notranslate"><span class="pre">num_find_num_type_for()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/audio.html#recode.audio.num_type_for"><code class="docutils literal notranslate"><span class="pre">num_type_for()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/base.html">recode.base</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.ChunkedDecoder"><code class="docutils literal notranslate"><span class="pre">ChunkedDecoder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.ChunkedEncoder"><code class="docutils literal notranslate"><span class="pre">ChunkedEncoder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.IterativeDecoder"><code class="docutils literal notranslate"><span class="pre">IterativeDecoder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.MetaDecoder"><code class="docutils literal notranslate"><span class="pre">MetaDecoder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.MetaEncoder"><code class="docutils literal notranslate"><span class="pre">MetaEncoder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.StructCodecSpecs"><code class="docutils literal notranslate"><span class="pre">StructCodecSpecs</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.codec_tuple"><code class="docutils literal notranslate"><span class="pre">codec_tuple</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.frame_to_meta"><code class="docutils literal notranslate"><span class="pre">frame_to_meta()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.meta_to_frame"><code class="docutils literal notranslate"><span class="pre">meta_to_frame()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.mk_codec"><code class="docutils literal notranslate"><span class="pre">mk_codec()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.mk_encoder_and_decoder"><code class="docutils literal notranslate"><span class="pre">mk_encoder_and_decoder()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/base.html#recode.base.specs_from_frames"><code class="docutils literal notranslate"><span class="pre">specs_from_frames()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/recode/util.html">recode.util</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.get_struct"><code class="docutils literal notranslate"><span class="pre">get_struct()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.list_of_dicts"><code class="docutils literal notranslate"><span class="pre">list_of_dicts()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.spy"><code class="docutils literal notranslate"><span class="pre">spy()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="module_docs/recode/util.html#recode.util.take"><code class="docutils literal notranslate"><span class="pre">take()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
-<p>Release: 0.1.37</p>
-<p>Last change: Aug 17, 2026</p>
-</section>
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
 
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="module_docs/recode.html" class="btn btn-neutral float-right" title="recode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
     </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">recode</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+  
+  <span class="sidebar-brand-text">recode</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">API reference</a><input aria-label="Toggle navigation of API reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/recode.html">recode</a><input aria-label="Toggle navigation of recode" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/recode.audio.html">recode.audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/recode.base.html">recode.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/recode.util.html">recode.util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-</body>
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/index.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <!-- generated by epythet -->
+<section id="recode">
+<h1>recode<a class="headerlink" href="#recode" title="Link to this heading">¶</a></h1>
+<p>Make codecs for fixed size structured chunks serialization and deserialization of
+sequences, tabular data, and time-series.</p>
+<p>To install:	<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">recode</span></code></p>
+<p><a class="reference external" href="https://i2mint.github.io/recode/">Docmentation</a></p>
+<p>Make codecs for fixed size structured chunks serialization and deserialization of
+sequences, tabular data, and time-series.</p>
+<p>The easiest and bigest bang for your buck is <code class="docutils literal notranslate"><span class="pre">mk_codec</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">mk_codec</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">encoder</span></code> will encode a list (or any iterable) of numbers into bytes</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xc0\x1f\x85\xebQ\xb8\x1e\t@'</span>
+
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">decoder</span></code> will decode those bytes to get you back your numbers</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">[0.0, -3.0, 3.14]</span>
+</pre></div>
+</div>
+<p>There’s only really one argument you need to know about in <code class="docutils literal notranslate"><span class="pre">mk_codec</span></code>.
+The first argument, called <code class="docutils literal notranslate"><span class="pre">chk_format</span></code>, which is a string of characters from
+the “Format” column of the python
+<a class="reference external" href="https://docs.python.org/3/library/struct.html#format-characters">format characters</a></p>
+<p>The one we’ve just been through is in fact</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">(</span><span class="s1">'d'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That is, it will expect that your data is a list of numbers, and they’ll be encoded
+with the ‘d’ format character, that is 8-bytes doubles.
+That default is good because it gives you a lot of room, but if you knew that you
+would only be dealing with 2-byte integers (as in most WAV audio waveforms),
+you would have chosen <code class="docutils literal notranslate"><span class="pre">h</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">(</span><span class="s1">'h'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>What about those channels?
+Well, some times you need to encode/decode multi-channel streams, such as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">multi_channel_stream</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">9</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Say, for example, if you were dealing with stereo waveform
+(with the standard PCM_16 format), you’d do it this way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">(</span><span class="s1">'hh'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pcm_bytes</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">multi_channel_stream</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pcm_bytes</span>
+<span class="go">b'\x03\x00\xff\xff\x04\x00\xff\xff\x05\x00\xf7\xff'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span><span class="p">(</span><span class="n">pcm_bytes</span><span class="p">)</span>
+<span class="go">[(3, -1), (4, -1), (5, -9)]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">n_channels</span></code> and <code class="docutils literal notranslate"><span class="pre">chk_size_bytes</span></code> arguments are there if you want to assert
+that your number of channels and chunk size are what you expect.
+Again, these are just for verification, because we know how easy it is to
+misspecify the <code class="docutils literal notranslate"><span class="pre">chk_format</span></code>, and how hard it can be to notice that we did.</p>
+<p>It is advised to use these in any production code, for the sanity of everyone!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mk_codec</span><span class="p">(</span><span class="s1">'hhh'</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">AssertionError</span>: <span class="n">You said there'd be 2 channels, but I inferred 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mk_codec</span><span class="p">(</span><span class="s1">'hhh'</span><span class="p">,</span> <span class="n">chk_size_bytes</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">AssertionError</span>: <span class="n">The given chk_size_bytes 3 did not match the inferred (from chk_format) 6</span>
+</pre></div>
+</div>
+<p>Finally, so far we’ve done it this way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">(</span><span class="s1">'hHifd'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But see that what’s actually returned is a NAMED tuple, which means that you can
+can also get one object that will have <code class="docutils literal notranslate"><span class="pre">.encode</span></code> and <code class="docutils literal notranslate"><span class="pre">.decode</span></code> properties:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">codec</span> <span class="o">=</span> <span class="n">mk_codec</span><span class="p">(</span><span class="s1">'hHifd'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_encode</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoded</span> <span class="o">=</span> <span class="n">codec</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">to_encode</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoded</span> <span class="o">=</span> <span class="n">codec</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoded</span>
+<span class="go">[(1, 2, 3, 4.0, 5.0), (6, 7, 8, 9.0, 10.0)]</span>
+</pre></div>
+</div>
+<p>And you can checkout the properties of your encoder and decoder (they
+should be the same)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">codec</span><span class="o">.</span><span class="n">encode</span><span class="o">.</span><span class="n">chk_format</span>
+<span class="go">'hHifd'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">codec</span><span class="o">.</span><span class="n">encode</span><span class="o">.</span><span class="n">n_channels</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">codec</span><span class="o">.</span><span class="n">encode</span><span class="o">.</span><span class="n">chk_size_bytes</span>
+<span class="go">24</span>
+</pre></div>
+</div>
+</section>
+<section id="further-functionality-and-under-the-hood-peeps">
+<h1>Further functionality and under-the-hood peeps<a class="headerlink" href="#further-functionality-and-under-the-hood-peeps" title="Link to this heading">¶</a></h1>
+<p>This section shows various examples of recode and it how it can be used with:</p>
+<ul class="simple">
+<li><p>Single channel numerical streams</p></li>
+<li><p>Multi-channel numerical streams</p></li>
+<li><p>DataFrames</p></li>
+<li><p>Iterators</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">ChunkedEncoder</span><span class="p">,</span> 
+                    <span class="n">ChunkedDecoder</span><span class="p">,</span> 
+                    <span class="n">MetaEncoder</span><span class="p">,</span> 
+                    <span class="n">MetaDecoder</span><span class="p">,</span> 
+                    <span class="n">IterativeDecoder</span><span class="p">,</span> 
+                    <span class="n">StructCodecSpecs</span><span class="p">,</span> 
+                    <span class="n">specs_from_frames</span><span class="p">,</span>
+                    <span class="n">frame_to_meta</span><span class="p">,</span>
+                    <span class="n">meta_to_frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="quick-run-through">
+<h2>Quick run through<a class="headerlink" href="#quick-run-through" title="Link to this heading">¶</a></h2>
+<p>First define the frame you want to encode</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Next define the specifications for that encoding</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">'h'</span><span class="p">)</span>
+<span class="n">specs</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
+</pre></div>
+</div>
+<p>Next define an encoder and encode your frame to bytes</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">b</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>b'\x01\x00\x02\x00\x03\x00'
+</pre></div>
+</div>
+<p>Once you need your original frame again, define a decoder and decode your frame</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">decoded_frames</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="n">decoded_frames</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[1, 2, 3]
+</pre></div>
+</div>
+</section>
+<section id="step-by-step-explanation">
+<h2>Step-by-step explanation<a class="headerlink" href="#step-by-step-explanation" title="Link to this heading">¶</a></h2>
+<section id="define-your-structcodecspecs">
+<h3>Define your StructCodecSpecs<a class="headerlink" href="#define-your-structcodecspecs" title="Link to this heading">¶</a></h3>
+<p>StructCodecSpecs is used to define the specs for making codecs for fixed size structured chunks serialization and deserialization of sequences, tabular data, and time-series. This definition is based on format strings of the <a class="reference external" href="https://docs.python.org/3/library/struct.html#format-strings">python struct module</a>.</p>
+<p>There are two ways to define StructCodecSpecs, the first being to explicitly
+define it using the StructCodecSpecs class.
+StructCodecSpecs takes three arguments: <code class="docutils literal notranslate"><span class="pre">chk_format</span></code>, <code class="docutils literal notranslate"><span class="pre">n_channels</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">chk_size_bytes</span></code>.</p>
+<p>Only <code class="docutils literal notranslate"><span class="pre">chk_format</span></code> is required,
+as <code class="docutils literal notranslate"><span class="pre">n_channels</span></code> and <code class="docutils literal notranslate"><span class="pre">chk_size_bytes</span></code> can be determined based on <code class="docutils literal notranslate"><span class="pre">chk_format</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">n_channels</span></code> or  <code class="docutils literal notranslate"><span class="pre">chk_size_bytes</span></code> are given, they will be used to
+assert that the values inferred from <code class="docutils literal notranslate"><span class="pre">chk_format</span></code> match.</p>
+<p>If this is not the case, then do not provide an argument for <code class="docutils literal notranslate"><span class="pre">n_channels</span></code>
+and instead pass a string with the format character matching the data type for
+each channel in the frame to <code class="docutils literal notranslate"><span class="pre">chk_format</span></code>.
+For example if the first channel
+contains integers and the second contains floats, then <code class="docutils literal notranslate"><span class="pre">chk_format</span> <span class="pre">=</span> <span class="pre">'hd'</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">'h'</span><span class="p">)</span>
+<span class="n">specs</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
+</pre></div>
+</div>
+<p>The second way to define StructCodecSpecs is to use <code class="docutils literal notranslate"><span class="pre">specs_from_frames</span></code> which will implictly define StructCodecSpecs based on the frame that is going to be encoded/decoded. This function will return a tuple containing a reconstituted version of the iterator given as an input, and the defined StructCodecSpecs. The first element of the tuple can be ignored if the frame passed is not an iterator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">specs</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>StructCodecSpecs(chk_format='h', n_channels=1, chk_size_bytes=2)
+</pre></div>
+</div>
+<p>If frame is an iterator, then redefine frame as the first argument of the tuple so the first element of frame is not lost for encoding.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="n">frame</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">specs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(StructCodecSpecs(chk_format='hh', n_channels=2, chk_size_bytes=4),
+ [[1, 2], [3, 4]])
+</pre></div>
+</div>
+</section>
+<section id="define-your-encoder">
+<h3>Define your Encoder<a class="headerlink" href="#define-your-encoder" title="Link to this heading">¶</a></h3>
+<p>Your Encoder will allow you to, you guessed it, encode your frames! There are two Encoders currently defined in recode: <code class="docutils literal notranslate"><span class="pre">ChunkedEncoder</span></code> and <code class="docutils literal notranslate"><span class="pre">MetaEncoder</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ChunkedEncoder</span></code> should be your goto encoder for sequences, while <code class="docutils literal notranslate"><span class="pre">MetaEncoder</span></code> works best for tabular data (currently must be in the format of list of dicts).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">b</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>b'\x01\x00\x02\x00\x03\x00'
+</pre></div>
+</div>
+<p>When using a <code class="docutils literal notranslate"><span class="pre">MetaEncoder</span></code>, an extra argument named frame_to_meta is required, which can be easily imported from recode!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mi">4</span><span class="p">}]</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">MetaEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frame_to_meta</span><span class="o">=</span><span class="n">frame_to_meta</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">b</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>b'\x07\x00foo.bar\x01\x00\x01\x00\x02\x00\x02\x00\x03\x00\x04\x00'
+</pre></div>
+</div>
+</section>
+<section id="define-your-decoder">
+<h3>Define your Decoder<a class="headerlink" href="#define-your-decoder" title="Link to this heading">¶</a></h3>
+<p>Next up your Decoder will allow you to decode your encoded bytes. There are three Encoders currently defined in recode: <code class="docutils literal notranslate"><span class="pre">ChunkedDecoder</span></code>, <code class="docutils literal notranslate"><span class="pre">IterativeDecoder</span></code>, and <code class="docutils literal notranslate"><span class="pre">MetaDecoder</span></code>.</p>
+<p>Either <code class="docutils literal notranslate"><span class="pre">ChunkedDecoder</span></code> or <code class="docutils literal notranslate"><span class="pre">IterativeDecoder</span></code> will work well for sequences, with the only difference being that <code class="docutils literal notranslate"><span class="pre">IterativeDecoder</span></code> returns an iterator of decoded chunks while <code class="docutils literal notranslate"><span class="pre">ChunkedDecoder</span></code> returns the whole list of decoded chunks. <code class="docutils literal notranslate"><span class="pre">MetaDecoder</span></code> works best for tabular data encoded with <code class="docutils literal notranslate"><span class="pre">MetaEncoder</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[1, 2, 3]
+</pre></div>
+</div>
+<p>As is shown in the following example, an <code class="docutils literal notranslate"><span class="pre">IterativeDecoder</span></code> will return an unpack_iterator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">IterativeDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">iter_frames</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">iter_frames</span><span class="p">))</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">iter_frames</span><span class="p">),</span> <span class="nb">next</span><span class="p">(</span><span class="n">iter_frames</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;class 'unpack_iterator'&gt;
+((1, 1), (2, 2))
+</pre></div>
+</div>
+<p>When using a <code class="docutils literal notranslate"><span class="pre">MetaDecoder</span></code>, an extra argument named meta_to_frame is required, which can be easily imported from recode!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mi">4</span><span class="p">}]</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">MetaEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frame_to_meta</span><span class="o">=</span><span class="n">frame_to_meta</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">MetaDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">,</span> <span class="n">meta_to_frame</span><span class="o">=</span><span class="n">meta_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">decoded_frames</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="n">decoded_frames</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[{'foo': 1, 'bar': 1}, {'foo': 2, 'bar': 2}, {'foo': 3, 'bar': 4}]
+</pre></div>
+</div>
+</section>
+</section>
+<section id="encoding-a-waveform">
+<h2>Encoding a waveform<a class="headerlink" href="#encoding-a-waveform" title="Link to this heading">¶</a></h2>
+<section id="create-a-synthetic-waveform-using-hum">
+<h3>Create a synthetic waveform using <code class="docutils literal notranslate"><span class="pre">hum</span></code><a class="headerlink" href="#create-a-synthetic-waveform-using-hum" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hum.gen.sine_mix</span><span class="w"> </span><span class="kn">import</span> <span class="n">freq_based_stationary_wf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">DFLT_N_SAMPLES</span> <span class="o">=</span> <span class="mi">21</span> <span class="o">*</span> <span class="mi">2048</span>
+<span class="n">DFLT_SR</span> <span class="o">=</span> <span class="mi">44100</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wf_mix</span> <span class="o">=</span> <span class="n">freq_based_stationary_wf</span><span class="p">(</span><span class="n">freqs</span><span class="o">=</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">800</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">n_samples</span> <span class="o">=</span> <span class="n">DFLT_N_SAMPLES</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">DFLT_SR</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wf_mix</span><span class="p">[:</span><span class="mi">300</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p><img alt="png" src="https://raw.githubusercontent.com/i2mint/recode/master/notebooks/recode_demo_files/recode_demo_35_0.png" /></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wf_mix</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>array([0.        , 0.07114157, 0.14170624, ..., 0.49480205, 0.54853009,
+       0.5979443 ])
+</pre></div>
+</div>
+</section>
+<section id="encode-the-wf">
+<h3>Encode the wf<a class="headerlink" href="#encode-the-wf" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="s1">'d'</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">wf_mix</span><span class="p">)</span>
+<span class="n">b</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>b'\x00\x00\x00\x00\x00\x00\x00\x00\x1b:\x11\x8dU6\xb2?\xb8!\xa2\x15n#\xc2?\xe6I\xedz\x15\x06\xcb?L;\xe6\xfah\xd8\xd1?}\x8c\x9b\x9a\xf5\x08\xd6?D\xcc\xf1\x897\x0c\xda?\xe3\xc5\xbeb/\xda\xdd?DE\xb6K\xb6\xb5\xe0?\x82|\xfcz\x90\\\xe2?\xae3:$\x99\xde\xe3?\x1e\x95\xbe\xef$9\xe5?\x81\xd7\xdc\xec'
+</pre></div>
+</div>
+</section>
+<section id="decode-and-compare-to-wf-mix">
+<h3>Decode and compare to wf_mix<a class="headerlink" href="#decode-and-compare-to-wf-mix" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decoded_wf_mix</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">decoded_wf_mix</span><span class="p">[:</span><span class="mi">300</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p><img alt="png" src="https://raw.githubusercontent.com/i2mint/recode/master/notebooks/recode_demo_files/recode_demo_40_0.png" /></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">decoded_wf_mix</span> <span class="o">==</span> <span class="n">wf_mix</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</section>
+</section>
+<section id="encoding-a-pandas-dataframe">
+<h2>Encoding a pandas dataframe<a class="headerlink" href="#encoding-a-pandas-dataframe" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</pre></div>
+</div>
+<section id="create-import-your-dataframe">
+<h3>Create/import your dataframe<a class="headerlink" href="#create-import-your-dataframe" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span> <span class="s1">'set'</span><span class="p">])</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>foo</th>
+      <th>bar</th>
+      <th>set</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+<section id="prep-the-dataframe-for-encoding">
+<h3>Prep the dataframe for encoding<a class="headerlink" href="#prep-the-dataframe-for-encoding" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">'records'</span><span class="p">)</span>
+<span class="n">frame</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[{'foo': 1, 'bar': 2, 'set': 3}, {'foo': 4, 'bar': 5, 'set': 6}]
+</pre></div>
+</div>
+</section>
+<section id="encode-the-list-of-dicts">
+<h3>Encode the list of dicts<a class="headerlink" href="#encode-the-list-of-dicts" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">MetaEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frame_to_meta</span><span class="o">=</span><span class="n">frame_to_meta</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">MetaDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">,</span> <span class="n">meta_to_frame</span><span class="o">=</span><span class="n">meta_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">b</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>b'\x0b\x00foo.bar.set\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\x06\x00'
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decoded_frame</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="n">decoded_frame</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[{'foo': 1, 'bar': 2, 'set': 3}, {'foo': 4, 'bar': 5, 'set': 6}]
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decoded_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">decoded_frame</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">decoded_df</span> <span class="o">==</span> <span class="n">df</span><span class="p">))</span>
+<span class="n">decoded_df</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>foo</th>
+      <th>bar</th>
+      <th>set</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="miscellaneous-information">
+<h2>Miscellaneous information<a class="headerlink" href="#miscellaneous-information" title="Link to this heading">¶</a></h2>
+<section id="byte-order-size-and-alignment">
+<h3>Byte order, Size, and Alignment<a class="headerlink" href="#byte-order-size-and-alignment" title="Link to this heading">¶</a></h3>
+<p>This table provides the characters associated with Byte order, Size, and Alignment. If one of these characters is not given as the first character of the format string, then <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> will be assumed. More information about Byte order, Size, and Alignment can be found <a class="reference external" href="https://docs.python.org/3/library/struct.html#byte-order-size-and-alignment">here</a>.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Character</p></th>
+<th class="head"><p>Byte order</p></th>
+<th class="head"><p>Size</p></th>
+<th class="head"><p>Alignment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>&#64;</p></td>
+<td><p>native</p></td>
+<td><p>native</p></td>
+<td><p>native</p></td>
+</tr>
+<tr class="row-odd"><td><p>=</p></td>
+<td><p>native</p></td>
+<td><p>standard</p></td>
+<td><p>none</p></td>
+</tr>
+<tr class="row-even"><td><p>&lt;</p></td>
+<td><p>little-endian</p></td>
+<td><p>standard</p></td>
+<td><p>none</p></td>
+</tr>
+<tr class="row-odd"><td><p>&gt;</p></td>
+<td><p>big-endian</p></td>
+<td><p>standard</p></td>
+<td><p>none</p></td>
+</tr>
+<tr class="row-even"><td><p>!</p></td>
+<td><p>network (=big-endian)</p></td>
+<td><p>standard</p></td>
+<td><p>none</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+<section id="full-examples">
+<h1>Full Examples<a class="headerlink" href="#full-examples" title="Link to this heading">¶</a></h1>
+<section id="single-channel-numerical-stream">
+<h2>Single channel numerical stream<a class="headerlink" href="#single-channel-numerical-stream" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructCodecSpecs</span><span class="p">,</span> <span class="n">ChunkedEncoder</span><span class="p">,</span> <span class="n">ChunkedDecoder</span>
+<span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">'h'</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">b</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">'</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">'</span>
+<span class="n">decoded_frames</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">decoded_frames</span> <span class="o">==</span> <span class="n">frames</span>
+</pre></div>
+</div>
+</section>
+<section id="multi-channel-numerical-stream">
+<h2>Multi-channel numerical stream<a class="headerlink" href="#multi-channel-numerical-stream" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructCodecSpecs</span><span class="p">,</span> <span class="n">ChunkedEncoder</span><span class="p">,</span> <span class="n">ChunkedDecoder</span>
+<span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">'@hh'</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">b</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">'</span><span class="se">\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\x06\x00</span><span class="s1">'</span>
+<span class="n">decoded_frames</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">decoded_frames</span> <span class="o">==</span> <span class="n">frames</span>
+</pre></div>
+</div>
+</section>
+<section id="iterative-decoder">
+<h2>Iterative decoder<a class="headerlink" href="#iterative-decoder" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructCodecSpecs</span><span class="p">,</span> <span class="n">ChunkedEncoder</span><span class="p">,</span> <span class="n">IterativeDecoder</span>
+<span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span> <span class="o">=</span> <span class="s1">'hdhd'</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">IterativeDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.1</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mf">2.2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">2.2</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mf">3.3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mf">3.3</span><span class="p">)]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="n">iter_frames</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">next</span><span class="p">(</span><span class="n">iter_frames</span><span class="p">)</span> <span class="o">==</span> <span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">iter_frames</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(2, 2.2, 2, 2.2)
+</pre></div>
+</div>
+</section>
+<section id="dataframe-as-list-of-dicts-using-metaencoder-metadecoder">
+<h2>DataFrame (as list of dicts) using MetaEncoder/MetaDecoder<a class="headerlink" href="#dataframe-as-list-of-dicts-using-metaencoder-metadecoder" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructCodecSpecs</span><span class="p">,</span> <span class="n">MetaEncoder</span><span class="p">,</span> <span class="n">MetaDecoder</span><span class="p">,</span> <span class="n">frame_to_meta</span><span class="p">,</span> <span class="n">meta_to_frame</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mf">2.2</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mf">513.23</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mf">456.1</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mf">32.0</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mf">6.7</span><span class="p">}]</span>
+<span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">'dd'</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">MetaEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">,</span> <span class="n">frame_to_meta</span> <span class="o">=</span> <span class="n">frame_to_meta</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">MetaDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">,</span> <span class="n">meta_to_frame</span> <span class="o">=</span> <span class="n">meta_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="n">data</span>
+</pre></div>
+</div>
+</section>
+<section id="implicitly-define-codec-specs-based-on-frames">
+<h2>Implicitly define codec specs based on frames<a class="headerlink" href="#implicitly-define-codec-specs-based-on-frames" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">specs_from_frames</span><span class="p">,</span> <span class="n">ChunkedEncoder</span><span class="p">,</span> <span class="n">ChunkedDecoder</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">b</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">'</span><span class="se">\x01\x00\x02\x00\x03\x00</span><span class="s1">'</span>
+<span class="n">decoded_frames</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="n">decoded_frames</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[1, 2, 3]
+</pre></div>
+</div>
+</section>
+<section id="implicit-definition-of-iterator">
+<h2>Implicit definition of iterator<a class="headerlink" href="#implicit-definition-of-iterator" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">specs_from_frames</span><span class="p">,</span> <span class="n">ChunkedEncoder</span><span class="p">,</span> <span class="n">IterativeDecoder</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([[</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.2</span><span class="p">],[</span><span class="mf">3.3</span><span class="p">,</span><span class="mf">4.4</span><span class="p">]])</span>
+<span class="n">frames</span><span class="p">,</span> <span class="n">specs</span> <span class="o">=</span> <span class="n">specs_from_frames</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span> <span class="o">=</span> <span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="n">decoded_frames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">decoded_frames</span> <span class="o">==</span> <span class="p">[(</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.2</span><span class="p">),(</span><span class="mf">3.3</span><span class="p">,</span><span class="mf">4.4</span><span class="p">)]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="more">
+<h1>More<a class="headerlink" href="#more" title="Link to this heading">¶</a></h1>
+<section id="example-of-recode-functionality-to-read-and-write-audio-files">
+<h2>Example of recode functionality to read and write audio files<a class="headerlink" href="#example-of-recode-functionality-to-read-and-write-audio-files" title="Link to this heading">¶</a></h2>
+<p>In the below example we can see that the functionality of reading and writing audio to bytes is replicated in <code class="docutils literal notranslate"><span class="pre">recode</span></code>.
+An example of a waveform audio file is first created using <code class="docutils literal notranslate"><span class="pre">mk_wf</span></code>.
+Then, that example wave form is converted to bytes using <code class="docutils literal notranslate"><span class="pre">BytesIO</span></code> and <code class="docutils literal notranslate"><span class="pre">soundfile.write</span></code>.
+Then, that same example wave form is converted to bytes using <code class="docutils literal notranslate"><span class="pre">recode</span></code> functionality.
+Finally it can be seen through the assertions that <code class="docutils literal notranslate"><span class="pre">soundfile</span></code>’s read/write and <code class="docutils literal notranslate"><span class="pre">recode</span></code>’s encode/decode provide
+the same functionality for audio files (aside from the header in <code class="docutils literal notranslate"><span class="pre">soundfile</span></code> as a result of the .wav format).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChunkedDecoder</span><span class="p">,</span> <span class="n">ChunkToFrame</span><span class="p">,</span> <span class="n">ChunkedEncoder</span><span class="p">,</span> <span class="n">StructCodecSpecs</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Kind</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">random</span> <span class="o">=</span> <span class="s1">'random'</span>
+    <span class="n">increasing</span> <span class="o">=</span> <span class="s1">'increasing'</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_wf</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Kind</span><span class="o">=</span><span class="n">Kind</span><span class="o">.</span><span class="n">random</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="n">Kind</span><span class="o">.</span><span class="n">random</span><span class="p">:</span>
+        <span class="n">dtype_str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'num_type'</span><span class="p">,</span> <span class="s1">'int16'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dtype_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'int'</span><span class="p">):</span>
+            <span class="n">low</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'low'</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">**</span><span class="mi">15</span><span class="p">))</span>
+            <span class="n">high</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'high'</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">15</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">wf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">high</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Don't know how to handle this case"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Don't know how to handle this case"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wf</span>
+
+<span class="n">wf</span> <span class="o">=</span> <span class="n">mk_wf</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">sr</span> <span class="o">=</span> <span class="mi">10000</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">wf</span><span class="p">,</span> <span class="n">sr</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">'WAV'</span><span class="p">)</span>
+<span class="n">file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="s1">'h'</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">ChunkedEncoder</span><span class="p">(</span><span class="n">frame_to_chk</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">frame_to_chk</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">ChunkedDecoder</span><span class="p">(</span><span class="n">chk_size_bytes</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_size_bytes</span><span class="p">,</span> 
+                         <span class="n">chk_to_frame</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">chk_to_frame</span><span class="p">,</span> 
+                         <span class="n">n_channels</span><span class="o">=</span><span class="n">specs</span><span class="o">.</span><span class="n">n_channels</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">d</span> <span class="o">==</span> <span class="n">b</span><span class="p">[</span><span class="mi">44</span><span class="p">:]</span>
+
+<span class="n">sf_read</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int16'</span><span class="p">)</span>
+<span class="n">recode_read</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sf_read</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">recode_read</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">recode_read</span> <span class="o">==</span> <span class="n">wf</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sf_read</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">wf</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="epythet-aggregates">This documentation as a single file: <a href="recode.md">recode.md</a> (Markdown, for agents).</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-09-22 13:00 UTC from <a href="https://github.com/i2mint/recode/commit/bc4e9ba18664e33ae15288177e281f0cebadc9e4">bc4e9ba</a> (master) · recode 0.1.39 · <a href="about-this-build.html">about this build</a></p>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="api.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">API reference</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=4af9b32f"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=fd10adb8"></script>
+    </body>
 </html>

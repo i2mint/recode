@@ -1,0 +1,15 @@
+recode.util
+===========
+
+.. automodule:: recode.util
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_struct
+      list_of_dicts
+      spy
+      take
+   

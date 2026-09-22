@@ -1,0 +1,29 @@
+recode.base
+===========
+
+.. automodule:: recode.base
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      add_coding_attributes
+      frame_to_meta
+      meta_to_frame
+      mk_codec
+      mk_encoder_and_decoder
+      specs_from_frames
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ChunkedDecoder
+      ChunkedEncoder
+      IterativeDecoder
+      MetaDecoder
+      MetaEncoder
+      StructCodecSpecs
+      codec_tuple
+   

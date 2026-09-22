@@ -1,0 +1,15 @@
+﻿recode
+======
+
+.. automodule:: recode
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   audio
+   base
+   util

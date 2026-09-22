@@ -1,0 +1,28 @@
+recode.audio
+============
+
+.. automodule:: recode.audio
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      decode_pcm_bytes
+      decode_wav_bytes
+      decode_wav_header_bytes
+      encode_pcm_bytes
+      encode_wav_bytes
+      encode_wav_header_bytes
+      extract_wav_header_from_file
+      header_size_of_wav_bytes
+      mk_pcm_audio_codec
+      num_find_num_type_for
+      num_type_for
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      ShortWavData
+   
