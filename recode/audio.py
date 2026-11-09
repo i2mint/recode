@@ -37,11 +37,12 @@ b'\x01\x00\x02\x00\x03\x00'
 """
 
 import operator
+import re
 import struct
 import warnings
 import wave
 from io import BytesIO
-from typing import Union
+from typing import NamedTuple, Union
 from collections.abc import Iterable
 from numbers import Number
 from recode.base import mk_codec
@@ -140,6 +141,14 @@ _EXTENSIBLE_FMT_CHUNK_SIZE = 40
 _SUBFORMAT_GUID_OFFSET = 24  # within the `fmt ` chunk contents
 # The SubFormat GUID that says an EXTENSIBLE chunk really does carry plain PCM.
 _PCM_SUBFORMAT_GUID = bytes.fromhex("0100000000001000800000aa00389b71")
+# Where a chunk id (four printable ASCII characters) starts, as a zero-width match.
+_CHUNK_ID_AHEAD = re.compile(rb"(?=[\x20-\x7e]{4})")
+# ... and the ids encoders append after the audio (metadata, cues, padding).
+_KNOWN_TRAILING_CHUNK_IDS = (
+    b"LIST", b"id3 ", b"ID3 ", b"fact", b"cue ", b"smpl", b"bext", b"JUNK",
+    b"PAD ", b"iXML", b"_PMX", b"acid", b"inst", b"plst",
+)  # fmt: skip
+_KNOWN_CHUNK_ID = re.compile(b"|".join(map(re.escape, _KNOWN_TRAILING_CHUNK_IDS)))
 
 
 class ShortWavData(UserWarning):
@@ -330,10 +339,49 @@ def _wav_data_chunk(wav_bytes: bytes) -> tuple:
     >>> _wav_data_chunk(bytes(broken) + trailing)
     (44, 6)
     """
-    contents, declared = _wav_chunk(wav_bytes, b"data")
-    if declared <= len(wav_bytes) - contents:
-        return contents, declared
-    return contents, _payload_end_of_overrunning_data(wav_bytes, contents)
+    for chunk in wav_chunks(wav_bytes):
+        if chunk.chunk_id == b"data":
+            return chunk.offset, chunk.size
+    _wav_chunk(wav_bytes, b"data")  # no data chunk: raises the walk's own error
+    raise ValueError("Not WAV bytes: no `data` chunk found")
+
+
+class WavChunk(NamedTuple):
+    """A RIFF chunk's id, and where its contents sit in the buffer."""
+
+    chunk_id: bytes
+    offset: int
+    size: int
+
+
+def wav_chunks(wav_bytes: bytes):
+    r""":class:`WavChunk` ``(chunk_id, offset, size)`` of every chunk of a RIFF/WAVE buffer, in order.
+
+    The one chunk walker: :func:`decode_wav_bytes` and other readers (voxy's numpy
+    one) locate their ``data`` through it. ``offset`` and ``size`` locate the
+    chunk's contents. A ``data`` chunk whose declared size is a streaming placeholder
+    (``0``, or past the end of the buffer) ends where the chunks after it begin, or
+    at the end of the buffer (see :func:`_wav_data_chunk`); any other chunk's size is
+    clipped to what is there. Raises ``ValueError`` if the buffer is not RIFF/WAVE.
+
+    >>> raw = encode_wav_bytes([1, 2, 3], 42) + b'LIST' + struct.pack('<I', 4) + b'INFO'
+    >>> [(chunk_id, size) for chunk_id, _, size in wav_chunks(raw)]
+    [(b'fmt ', 16), (b'data', 6), (b'LIST', 4)]
+    """
+    _check_riff_wave(wav_bytes)
+    end, pos = len(wav_bytes), _RIFF_HEADER_SIZE
+    while pos + _CHUNK_HEADER_SIZE <= end:
+        chunk_id = bytes(wav_bytes[pos : pos + _CHUNK_ID_SIZE])
+        (declared,) = struct.unpack(
+            "<I", wav_bytes[pos + _CHUNK_ID_SIZE : pos + _CHUNK_HEADER_SIZE]
+        )
+        contents = pos + _CHUNK_HEADER_SIZE
+        if chunk_id == b"data" and not 0 < declared <= end - contents:
+            size = _payload_end_of_overrunning_data(wav_bytes, contents)
+        else:
+            size = min(declared, end - contents)
+        yield WavChunk(chunk_id, contents, size)
+        pos = contents + size + size % 2
 
 
 def _check_riff_wave(wav_bytes: bytes) -> None:
@@ -405,15 +453,24 @@ def _payload_end_of_overrunning_data(wav_bytes: bytes, contents: int) -> int:
     file, where reading to the end is right.
     """
     end = len(wav_bytes)
-    start = contents + (contents % 2)
-    for candidate in range(start, end - _CHUNK_HEADER_SIZE + 1, 2):
-        if _parses_as_chunk_list_to_eof(wav_bytes, candidate):
-            return candidate - contents
+    start, last = contents + (contents % 2), end - _CHUNK_HEADER_SIZE + 1
+    # Only positions that read as a chunk id can start a chunk list, so a regex finds
+    # the candidates in C instead of trying every word in Python. The ids encoders
+    # really append come first: they are rare in audio, which makes that pass fast on
+    # a long recording. Any other printable id is the slower second pass (so an
+    # unknown chunk ahead of a known one is read as audio).
+    for pattern in (_KNOWN_CHUNK_ID, _CHUNK_ID_AHEAD):
+        for found in pattern.finditer(wav_bytes, start, last):
+            candidate = found.start()
+            if candidate % 2 == 0 and _parses_as_chunk_list_to_eof(
+                wav_bytes, candidate
+            ):
+                return candidate - contents
     return end - contents
 
 
 def _parses_as_chunk_list_to_eof(wav_bytes: bytes, pos: int) -> bool:
-    """Does the buffer from `pos` read as a chunk list that lands exactly on EOF?"""
+    """Does the buffer from `pos` read as a chunk list that lands on EOF (a final pad byte may be missing)?"""
     end = len(wav_bytes)
     while pos < end:
         if pos + _CHUNK_HEADER_SIZE > end:
@@ -426,7 +483,7 @@ def _parses_as_chunk_list_to_eof(wav_bytes: bytes, pos: int) -> bool:
             "<I", wav_bytes[pos + _CHUNK_ID_SIZE : pos + _CHUNK_HEADER_SIZE]
         )
         pos += _CHUNK_HEADER_SIZE + declared + (declared % 2)
-    return pos == end
+    return pos in (end, end + 1)  # a final pad byte may be missing
 
 
 def header_size_of_wav_bytes(wav_bytes: bytes, meta: dict = None) -> int:

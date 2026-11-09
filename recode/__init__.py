@@ -107,6 +107,8 @@ from recode.base import *
 from recode.audio import (
     encode_wav_bytes,
     decode_wav_bytes,
+    wav_chunks,
+    WavChunk,
     encode_wav_header_bytes,
     decode_wav_header_bytes,
     mk_pcm_audio_codec,
