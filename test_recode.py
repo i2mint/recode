@@ -789,3 +789,48 @@ def test_8_bit_encode_accepts_a_numpy_int8_waveform():
     stereo = np.array([[-128, 1], [0, 127]], dtype=np.int8)
     raw = encode_wav_bytes(stereo, _SR, width_bytes=1, n_channels=2)
     assert decode_wav_bytes(raw) == ([(-128, 1), (0, 127)], _SR)
+
+
+# --- wav_chunks: the one chunk walker (voxy reads its numpy arrays through it) ---
+
+
+def _stream_wav(audio: bytes, *, declared=0xFFFFFFFF, after=b""):
+    head = b"RIFF" + struct.pack("<I", 0xFFFFFFFF) + b"WAVE"
+    fmt = b"fmt " + struct.pack("<IHHIIHH", 16, 1, 1, 8000, 16000, 2, 16)
+    return head + fmt + b"data" + struct.pack("<I", declared) + audio + after
+
+
+def _chunk(chunk_id: bytes, body: bytes) -> bytes:
+    return chunk_id + struct.pack("<I", len(body)) + body + b"\0" * (len(body) % 2)
+
+
+@pytest.mark.parametrize("declared", [0, 0xFFFFFFFF])
+@pytest.mark.parametrize(
+    "audio", [bytes([1, 2]) * 500, bytes(1000)], ids=["noise", "digital-silence"]
+)
+@pytest.mark.parametrize("chunk_id", [b"LIST", b"zzzz"], ids=["known", "unknown"])
+def test_wav_chunks_ends_placeholder_data_before_trailing_chunks(
+    declared, audio, chunk_id
+):
+    from recode import wav_chunks
+
+    raw = _stream_wav(audio, declared=declared, after=_chunk(chunk_id, b"INFOabcd"))
+    chunks = {cid: (off, size) for cid, off, size in wav_chunks(raw)}
+    assert chunks[b"data"][1] == len(audio)
+    assert chunks[chunk_id][1] == 8
+
+
+def test_wav_chunks_placeholder_without_trailer_runs_to_the_end():
+    from recode import wav_chunks
+
+    raw = _stream_wav(bytes(1000))
+    assert [(c, s) for c, _, s in wav_chunks(raw)] == [(b"fmt ", 16), (b"data", 1000)]
+
+
+def test_wav_chunks_clips_a_truncated_chunk_and_refuses_non_wav():
+    from recode import wav_chunks
+
+    raw = _stream_wav(bytes(10), declared=10) + b"LIST" + struct.pack("<I", 99) + b"ab"
+    assert list(wav_chunks(raw))[-1][0::2] == (b"LIST", 2)
+    with pytest.raises(ValueError, match="Not WAV"):
+        list(wav_chunks(b"not a wav file at all"))

@@ -37,6 +37,7 @@ b'\x01\x00\x02\x00\x03\x00'
 """
 
 import operator
+import re
 import struct
 import warnings
 import wave
@@ -140,6 +141,26 @@ _EXTENSIBLE_FMT_CHUNK_SIZE = 40
 _SUBFORMAT_GUID_OFFSET = 24  # within the `fmt ` chunk contents
 # The SubFormat GUID that says an EXTENSIBLE chunk really does carry plain PCM.
 _PCM_SUBFORMAT_GUID = bytes.fromhex("0100000000001000800000aa00389b71")
+# Where a chunk id (four printable ASCII characters) starts, as a zero-width match.
+_CHUNK_ID_AHEAD = re.compile(rb"(?=[\x20-\x7e]{4})")
+# ... and the ids encoders append after the audio (metadata, cues, padding).
+KNOWN_TRAILING_CHUNK_IDS = (
+    b"LIST", b"id3 ", b"ID3 ", b"fact", b"cue ", b"smpl", b"bext", b"JUNK",
+    b"PAD ", b"iXML", b"_PMX", b"acid", b"inst", b"plst",
+)  # fmt: skip
+
+
+def _known_chunk_id_positions(wav_bytes, start: int, stop: int):
+    """Where a known trailing chunk id occurs in ``wav_bytes[start:stop]``, in order
+    (``bytes.find`` scans in C, far faster than a regex alternation)."""
+    found = []
+    for chunk_id in KNOWN_TRAILING_CHUNK_IDS:
+        at = wav_bytes.find(chunk_id, start, stop + _CHUNK_ID_SIZE)
+        while at != -1:
+            found.append(at)
+            at = wav_bytes.find(chunk_id, at + 1, stop + _CHUNK_ID_SIZE)
+    return sorted(found)
+
 
 
 class ShortWavData(UserWarning):
@@ -336,6 +357,36 @@ def _wav_data_chunk(wav_bytes: bytes) -> tuple:
     return contents, _payload_end_of_overrunning_data(wav_bytes, contents)
 
 
+def wav_chunks(wav_bytes: bytes):
+    r"""``(chunk_id, offset, size)`` of every chunk of a RIFF/WAVE buffer, in order.
+
+    The one chunk walker: :func:`decode_wav_bytes` and other readers (voxy's numpy
+    one) take their ``fmt `` and ``data`` from it. ``offset`` and ``size`` locate the
+    chunk's contents. A ``data`` chunk whose declared size is a streaming placeholder
+    (``0``, or past the end of the buffer) ends where the chunks after it begin, or
+    at the end of the buffer (see :func:`_wav_data_chunk`); any other chunk's size is
+    clipped to what is there. Raises ``ValueError`` if the buffer is not RIFF/WAVE.
+
+    >>> raw = encode_wav_bytes([1, 2, 3], 42) + b'LIST' + struct.pack('<I', 4) + b'INFO'
+    >>> [(chunk_id, size) for chunk_id, _, size in wav_chunks(raw)]
+    [(b'fmt ', 16), (b'data', 6), (b'LIST', 4)]
+    """
+    _check_riff_wave(wav_bytes)
+    end, pos = len(wav_bytes), _RIFF_HEADER_SIZE
+    while pos + _CHUNK_HEADER_SIZE <= end:
+        chunk_id = bytes(wav_bytes[pos : pos + _CHUNK_ID_SIZE])
+        (declared,) = struct.unpack(
+            "<I", wav_bytes[pos + _CHUNK_ID_SIZE : pos + _CHUNK_HEADER_SIZE]
+        )
+        contents = pos + _CHUNK_HEADER_SIZE
+        if chunk_id == b"data" and not 0 < declared <= end - contents:
+            size = _payload_end_of_overrunning_data(wav_bytes, contents)
+        else:
+            size = min(declared, end - contents)
+        yield chunk_id, contents, size
+        pos = contents + size + size % 2
+
+
 def _check_riff_wave(wav_bytes: bytes) -> None:
     """Raise `ValueError` unless the buffer opens with a RIFF/WAVE preamble."""
     if (
@@ -406,8 +457,13 @@ def _payload_end_of_overrunning_data(wav_bytes: bytes, contents: int) -> int:
     """
     end = len(wav_bytes)
     start = contents + (contents % 2)
-    for candidate in range(start, end - _CHUNK_HEADER_SIZE + 1, 2):
-        if _parses_as_chunk_list_to_eof(wav_bytes, candidate):
+    # Only positions that read as a chunk id can start a chunk list, so a regex finds
+    # the candidates in C instead of trying every word of a long recording in Python.
+    for found in _CHUNK_ID_AHEAD.finditer(
+        wav_bytes, start, end - _CHUNK_HEADER_SIZE + 1
+    ):
+        candidate = found.start()
+        if candidate % 2 == 0 and _parses_as_chunk_list_to_eof(wav_bytes, candidate):
             return candidate - contents
     return end - contents
 
