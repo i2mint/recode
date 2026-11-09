@@ -806,7 +806,9 @@ def _chunk(chunk_id: bytes, body: bytes) -> bytes:
 
 @pytest.mark.parametrize("declared", [0, 0xFFFFFFFF])
 @pytest.mark.parametrize(
-    "audio", [bytes([1, 2]) * 500, bytes(1000)], ids=["noise", "digital-silence"]
+    "audio",
+    [bytes([1, 2]) * 500, bytes(1000), b"loud printable text " * 50],
+    ids=["noise", "digital-silence", "printable"],
 )
 @pytest.mark.parametrize("chunk_id", [b"LIST", b"zzzz"], ids=["known", "unknown"])
 def test_wav_chunks_ends_placeholder_data_before_trailing_chunks(
@@ -834,3 +836,26 @@ def test_wav_chunks_clips_a_truncated_chunk_and_refuses_non_wav():
     assert list(wav_chunks(raw))[-1][0::2] == (b"LIST", 2)
     with pytest.raises(ValueError, match="Not WAV"):
         list(wav_chunks(b"not a wav file at all"))
+
+
+def test_wav_chunks_missing_final_pad_byte_and_buffer_types():
+    from recode import wav_chunks
+
+    trailer = b"LIST" + struct.pack("<I", 7) + b"1234567"  # odd size, no pad byte
+    raw = _stream_wav(bytes(1000), after=trailer)
+    for buffer in (raw, bytearray(raw), memoryview(raw)):
+        assert [c.size for c in wav_chunks(buffer)][-2:] == [1000, 7]
+
+
+@pytest.mark.parametrize("declared", [0, 0xFFFFFFFF, 1000])
+def test_decode_wav_bytes_agrees_with_wav_chunks(declared):
+    from recode import decode_wav_bytes, wav_chunks
+
+    raw = _stream_wav(
+        struct.pack("<500h", *range(500)),
+        declared=declared,
+        after=_chunk(b"LIST", b"INFOabcd"),
+    )
+    (data,) = [c for c in wav_chunks(raw) if c.chunk_id == b"data"]
+    assert data.size == 1000
+    assert len(decode_wav_bytes(raw)[0]) == 500
