@@ -9,10 +9,11 @@
 <link rel="alternate" type="text/markdown" href="index.html.md">
 <link rel="describedby" href="llms.txt"><link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="API reference" href="api.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>recode</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     
@@ -555,7 +556,7 @@ contains integers and the second contains floats, then <code class="docutils lit
 </div>
 </section>
 <section id="decode-and-compare-to-wf-mix">
-<h3>Decode and compare to wf_mix<a class="headerlink" href="#decode-and-compare-to-wf-mix" title="Link to this heading">¶</a></h3>
+<span id="decode-and-compare-to-wf_mix"></span><h3>Decode and compare to wf_mix<a class="headerlink" href="#decode-and-compare-to-wf-mix" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">decoded_wf_mix</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">decoded_wf_mix</span><span class="p">[:</span><span class="mi">300</span><span class="p">]);</span>
 </pre></div>
@@ -575,7 +576,7 @@ contains integers and the second contains floats, then <code class="docutils lit
 </pre></div>
 </div>
 <section id="create-import-your-dataframe">
-<h3>Create/import your dataframe<a class="headerlink" href="#create-import-your-dataframe" title="Link to this heading">¶</a></h3>
+<span id="createimport-your-dataframe"></span><h3>Create/import your dataframe<a class="headerlink" href="#create-import-your-dataframe" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]],</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">,</span> <span class="s1">'set'</span><span class="p">])</span>
 <span class="n">df</span>
 </pre></div>
@@ -766,7 +767,7 @@ contains integers and the second contains floats, then <code class="docutils lit
 </div>
 </section>
 <section id="dataframe-as-list-of-dicts-using-metaencoder-metadecoder">
-<h2>DataFrame (as list of dicts) using MetaEncoder/MetaDecoder<a class="headerlink" href="#dataframe-as-list-of-dicts-using-metaencoder-metadecoder" title="Link to this heading">¶</a></h2>
+<span id="dataframe-as-list-of-dicts-using-metaencodermetadecoder"></span><h2>DataFrame (as list of dicts) using MetaEncoder/MetaDecoder<a class="headerlink" href="#dataframe-as-list-of-dicts-using-metaencoder-metadecoder" title="Link to this heading">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">recode</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructCodecSpecs</span><span class="p">,</span> <span class="n">MetaEncoder</span><span class="p">,</span> <span class="n">MetaDecoder</span><span class="p">,</span> <span class="n">frame_to_meta</span><span class="p">,</span> <span class="n">meta_to_frame</span>
 <span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mf">2.2</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mf">513.23</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mf">456.1</span><span class="p">},</span> <span class="p">{</span><span class="s1">'foo'</span><span class="p">:</span> <span class="mf">32.0</span><span class="p">,</span> <span class="s1">'bar'</span><span class="p">:</span> <span class="mf">6.7</span><span class="p">}]</span>
 <span class="n">specs</span> <span class="o">=</span> <span class="n">StructCodecSpecs</span><span class="p">(</span><span class="n">chk_format</span><span class="o">=</span><span class="s1">'dd'</span><span class="p">,</span> <span class="n">n_channels</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
@@ -872,7 +873,7 @@ the same functionality for audio files (aside from the header in <code class="do
 </section>
 </section>
 
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-09-22 14:10 UTC from <a href="https://github.com/i2mint/recode/commit/85e0943c3489f32ef7efc59e10d5880ee7e312f3">85e0943</a> (master) · recode 0.1.40 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-11-22 11:34 UTC from <a href="https://github.com/i2mint/recode/commit/35af64a21e4d50acfa39eaed83382b9b29f1c2a1">35af64a</a> (master) · recode 0.1.40 · <a href="about-this-build.html">about this build</a></p>
         </article>
       </div>
       <footer>

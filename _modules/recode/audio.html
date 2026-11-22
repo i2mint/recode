@@ -6,10 +6,11 @@
 <link rel="alternate" type="text/markdown" href="audio.html.md">
 <link rel="describedby" href="../../llms.txt" type="text/markdown"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>recode.audio - recode</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
@@ -280,11 +281,12 @@
 <span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">wave</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">recode.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">mk_codec</span>
@@ -392,6 +394,14 @@
 <span class="n">_SUBFORMAT_GUID_OFFSET</span> <span class="o">=</span> <span class="mi">24</span>  <span class="c1"># within the `fmt ` chunk contents</span>
 <span class="c1"># The SubFormat GUID that says an EXTENSIBLE chunk really does carry plain PCM.</span>
 <span class="n">_PCM_SUBFORMAT_GUID</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s2">"0100000000001000800000aa00389b71"</span><span class="p">)</span>
+<span class="c1"># Where a chunk id (four printable ASCII characters) starts, as a zero-width match.</span>
+<span class="n">_CHUNK_ID_AHEAD</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">rb</span><span class="s2">"(?=[\x20-\x7e]</span><span class="si">{4}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="c1"># ... and the ids encoders append after the audio (metadata, cues, padding).</span>
+<span class="n">_KNOWN_TRAILING_CHUNK_IDS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">b</span><span class="s2">"LIST"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"id3 "</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"ID3 "</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"fact"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"cue "</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"smpl"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"bext"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"JUNK"</span><span class="p">,</span>
+    <span class="sa">b</span><span class="s2">"PAD "</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"iXML"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"_PMX"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"acid"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"inst"</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"plst"</span><span class="p">,</span>
+<span class="p">)</span>  <span class="c1"># fmt: skip</span>
+<span class="n">_KNOWN_CHUNK_ID</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">b</span><span class="s2">"|"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">,</span> <span class="n">_KNOWN_TRAILING_CHUNK_IDS</span><span class="p">)))</span>
 
 
 <div class="viewcode-block" id="ShortWavData">
@@ -588,10 +598,55 @@
 <span class="sd">    &gt;&gt;&gt; _wav_data_chunk(bytes(broken) + trailing)</span>
 <span class="sd">    (44, 6)</span>
 <span class="sd">    """</span>
-    <span class="n">contents</span><span class="p">,</span> <span class="n">declared</span> <span class="o">=</span> <span class="n">_wav_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">declared</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span> <span class="o">-</span> <span class="n">contents</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">declared</span>
-    <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">_payload_end_of_overrunning_data</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">wav_chunks</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">chunk_id</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">chunk</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">chunk</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">_wav_chunk</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"data"</span><span class="p">)</span>  <span class="c1"># no data chunk: raises the walk's own error</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Not WAV bytes: no `data` chunk found"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="WavChunk">
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.WavChunk">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">WavChunk</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A RIFF chunk's id, and where its contents sit in the buffer."""</span>
+
+    <span class="n">chunk_id</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="wav_chunks">
+<a class="viewcode-back" href="../../_autosummary/recode.audio.html#recode.audio.wav_chunks">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">wav_chunks</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">""":class:`WavChunk` ``(chunk_id, offset, size)`` of every chunk of a RIFF/WAVE buffer, in order.</span>
+
+<span class="sd">    The one chunk walker: :func:`decode_wav_bytes` and other readers (voxy's numpy</span>
+<span class="sd">    one) locate their ``data`` through it. ``offset`` and ``size`` locate the</span>
+<span class="sd">    chunk's contents. A ``data`` chunk whose declared size is a streaming placeholder</span>
+<span class="sd">    (``0``, or past the end of the buffer) ends where the chunks after it begin, or</span>
+<span class="sd">    at the end of the buffer (see :func:`_wav_data_chunk`); any other chunk's size is</span>
+<span class="sd">    clipped to what is there. Raises ``ValueError`` if the buffer is not RIFF/WAVE.</span>
+
+<span class="sd">    &gt;&gt;&gt; raw = encode_wav_bytes([1, 2, 3], 42) + b'LIST' + struct.pack('&lt;I', 4) + b'INFO'</span>
+<span class="sd">    &gt;&gt;&gt; [(chunk_id, size) for chunk_id, _, size in wav_chunks(raw)]</span>
+<span class="sd">    [(b'fmt ', 16), (b'data', 6), (b'LIST', 4)]</span>
+<span class="sd">    """</span>
+    <span class="n">_check_riff_wave</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
+    <span class="n">end</span><span class="p">,</span> <span class="n">pos</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">),</span> <span class="n">_RIFF_HEADER_SIZE</span>
+    <span class="k">while</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+        <span class="n">chunk_id</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span><span class="p">])</span>
+        <span class="p">(</span><span class="n">declared</span><span class="p">,)</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span>
+            <span class="s2">"&lt;I"</span><span class="p">,</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span>
+        <span class="k">if</span> <span class="n">chunk_id</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">"data"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">declared</span> <span class="o">&lt;=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">contents</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="n">_payload_end_of_overrunning_data</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">declared</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">contents</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">WavChunk</span><span class="p">(</span><span class="n">chunk_id</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">contents</span> <span class="o">+</span> <span class="n">size</span> <span class="o">+</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">2</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_check_riff_wave</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -663,15 +718,24 @@
 <span class="sd">    file, where reading to the end is right.</span>
 <span class="sd">    """</span>
     <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="n">contents</span> <span class="o">+</span> <span class="p">(</span><span class="n">contents</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">_parses_as_chunk_list_to_eof</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">candidate</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">candidate</span> <span class="o">-</span> <span class="n">contents</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">last</span> <span class="o">=</span> <span class="n">contents</span> <span class="o">+</span> <span class="p">(</span><span class="n">contents</span> <span class="o">%</span> <span class="mi">2</span><span class="p">),</span> <span class="n">end</span> <span class="o">-</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="c1"># Only positions that read as a chunk id can start a chunk list, so a regex finds</span>
+    <span class="c1"># the candidates in C instead of trying every word in Python. The ids encoders</span>
+    <span class="c1"># really append come first: they are rare in audio, which makes that pass fast on</span>
+    <span class="c1"># a long recording. Any other printable id is the slower second pass (so an</span>
+    <span class="c1"># unknown chunk ahead of a known one is read as audio).</span>
+    <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="p">(</span><span class="n">_KNOWN_CHUNK_ID</span><span class="p">,</span> <span class="n">_CHUNK_ID_AHEAD</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">pattern</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="n">found</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">candidate</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">_parses_as_chunk_list_to_eof</span><span class="p">(</span>
+                <span class="n">wav_bytes</span><span class="p">,</span> <span class="n">candidate</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="n">candidate</span> <span class="o">-</span> <span class="n">contents</span>
     <span class="k">return</span> <span class="n">end</span> <span class="o">-</span> <span class="n">contents</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_parses_as_chunk_list_to_eof</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Does the buffer from `pos` read as a chunk list that lands exactly on EOF?"""</span>
+<span class="w">    </span><span class="sd">"""Does the buffer from `pos` read as a chunk list that lands on EOF (a final pad byte may be missing)?"""</span>
     <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wav_bytes</span><span class="p">)</span>
     <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">&gt;</span> <span class="n">end</span><span class="p">:</span>
@@ -684,7 +748,7 @@
             <span class="s2">"&lt;I"</span><span class="p">,</span> <span class="n">wav_bytes</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_ID_SIZE</span> <span class="p">:</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">_CHUNK_HEADER_SIZE</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="n">pos</span> <span class="o">+=</span> <span class="n">_CHUNK_HEADER_SIZE</span> <span class="o">+</span> <span class="n">declared</span> <span class="o">+</span> <span class="p">(</span><span class="n">declared</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pos</span> <span class="o">==</span> <span class="n">end</span>
+    <span class="k">return</span> <span class="n">pos</span> <span class="ow">in</span> <span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># a final pad byte may be missing</span>
 
 
 <div class="viewcode-block" id="header_size_of_wav_bytes">

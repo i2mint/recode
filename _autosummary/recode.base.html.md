@@ -25,32 +25,32 @@ Base recode objects
 
 ### *class* recode.base.ChunkedDecoder(chk_to_frame, chk_format=None, n_channels=None, chk_size_bytes=None)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]]
 
 Deserializes numerical streams and sequences serialized by ChunkedEncoder
 
 ### *class* recode.base.ChunkedEncoder(frame_to_chk, chk_format=None, n_channels=None, chk_size_bytes=None)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
 
 Serializes numerical streams and sequences
 
 ### *class* recode.base.IterativeDecoder(chk_to_frame)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]]
 
 Creates an iterator of deserialized chunks of numerical streams and sequences serialized
 by ChunkedEncoder
 
 ### *class* recode.base.MetaDecoder(chk_to_frame, meta_to_frame)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]]
 
 Deserializes tabular data serialized by MetaEncoder
 
 ### *class* recode.base.MetaEncoder(frame_to_chk, frame_to_meta)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
 
 Serializes tabular data (must be formatted as list of dicts)
 

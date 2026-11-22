@@ -9,10 +9,11 @@
 <link rel="alternate" type="text/markdown" href="recode.audio.html.md">
 <link rel="describedby" href="llms.txt"><link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="recode.base" href="recode.base.html"><link rel="prev" title="recode" href="recode.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>recode.audio - recode</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
@@ -321,6 +322,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#recode.audio.num_type_for" title="recode.audio.num_type_for"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_type_for</span></code></a>(num[, num_sys, target_num_sys])</p></td>
 <td><p>Translate from one (sample width) number type to another.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#recode.audio.wav_chunks" title="recode.audio.wav_chunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wav_chunks</span></code></a>(wav_bytes)</p></td>
+<td><p><a class="reference internal" href="#recode.audio.WavChunk" title="recode.audio.WavChunk"><code class="xref py py-class docutils literal notranslate"><span class="pre">WavChunk</span></code></a> <code class="docutils literal notranslate"><span class="pre">(chunk_id,</span> <span class="pre">offset,</span> <span class="pre">size)</span></code> of every chunk of a RIFF/WAVE buffer, in order.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#recode.audio.WavChunk" title="recode.audio.WavChunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WavChunk</span></code></a>(chunk_id, offset, size)</p></td>
+<td><p>A RIFF chunk's id, and where its contents sit in the buffer.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -337,7 +351,7 @@
 <dl class="py exception">
 <dt class="sig sig-object py" id="recode.audio.ShortWavData">
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">recode.audio.</span></span><span class="sig-name descname"><span class="pre">ShortWavData</span></span><a class="reference internal" href="../_modules/recode/audio.html#ShortWavData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.audio.ShortWavData" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#UserWarning" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#UserWarning" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a></p>
 <p>The <code class="code docutils literal notranslate"><span class="pre">data</span></code> chunk carries fewer bytes than its own header declares.</p>
 <p>Raised as a warning rather than an error because the audio that <em>is</em> present is
 still worth decoding – a partially downloaded file, or one written to a stream
@@ -346,15 +360,42 @@ the shortfall to pass unmentioned, since the caller cannot otherwise tell a
 truncated file from a complete one.</p>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="recode.audio.WavChunk">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">recode.audio.</span></span><span class="sig-name descname"><span class="pre">WavChunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode/audio.html#WavChunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.audio.WavChunk" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
+<p>A RIFF chunk’s id, and where its contents sit in the buffer.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="recode.audio.WavChunk.chunk_id">
+<span class="sig-name descname"><span class="pre">chunk_id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.15)"><span class="pre">bytes</span></a></span><a class="headerlink" href="#recode.audio.WavChunk.chunk_id" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="recode.audio.WavChunk.offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span><a class="headerlink" href="#recode.audio.WavChunk.offset" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="recode.audio.WavChunk.size">
+<span class="sig-name descname"><span class="pre">size</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span><a class="headerlink" href="#recode.audio.WavChunk.size" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="recode.audio.decode_pcm_bytes">
 <span class="sig-prename descclassname"><span class="pre">recode.audio.</span></span><span class="sig-name descname"><span class="pre">decode_pcm_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pcm_bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode/audio.html#decode_pcm_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.audio.decode_pcm_bytes" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
 (Will try to figure it out)</p></li>
-<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
+<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -374,8 +415,8 @@ truncated file from a complete one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wav_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a></span>) – The bytes of a RIFF/WAVE container holding uncompressed PCM</p></li>
-<li><p><strong>eight_bit_unsigned</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Read 8-bit audio as the unsigned PCM the WAV spec
+<li><p><strong>wav_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a></span>) – The bytes of a RIFF/WAVE container holding uncompressed PCM</p></li>
+<li><p><strong>eight_bit_unsigned</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Read 8-bit audio as the unsigned PCM the WAV spec
 mandates (0..255 on disk, biased to -128..127 here). Pass <code class="code docutils literal notranslate"><span class="pre">False</span></code> for the
 pre-recode#12 behaviour, which read those bytes as signed – silence came back
 as -128 – and so round-tripped with <code class="code docutils literal notranslate"><span class="pre">encode_wav_bytes</span></code> but with nothing else.
@@ -387,7 +428,7 @@ Widths of 9 bits and up are signed in the spec and are unaffected either way.</p
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – if <code class="code docutils literal notranslate"><span class="pre">wav_bytes</span></code> is not a RIFF/WAVE container with a <code class="code docutils literal notranslate"><span class="pre">data</span></code>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if <code class="code docutils literal notranslate"><span class="pre">wav_bytes</span></code> is not a RIFF/WAVE container with a <code class="code docutils literal notranslate"><span class="pre">data</span></code>
 chunk. (Before recode#4 the same inputs raised <code class="code docutils literal notranslate"><span class="pre">AssertionError</span></code>, <code class="code docutils literal notranslate"><span class="pre">wave.Error</span></code>
 or <code class="code docutils literal notranslate"><span class="pre">EOFError</span></code> depending on how they were malformed; they are unified here.)</p></li>
 <li><p><a class="reference internal" href="#recode.audio.ShortWavData" title="recode.audio.ShortWavData"><strong>ShortWavData</strong></a> – <em>warning</em>, not an exception – see below.</p></li>
@@ -447,11 +488,6 @@ negative (recode#12). Pass <code class="code docutils literal notranslate"><span
 <span class="sig-prename descclassname"><span class="pre">recode.audio.</span></span><span class="sig-name descname"><span class="pre">decode_wav_header_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wav_header_bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode/audio.html#decode_wav_header_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.audio.decode_wav_header_bytes" title="Link to this definition">¶</a></dt>
 <dd><p>Get a dict of params decoded from a wav header</p>
 <p>For examples, see the <code class="code docutils literal notranslate"><span class="pre">encode_wav_header_bytes</span></code> function, it’s inverse.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">recode.audio</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_wav_header_bytes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">header_bytes</span> <span class="o">=</span> <span class="n">encode_wav_header_bytes</span><span class="p">(</span><span class="mi">44100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">decode_wav_header_bytes</span><span class="p">(</span><span class="n">header_bytes</span><span class="p">)</span>
@@ -465,6 +501,11 @@ negative (recode#12). Pass <code class="code docutils literal notranslate"><span
 <p>Stdlib <code class="code docutils literal notranslate"><span class="pre">wave</span></code> is the primary reader. A <code class="code docutils literal notranslate"><span class="pre">WAVE_FORMAT_EXTENSIBLE</span></code> header, which it
 refuses before Python 3.12, is parsed directly instead so the same file decodes on
 every supported version – see <code class="xref py py-func docutils literal notranslate"><span class="pre">_extensible_wav_header_params()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -474,10 +515,10 @@ every supported version – see <code class="xref py py-func docutils literal no
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wf</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/numbers.html#numbers.Number" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Number</span></code></a>]</span>) – Waveform to encode</p></li>
-<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+<li><p><strong>wf</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/numbers.html#numbers.Number" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Number</span></code></a>]</span>) – Waveform to encode</p></li>
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
 (will try to figure it out by itself)</p></li>
-<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
+<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -497,11 +538,11 @@ every supported version – see <code class="xref py py-func docutils literal no
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wf</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/numbers.html#numbers.Number" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Number</span></code></a>]</span>) – Waveform to encode (iterable of numbers)</p></li>
-<li><p><strong>sr</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Sample rate in Hz</p></li>
-<li><p><strong>width_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – The width of a sample in bytes</p></li>
-<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
-<li><p><strong>eight_bit_unsigned</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Write 8-bit audio as the unsigned PCM the WAV spec
+<li><p><strong>wf</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/numbers.html#numbers.Number" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Number</span></code></a>]</span>) – Waveform to encode (iterable of numbers)</p></li>
+<li><p><strong>sr</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Sample rate in Hz</p></li>
+<li><p><strong>width_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – The width of a sample in bytes</p></li>
+<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
+<li><p><strong>eight_bit_unsigned</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Write 8-bit audio as the unsigned PCM the WAV spec
 mandates (samples biased by 128 into 0..255 on disk). Pass <code class="code docutils literal notranslate"><span class="pre">False</span></code> for the
 pre-recode#12 behaviour, which wrote them signed – files that recode read
 back correctly and every other tool did not. Widths of 9 bits and up are
@@ -512,7 +553,7 @@ signed in the spec and are unaffected either way.</p></li>
 <dd class="field-even"><p>The complete WAV file bytes (header + data)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><em>bytes</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.15)"><em>bytes</em></a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -544,10 +585,10 @@ signed in the spec and are unaffected either way.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sr</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – The sample rate (i.e. “frame rate” i.e. “chk_rate”)</p></li>
-<li><p><strong>width_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – The “sample width” in bytes</p></li>
-<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels (default is 1)</p></li>
-<li><p><strong>nframes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – <p>Optional number of frames (default is 0).</p>
+<li><p><strong>sr</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – The sample rate (i.e. “frame rate” i.e. “chk_rate”)</p></li>
+<li><p><strong>width_bytes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – The “sample width” in bytes</p></li>
+<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels (default is 1)</p></li>
+<li><p><strong>nframes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – <p>Optional number of frames (default is 0).</p>
 <dl class="simple">
 <dt>NOTE:</dt><dd><p>If a wav file is to be read correctly, the num of frames (i.e.
 samples/chks) should be exactly the number you’ll actually be writing in the
@@ -559,7 +600,7 @@ wave file.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a></span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">header_bytes</span> <span class="o">=</span> <span class="n">encode_wav_header_bytes</span><span class="p">(</span><span class="mi">44100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -602,7 +643,7 @@ before, a truncated prefix that parses as nothing at all (recode#4).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filepath</strong> – The path to the WAV file</p></li>
-<li><p><strong>read_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – How many bytes to read at a time while looking for the audio</p></li>
+<li><p><strong>read_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – How many bytes to read at a time while looking for the audio</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -610,7 +651,7 @@ before, a truncated prefix that parses as nothing at all (recode#4).</p>
 chunk’s contents</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – if the file is not a RIFF/WAVE container with a reachable <code class="code docutils literal notranslate"><span class="pre">data</span></code>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if the file is not a RIFF/WAVE container with a reachable <code class="code docutils literal notranslate"><span class="pre">data</span></code>
 chunk. (It used to answer such files with arbitrary bytes and no complaint.)</p>
 </dd>
 </dl>
@@ -627,11 +668,6 @@ stays correct when the file carries trailing metadata or an over-declared <code 
 size.</p>
 <p><code class="code docutils literal notranslate"><span class="pre">meta</span></code> – an already-decoded header, once passed to save re-parsing it – is
 accepted for backwards compatibility and no longer used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">header_size_of_wav_bytes</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="sa">b</span><span class="s1">'RIFF.</span><span class="se">\x00\x00\x00</span><span class="s1">WAVEfmt </span><span class="se">\x10\x00\x00\x00\x01\x00\x01\x00</span><span class="s1">'</span>
 <span class="gp">... </span>    <span class="sa">b</span><span class="s1">'*</span><span class="se">\x00\x00\x00</span><span class="s1">T</span><span class="se">\x00\x00\x00\x02\x00\x10\x00</span><span class="s1">data</span><span class="se">\n\x00\x00\x00</span><span class="s1">'</span>
@@ -640,6 +676,11 @@ accepted for backwards compatibility and no longer used.</p>
 <span class="go">44</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -651,9 +692,9 @@ See <a class="reference external" href="https://en.wikipedia.org/wiki/Pulse-code
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
 (Will try to figure it out)</p></li>
-<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
+<li><p><strong>n_channels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of channels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -723,6 +764,25 @@ what we encode to get back the same thing:</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="recode.audio.wav_chunks">
+<span class="sig-prename descclassname"><span class="pre">recode.audio.</span></span><span class="sig-name descname"><span class="pre">wav_chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wav_bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/recode/audio.html#wav_chunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#recode.audio.wav_chunks" title="Link to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#recode.audio.WavChunk" title="recode.audio.WavChunk"><code class="xref py py-class docutils literal notranslate"><span class="pre">WavChunk</span></code></a> <code class="docutils literal notranslate"><span class="pre">(chunk_id,</span> <span class="pre">offset,</span> <span class="pre">size)</span></code> of every chunk of a RIFF/WAVE buffer, in order.</p>
+<p>The one chunk walker: <a class="reference internal" href="#recode.audio.decode_wav_bytes" title="recode.audio.decode_wav_bytes"><code class="xref py py-func docutils literal notranslate"><span class="pre">decode_wav_bytes()</span></code></a> and other readers (voxy’s numpy
+one) locate their <code class="docutils literal notranslate"><span class="pre">data</span></code> through it. <code class="docutils literal notranslate"><span class="pre">offset</span></code> and <code class="docutils literal notranslate"><span class="pre">size</span></code> locate the
+chunk’s contents. A <code class="docutils literal notranslate"><span class="pre">data</span></code> chunk whose declared size is a streaming placeholder
+(<code class="docutils literal notranslate"><span class="pre">0</span></code>, or past the end of the buffer) ends where the chunks after it begin, or
+at the end of the buffer (see <code class="xref py py-func docutils literal notranslate"><span class="pre">_wav_data_chunk()</span></code>); any other chunk’s size is
+clipped to what is there. Raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> if the buffer is not RIFF/WAVE.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">raw</span> <span class="o">=</span> <span class="n">encode_wav_bytes</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mi">42</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">'LIST'</span> <span class="o">+</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">'&lt;I'</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">'INFO'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="n">chunk_id</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="k">for</span> <span class="n">chunk_id</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">wav_chunks</span><span class="p">(</span><span class="n">raw</span><span class="p">)]</span>
+<span class="go">[(b'fmt ', 16), (b'data', 6), (b'LIST', 4)]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 </section>
 
         </article>
@@ -778,6 +838,12 @@ what we encode to get back the same thing:</p>
             <ul>
 <li><a class="reference internal" href="#">recode.audio</a><ul>
 <li><a class="reference internal" href="#recode.audio.ShortWavData"><code class="docutils literal notranslate"><span class="pre">ShortWavData</span></code></a></li>
+<li><a class="reference internal" href="#recode.audio.WavChunk"><code class="docutils literal notranslate"><span class="pre">WavChunk</span></code></a><ul>
+<li><a class="reference internal" href="#recode.audio.WavChunk.chunk_id"><code class="docutils literal notranslate"><span class="pre">WavChunk.chunk_id</span></code></a></li>
+<li><a class="reference internal" href="#recode.audio.WavChunk.offset"><code class="docutils literal notranslate"><span class="pre">WavChunk.offset</span></code></a></li>
+<li><a class="reference internal" href="#recode.audio.WavChunk.size"><code class="docutils literal notranslate"><span class="pre">WavChunk.size</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#recode.audio.decode_pcm_bytes"><code class="docutils literal notranslate"><span class="pre">decode_pcm_bytes()</span></code></a></li>
 <li><a class="reference internal" href="#recode.audio.decode_wav_bytes"><code class="docutils literal notranslate"><span class="pre">decode_wav_bytes()</span></code></a></li>
 <li><a class="reference internal" href="#recode.audio.decode_wav_header_bytes"><code class="docutils literal notranslate"><span class="pre">decode_wav_header_bytes()</span></code></a></li>
@@ -789,6 +855,7 @@ what we encode to get back the same thing:</p>
 <li><a class="reference internal" href="#recode.audio.mk_pcm_audio_codec"><code class="docutils literal notranslate"><span class="pre">mk_pcm_audio_codec()</span></code></a></li>
 <li><a class="reference internal" href="#recode.audio.num_find_num_type_for"><code class="docutils literal notranslate"><span class="pre">num_find_num_type_for()</span></code></a></li>
 <li><a class="reference internal" href="#recode.audio.num_type_for"><code class="docutils literal notranslate"><span class="pre">num_type_for()</span></code></a></li>
+<li><a class="reference internal" href="#recode.audio.wav_chunks"><code class="docutils literal notranslate"><span class="pre">wav_chunks()</span></code></a></li>
 </ul>
 </li>
 </ul>

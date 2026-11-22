@@ -1,4 +1,4 @@
-> built 2026-09-22 14:10 UTC from 85e0943 (master) · recode 0.1.40. Details: build_info.json
+> built 2026-11-22 11:34 UTC from 35af64a (master) · recode 0.1.40. Details: build_info.json
 
 # index.html.md
 
@@ -721,18 +721,24 @@ b'\x01\x00\x02\x00\x03\x00'
 
 ### Functions
 
-| [`decode_pcm_bytes`](_autosummary/recode.audio.html.md#recode.audio.decode_pcm_bytes)(pcm_bytes[, width, n_channels])   |                                                                                   |
-|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [`decode_wav_bytes`](_autosummary/recode.audio.html.md#recode.audio.decode_wav_bytes)(wav_bytes, \*[, ...])             | Decode WAV bytes into a `(waveform, sample_rate)` pair.                           |
-| [`decode_wav_header_bytes`](_autosummary/recode.audio.html.md#recode.audio.decode_wav_header_bytes)(wav_header_bytes)          | Get a dict of params decoded from a wav header                                    |
-| [`encode_pcm_bytes`](_autosummary/recode.audio.html.md#recode.audio.encode_pcm_bytes)(wf[, width, n_channels])          | Encode waveform (e.g. list of numbers) into PCM bytes.                            |
-| [`encode_wav_bytes`](_autosummary/recode.audio.html.md#recode.audio.encode_wav_bytes)(wf, sr[, width_bytes, ...])       | Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.            |
-| [`encode_wav_header_bytes`](_autosummary/recode.audio.html.md#recode.audio.encode_wav_header_bytes)(sr, width_bytes, \*)       | Make a WAV header from given parameters.                                          |
-| [`extract_wav_header_from_file`](_autosummary/recode.audio.html.md#recode.audio.extract_wav_header_from_file)(filepath, \*[, ...])  | Extract the header of a WAV file -- everything before the audio -- from its path. |
-| [`header_size_of_wav_bytes`](_autosummary/recode.audio.html.md#recode.audio.header_size_of_wav_bytes)(wav_bytes[, meta])        | Size, in bytes, of everything preceding the audio payload.                        |
-| [`mk_pcm_audio_codec`](_autosummary/recode.audio.html.md#recode.audio.mk_pcm_audio_codec)([width, n_channels])            | Make a (encoder, decoder) pair for PCM data with given width and n_channels.      |
-| [`num_find_num_type_for`](_autosummary/recode.audio.html.md#recode.audio.num_find_num_type_for)(num[, target_num_sys, ...])  | Find the target_num_sys equivalent of input num checking multiple unit options    |
-| [`num_type_for`](_autosummary/recode.audio.html.md#recode.audio.num_type_for)(num[, num_sys, target_num_sys])       | Translate from one (sample width) number type to another.                         |
+| [`decode_pcm_bytes`](_autosummary/recode.audio.html.md#recode.audio.decode_pcm_bytes)(pcm_bytes[, width, n_channels])   |                                                                                                                                      |
+|-----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| [`decode_wav_bytes`](_autosummary/recode.audio.html.md#recode.audio.decode_wav_bytes)(wav_bytes, \*[, ...])             | Decode WAV bytes into a `(waveform, sample_rate)` pair.                                                                              |
+| [`decode_wav_header_bytes`](_autosummary/recode.audio.html.md#recode.audio.decode_wav_header_bytes)(wav_header_bytes)          | Get a dict of params decoded from a wav header                                                                                       |
+| [`encode_pcm_bytes`](_autosummary/recode.audio.html.md#recode.audio.encode_pcm_bytes)(wf[, width, n_channels])          | Encode waveform (e.g. list of numbers) into PCM bytes.                                                                               |
+| [`encode_wav_bytes`](_autosummary/recode.audio.html.md#recode.audio.encode_wav_bytes)(wf, sr[, width_bytes, ...])       | Encode waveform (e.g. list of numbers) into PCM bytes with WAV header.                                                               |
+| [`encode_wav_header_bytes`](_autosummary/recode.audio.html.md#recode.audio.encode_wav_header_bytes)(sr, width_bytes, \*)       | Make a WAV header from given parameters.                                                                                             |
+| [`extract_wav_header_from_file`](_autosummary/recode.audio.html.md#recode.audio.extract_wav_header_from_file)(filepath, \*[, ...])  | Extract the header of a WAV file -- everything before the audio -- from its path.                                                    |
+| [`header_size_of_wav_bytes`](_autosummary/recode.audio.html.md#recode.audio.header_size_of_wav_bytes)(wav_bytes[, meta])        | Size, in bytes, of everything preceding the audio payload.                                                                           |
+| [`mk_pcm_audio_codec`](_autosummary/recode.audio.html.md#recode.audio.mk_pcm_audio_codec)([width, n_channels])            | Make a (encoder, decoder) pair for PCM data with given width and n_channels.                                                         |
+| [`num_find_num_type_for`](_autosummary/recode.audio.html.md#recode.audio.num_find_num_type_for)(num[, target_num_sys, ...])  | Find the target_num_sys equivalent of input num checking multiple unit options                                                       |
+| [`num_type_for`](_autosummary/recode.audio.html.md#recode.audio.num_type_for)(num[, num_sys, target_num_sys])       | Translate from one (sample width) number type to another.                                                                            |
+| [`wav_chunks`](_autosummary/recode.audio.html.md#recode.audio.wav_chunks)(wav_bytes)                              | [`WavChunk`](_autosummary/recode.audio.html.md#recode.audio.WavChunk) `(chunk_id, offset, size)` of every chunk of a RIFF/WAVE buffer, in order. |
+
+### Classes
+
+| [`WavChunk`](_autosummary/recode.audio.html.md#recode.audio.WavChunk)(chunk_id, offset, size)   | A RIFF chunk's id, and where its contents sit in the buffer.   |
+|-------------------------------------------------------------------------------------|----------------------------------------------------------------|
 
 ### Exceptions
 
@@ -751,10 +757,28 @@ whose length was never patched back into the header. What must not happen is for
 the shortfall to pass unmentioned, since the caller cannot otherwise tell a
 truncated file from a complete one.
 
+### *class* recode.audio.WavChunk(chunk_id, offset, size)
+
+Bases: [`NamedTuple`](https://docs.python.org/3/library/typing.html#typing.NamedTuple)
+
+A RIFF chunk’s id, and where its contents sit in the buffer.
+
+#### chunk_id *: [bytes](https://docs.python.org/3/builtins/stdtypes.html#bytes)*
+
+Alias for field number 0
+
+#### offset *: [int](https://docs.python.org/3/builtins/functions.html#int)*
+
+Alias for field number 1
+
+#### size *: [int](https://docs.python.org/3/builtins/functions.html#int)*
+
+Alias for field number 2
+
 ### recode.audio.decode_pcm_bytes(pcm_bytes, width=2, n_channels=1)
 
 * **Parameters:**
-  * **width** (`Union`[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`int`](https://docs.python.org/3/builtins/functions.html#int)]) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+  * **width** ([`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`int`](https://docs.python.org/3/builtins/functions.html#int)]) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
     (Will try to figure it out)
   * **n_channels** ([`int`](https://docs.python.org/3/builtins/functions.html#int)) – Number of channels
 * **Returns:**
@@ -843,9 +867,6 @@ Get a dict of params decoded from a wav header
 
 For examples, see the `encode_wav_header_bytes` function, it’s inverse.
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ```pycon
 >>> from recode.audio import encode_wav_header_bytes
 >>> header_bytes = encode_wav_header_bytes(44100, 2, n_channels=3)
@@ -861,13 +882,16 @@ Stdlib `wave` is the primary reader. A `WAVE_FORMAT_EXTENSIBLE` header, which it
 refuses before Python 3.12, is parsed directly instead so the same file decodes on
 every supported version – see `_extensible_wav_header_params()`.
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
 ### recode.audio.encode_pcm_bytes(wf, width=16, n_channels=1)
 
 Encode waveform (e.g. list of numbers) into PCM bytes.
 
 * **Parameters:**
   * **wf** ([`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Number`](https://docs.python.org/3/library/numbers.html#numbers.Number)]) – Waveform to encode
-  * **width** (`Union`[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`int`](https://docs.python.org/3/builtins/functions.html#int)]) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+  * **width** ([`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`int`](https://docs.python.org/3/builtins/functions.html#int)]) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
     (will try to figure it out by itself)
   * **n_channels** ([`int`](https://docs.python.org/3/builtins/functions.html#int)) – Number of channels
 * **Returns:**
@@ -1005,9 +1029,6 @@ size.
 `meta` – an already-decoded header, once passed to save re-parsing it – is
 accepted for backwards compatibility and no longer used.
 
-* **Return type:**
-  [`int`](https://docs.python.org/3/builtins/functions.html#int)
-
 ```pycon
 >>> header_size_of_wav_bytes(
 ...     b'RIFF.\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00'
@@ -1017,6 +1038,9 @@ accepted for backwards compatibility and no longer used.
 44
 ```
 
+* **Return type:**
+  [`int`](https://docs.python.org/3/builtins/functions.html#int)
+
 ### recode.audio.mk_pcm_audio_codec(width=16, n_channels=1)
 
 Make a (encoder, decoder) pair for PCM data with given width and n_channels.
@@ -1025,7 +1049,7 @@ PCM data is what’s used in the uncompressed raw WAVE formats (such as used in 
 See [https://en.wikipedia.org/wiki/Pulse-code_modulation](https://en.wikipedia.org/wiki/Pulse-code_modulation).
 
 * **Parameters:**
-  * **width** (`Union`[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`int`](https://docs.python.org/3/builtins/functions.html#int)]) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
+  * **width** ([`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`int`](https://docs.python.org/3/builtins/functions.html#int)]) – The width of a sample (in bits, bytes, numpy dtype, pyaudio …)
     (Will try to figure it out)
   * **n_channels** ([`int`](https://docs.python.org/3/builtins/functions.html#int)) – Number of channels
 * **Returns:**
@@ -1086,6 +1110,23 @@ Use with `functools.partial` when you have some fix translation endpoints.
 'float64'
 ```
 
+### recode.audio.wav_chunks(wav_bytes)
+
+[`WavChunk`](_autosummary/recode.audio.html.md#recode.audio.WavChunk) `(chunk_id, offset, size)` of every chunk of a RIFF/WAVE buffer, in order.
+
+The one chunk walker: [`decode_wav_bytes()`](_autosummary/recode.audio.html.md#recode.audio.decode_wav_bytes) and other readers (voxy’s numpy
+one) locate their `data` through it. `offset` and `size` locate the
+chunk’s contents. A `data` chunk whose declared size is a streaming placeholder
+(`0`, or past the end of the buffer) ends where the chunks after it begin, or
+at the end of the buffer (see `_wav_data_chunk()`); any other chunk’s size is
+clipped to what is there. Raises `ValueError` if the buffer is not RIFF/WAVE.
+
+```pycon
+>>> raw = encode_wav_bytes([1, 2, 3], 42) + b'LIST' + struct.pack('<I', 4) + b'INFO'
+>>> [(chunk_id, size) for chunk_id, _, size in wav_chunks(raw)]
+[(b'fmt ', 16), (b'data', 6), (b'LIST', 4)]
+```
+
 
 # _autosummary/recode.base.html.md
 
@@ -1116,32 +1157,32 @@ Base recode objects
 
 ### *class* recode.base.ChunkedDecoder(chk_to_frame, chk_format=None, n_channels=None, chk_size_bytes=None)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]]
 
 Deserializes numerical streams and sequences serialized by ChunkedEncoder
 
 ### *class* recode.base.ChunkedEncoder(frame_to_chk, chk_format=None, n_channels=None, chk_size_bytes=None)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
 
 Serializes numerical streams and sequences
 
 ### *class* recode.base.IterativeDecoder(chk_to_frame)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]]
 
 Creates an iterator of deserialized chunks of numerical streams and sequences serialized
 by ChunkedEncoder
 
 ### *class* recode.base.MetaDecoder(chk_to_frame, meta_to_frame)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)], [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]]
 
 Deserializes tabular data serialized by MetaEncoder
 
 ### *class* recode.base.MetaEncoder(frame_to_chk, frame_to_meta)
 
-Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any) | [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
+Bases: [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any), [`Sequence`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]]], [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)]
 
 Serializes tabular data (must be formatted as list of dicts)
 
@@ -1695,7 +1736,7 @@ Utils for use throughout the package
 
 # About this build
 
-This documentation was built on **2026-09-22 14:10 UTC** from commit <a href="https://github.com/i2mint/recode/commit/85e0943c3489f32ef7efc59e10d5880ee7e312f3"><code>85e0943</code></a> on branch <code>master</code>, for **recode 0.1.40** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 11:34 UTC** from commit <a href="https://github.com/i2mint/recode/commit/35af64a21e4d50acfa39eaed83382b9b29f1c2a1"><code>35af64a</code></a> on branch <code>master</code>, for **recode 0.1.40** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -1704,9 +1745,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                      |
 |---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/recode/commit/85e0943c3489f32ef7efc59e10d5880ee7e312f3"><code>85e0943c3489f32ef7efc59e10d5880ee7e312f3</code></a> |
+| Commit              | <a href="https://github.com/i2mint/recode/commit/35af64a21e4d50acfa39eaed83382b9b29f1c2a1"><code>35af64a21e4d50acfa39eaed83382b9b29f1c2a1</code></a> |
 | Branch              | <code>master</code>                                                                                                                                  |
-| Tags at this commit | <code>0.1.40</code>                                                                                                                                  |
+| Tags at this commit | none                                                                                                                                                 |
 | Working tree        | clean                                                                                                                                                |
 | Remote              | <code>https://github.com/i2mint/recode</code>                                                                                                        |
 
@@ -1715,18 +1756,18 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/recode</code>                                                                 |
-| Run          | <a href="https://github.com/i2mint/recode/actions/runs/35738301691">35738301691</a>        |
+| Run          | <a href="https://github.com/i2mint/recode/actions/runs/45017911186">45017911186</a>        |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>3b92016bb6dcf47b543cb464a8b6b4420be08e08</code> (in the history of the built commit) |
+| Event commit | <code>35af64a21e4d50acfa39eaed83382b9b29f1c2a1</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.12  |
-| Sphinx   | 9.1.0   |
+| epythet  | 0.2.23  |
+| Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
-| Python   | 3.12.14 |
+| Python   | 3.12.16 |
 
 ## Configuration as resolved
 
@@ -1748,8 +1789,8 @@ Latest release: <a href="https://pypi.org/project/recode/0.1.40/">0.1.40</a>, th
 
 ```bash
 git clone https://github.com/i2mint/recode && cd recode
-git checkout 85e0943c3489f32ef7efc59e10d5880ee7e312f3
-pip install "epythet==0.2.12"
+git checkout 35af64a21e4d50acfa39eaed83382b9b29f1c2a1
+pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 

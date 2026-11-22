@@ -19,6 +19,13 @@ recode.audio
       mk_pcm_audio_codec
       num_find_num_type_for
       num_type_for
+      wav_chunks
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      WavChunk
    
    .. rubric:: Exceptions
 

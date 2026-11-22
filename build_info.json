@@ -1,41 +1,39 @@
 {
   "schema_version": 1,
-  "built_at": "2026-09-22T14:10:33Z",
+  "built_at": "2026-11-22T11:34:26Z",
   "package": {
     "name": "recode",
     "version": "0.1.40",
     "display_name": "recode",
-    "source": "setup.cfg"
+    "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "85e0943c3489f32ef7efc59e10d5880ee7e312f3",
-    "short_commit": "85e0943",
+    "commit": "35af64a21e4d50acfa39eaed83382b9b29f1c2a1",
+    "short_commit": "35af64a",
     "branch": "master",
-    "tags": [
-      "0.1.40"
-    ],
+    "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/recode",
-    "commit_url": "https://github.com/i2mint/recode/commit/85e0943c3489f32ef7efc59e10d5880ee7e312f3",
+    "commit_url": "https://github.com/i2mint/recode/commit/35af64a21e4d50acfa39eaed83382b9b29f1c2a1",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/recode",
-    "sha": "3b92016bb6dcf47b543cb464a8b6b4420be08e08",
+    "sha": "35af64a21e4d50acfa39eaed83382b9b29f1c2a1",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "35738301691",
-    "run_url": "https://github.com/i2mint/recode/actions/runs/35738301691",
+    "run_id": "45017911186",
+    "run_url": "https://github.com/i2mint/recode/actions/runs/45017911186",
     "server_url": "https://github.com"
   },
   "tools": {
-    "epythet": "0.2.12",
-    "sphinx": "9.1.0",
+    "epythet": "0.2.23",
+    "sphinx": "9.1.1",
     "docutils": "0.22.4",
-    "python": "3.12.14"
+    "python": "3.12.16"
   },
   "config": {
     "theme": "auto",
@@ -58,7 +56,7 @@
   },
   "site": {
     "modules_documented": 4,
-    "objects_documented": 30
+    "objects_documented": 35
   },
   "pypi": {
     "checked": true,
@@ -66,7 +64,7 @@
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/recode && cd recode\ngit checkout 85e0943c3489f32ef7efc59e10d5880ee7e312f3\npip install \"epythet==0.2.12\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/recode && cd recode\ngit checkout 35af64a21e4d50acfa39eaed83382b9b29f1c2a1\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,
